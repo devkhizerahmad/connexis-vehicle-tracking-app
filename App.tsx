@@ -1,37 +1,62 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
+// App.tsx — Connexis Splash Screen
+import React, {useEffect, useRef} from 'react';
 import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  StatusBar,
+  Animated,
+  Dimensions,
+} from 'react-native';
 
-function App() {
-  const isDarkMode = useColorScheme() === 'dark';
+const {width} = Dimensions.get('window');
 
-  return (
-    <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <AppContent />
-    </SafeAreaProvider>
-  );
-}
+export default function App() {
+  const scaleAnim = useRef(new Animated.Value(0.3)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
 
-function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
+  useEffect(() => {
+    Animated.parallel([
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        useNativeDriver: true,
+        friction: 4,
+      }),
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 800,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [fadeAnim, scaleAnim]);
 
   return (
     <View style={styles.container}>
-      <NewAppScreen
-        templateFileName="App.tsx"
-        safeAreaInsets={safeAreaInsets}
-      />
+      {/* Dark background behind the status bar (edge-to-edge safe) */}
+      <View style={styles.statusBarBg} />
+      <StatusBar barStyle="light-content" />
+
+      {/* Logo with Animation */}
+      <Animated.View
+        style={[
+          styles.logoContainer,
+          {transform: [{scale: scaleAnim}], opacity: fadeAnim},
+        ]}>
+        <Image
+          source={require('./src/assets/logo.png')}
+          style={styles.logo}
+          resizeMode="contain"
+        />
+      </Animated.View>
+
+      {/* Tagline */}
+      <Animated.Text style={[styles.tagline, {opacity: fadeAnim}]}>
+        VEHICLE TRACKING SOLUTIONS
+      </Animated.Text>
+
+      {/* Loading Dots */}
+      <Text style={styles.loading}>● ● ●</Text>
     </View>
   );
 }
@@ -39,7 +64,38 @@ function AppContent() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#e5d7d7',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  statusBarBg: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: StatusBar.currentHeight ?? 0,
+    backgroundColor: '#0f0f0f',
+  },
+  logoContainer: {
+    width: width * 0.75,
+    height: 110,
+  },
+  logo: {
+    width: '100%',
+    height: '100%',
+  },
+  tagline: {
+    color: '#E63946',
+    fontSize: 12,
+    letterSpacing: 4,
+    marginTop: 28,
+    fontWeight: '600',
+  },
+  loading: {
+    color: '#333333',
+    fontSize: 18,
+    position: 'absolute',
+    bottom: 60,
+    letterSpacing: 8,
   },
 });
-
-export default App;
