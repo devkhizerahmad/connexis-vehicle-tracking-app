@@ -52,7 +52,7 @@ export default function App() {
 
       {/* Tagline */}
       <Animated.Text style={[styles.tagline, {opacity: fadeAnim}]}>
-        VEHICLE TRACKING SOLUTIONS
+        VEHICLE MANAGEMENT SYSTEM
       </Animated.Text>
 
       {/* Loading Dots */}
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   tagline: {
-    color: '#E63946',
+    color: '#ea0e0e',
     fontSize: 12,
     letterSpacing: 4,
     marginTop: 28,
