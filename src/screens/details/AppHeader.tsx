@@ -1,28 +1,24 @@
-// AppHeader.tsx — gradient status bar + app bar (back chevron, "Details", avatar)
+// AppHeader.tsx — edge-to-edge gradient header (Fix suite v2 / Fix 2):
+//  • NO app-drawn status bar (no "9:41", no signal/wifi/battery) — the native OS
+//    status bar is the only status row (white icons via barStyle="light-content")
+//  • Gradient runs from the very top pixel (behind the transparent status bar)
+//  • App bar row (back / "Details" / avatar) offset by the system top inset only
 import React from 'react';
 import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {VerticalGradient} from './Gradient';
-import {Chevron, StatusIcons} from './Icons';
+import {Chevron} from './Icons';
 import {C, FS, H, S, SZ} from '../../theme/detailsTokens';
 
 export function AppHeader({onBack}: {onBack?: () => void}) {
+  const insets = useSafeAreaInsets();
   return (
     <View>
-      <VerticalGradient height={H.statusBar + H.appBar} />
+      {/* gradient from y=0, seamless through the app bar (statusBar inset + app bar) */}
+      <VerticalGradient height={insets.top + H.appBar} />
       <View style={StyleSheet.absoluteFill}>
-        {/* iOS status bar */}
-        <View
-          style={{
-            height: H.statusBar,
-            flexDirection: 'row',
-            alignItems: 'flex-end',
-            paddingBottom: 6,
-            paddingHorizontal: S.statusPadH,
-          }}>
-          <Text style={{color: C.white, fontSize: FS.statusTime, fontWeight: '600'}}>9:41</Text>
-          <View style={{flex: 1}} />
-          <StatusIcons />
-        </View>
+        {/* native status bar zone — transparent, system draws the only status row */}
+        <View style={{height: insets.top}} />
         {/* App bar */}
         <View
           style={{
