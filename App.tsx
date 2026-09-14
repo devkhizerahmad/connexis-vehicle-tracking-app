@@ -1,5 +1,5 @@
 // App.tsx — Connexis Splash Screen
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -9,12 +9,14 @@ import {
   Animated,
   Dimensions,
 } from 'react-native';
+import DetailsScreen from './src/screens/details/DetailsScreen';
 
 const {width} = Dimensions.get('window');
 
 export default function App() {
   const scaleAnim = useRef(new Animated.Value(0.3)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
+  const [showDetails, setShowDetails] = useState(false);
 
   useEffect(() => {
     Animated.parallel([
@@ -29,7 +31,13 @@ export default function App() {
         useNativeDriver: true,
       }),
     ]).start();
+    const t = setTimeout(() => setShowDetails(true), 2400);
+    return () => clearTimeout(t);
   }, [fadeAnim, scaleAnim]);
+
+  if (showDetails) {
+    return <DetailsScreen />;
+  }
 
   return (
     <View style={styles.container}>
