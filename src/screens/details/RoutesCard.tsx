@@ -1,6 +1,6 @@
-// RoutesCard.tsx — navy header (collapsible) + timeline of 3 route stops + View More link
-import React, {useState} from 'react';
-import {Pressable, StyleSheet, Text, View} from 'react-native';
+// RoutesCard.tsx — navy header (collapsible, 250ms) + timeline of 3 route stops + View More link
+import React, {useRef, useState} from 'react';
+import {Animated, Easing, Pressable, StyleSheet, Text, View} from 'react-native';
 import {Chevron, RouteIcon} from './Icons';
 import {Collapsible} from './Collapsible';
 import {badgeColor, C, FS, H, L, R, S, SZ, statusColor} from '../../theme/detailsTokens';
@@ -22,21 +22,45 @@ interface Props {
 }
 
 export function RoutesCard({routes, viewMore, onViewMore}: Props) {
-  const [open, setOpen] = useState(true);
+  const [expanded, setExpanded] = useState(true); // shown on first load
+  // chevronRotation: 0 when open, 180 when closed — animated in sync with state
+  const rot = useRef(new Animated.Value(0)).current;
+
+  const toggle = () => {
+    const next = !expanded;
+    setExpanded(next); // 1. flip state
+    Animated.timing(rot, {
+      // 2. animate chevron 0 <-> 180 over 250ms ease-out
+      toValue: next ? 0 : 1,
+      duration: L.collapseMs,
+      easing: Easing.out(Easing.cubic),
+      useNativeDriver: true,
+    }).start();
+  };
+
   return (
     <View>
+      {/* ENTIRE header row is the tap target (including empty space) */}
       <Pressable
         style={[styles.header, {height: H.sectionHeader, borderRadius: R.card}]}
-        onPress={() => setOpen(o => !o)}>
+        onPress={toggle}
+        accessibilityRole="button"
+        accessibilityState={{expanded}}>
         <RouteIcon color={C.white} size={SZ.headerIcon - 2} />
         <Text style={[styles.headerTitle, {marginLeft: 6}]}>Routes</Text>
         <View style={{flex: 1}} />
-        <View style={{transform: [{rotate: open ? '0deg' : '-90deg'}]}}>
-          <Chevron dir="down" color={C.white} size={12} />
-        </View>
+        <Animated.View
+          style={{
+            transform: [
+              {rotate: rot.interpolate({inputRange: [0, 1], outputRange: ['0deg', '180deg']})},
+            ],
+          }}>
+          <Chevron dir="down" color={C.white} size={SZ.headerIcon} />
+        </Animated.View>
       </Pressable>
 
-      <Collapsible open={open}>
+      {/* Body ALWAYS mounted (never unmounted) — Collapsible animates height+opacity */}
+      <Collapsible open={expanded}>
         <View
           style={{
             backgroundColor: C.white,
@@ -99,7 +123,7 @@ const styles = StyleSheet.create({
     backgroundColor: C.navy,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 10,
+    paddingHorizontal: S.sectionPadH,
     borderRadius: R.card,
   },
   headerTitle: {

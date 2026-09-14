@@ -53,6 +53,7 @@ export const S = {
   vehicleCardPad: 12,
   tilePad: 8,
   headerPadH: 12,
+  sectionPadH: 14, // collapsible section headers (Routes / Quick Report) — spec pad 14
   statusPadH: 16,
   chipPadH: 8,
 };
@@ -145,7 +146,7 @@ export const L = {
   donutDotDeg: 140,
   gridGap: 8,
   toastMs: 1800,
-  collapseMs: 200,
+  collapseMs: 250,
   gridCols: 3,
 };
 
