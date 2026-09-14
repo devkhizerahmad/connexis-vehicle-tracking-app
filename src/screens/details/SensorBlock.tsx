@@ -39,31 +39,40 @@ export function SensorBlock(p: Props) {
   const bannerAlert = p.banner.kind === 'alert';
   return (
     <View>
-      {/* Header */}
-      <View style={[styles.header, {height: H.sectionHeader, borderRadius: R.card}]}>
-        {p.accent === 'amber' ? (
-          <FuelPump color={accent} size={SZ.headerIcon} />
-        ) : (
-          <Thermo color={accent} size={SZ.headerIcon} />
-        )}
-        <Text style={[styles.headerTitle, {marginLeft: 6}]}>{p.title}</Text>
-        <View style={{flex: 1}} />
+      {/* Header — radius 8 on TOP corners only, height 44, dropdown flush inside */}
+      <View style={styles.header}>
+        {/* Left zone 70% */}
+        <View
+          style={{
+            flex: 0.7,
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingLeft: 14,
+            gap: 10,
+          }}>
+          {p.accent === 'amber' ? (
+            <FuelPump color={accent} size={SZ.headerIcon} />
+          ) : (
+            <Thermo color={accent} size={SZ.headerIcon} />
+          )}
+          <Text style={styles.headerTitle}>{p.title}</Text>
+        </View>
+
+        {/* Right zone 30% — dropdown flush with header top/right/bottom edges */}
         <Pressable
           onPress={p.onSelectPress}
           style={{
-            width: `${L.dropdownWpct}%`,
-            height: H.chip,
+            flex: 0.3,
             backgroundColor: C.white,
-            borderWidth: 1,
-            borderColor: C.border,
-            borderRadius: R.chip,
+            borderLeftWidth: 1,
+            borderLeftColor: C.navyLine,
             flexDirection: 'row',
             alignItems: 'center',
-            paddingLeft: S.chipPadH,
-            paddingRight: 6,
+            justifyContent: 'center',
+            gap: 4,
           }}>
-          <Text style={{color: C.grayText, fontSize: FS.plate, flex: 1}}>{p.dropdown}</Text>
-          <Chevron dir="down" color={C.grayText} size={10} />
+          <Text style={{color: C.grayText, fontSize: 12}}>{p.dropdown}</Text>
+          <Chevron dir="down" color={C.grayText} size={12} />
         </Pressable>
       </View>
 
@@ -124,11 +133,14 @@ export function SensorBlock(p: Props) {
 
 const styles = StyleSheet.create({
   header: {
+    height: H.sectionHeader,
     backgroundColor: C.navy,
+    borderTopLeftRadius: R.card,
+    borderTopRightRadius: R.card,
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
     flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    borderRadius: R.card,
+    overflow: 'hidden',
   },
   headerTitle: {
     color: C.white,
