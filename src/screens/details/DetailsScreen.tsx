@@ -43,6 +43,8 @@ export default function DetailsScreen() {
   return (
     <SafeAreaProvider>
       <View style={styles.screen}>
+        {/* RN 0.87: Android status bar is edge-to-edge (translucent) by default;
+            light-content makes the native icons white over the gradient */}
         <StatusBar barStyle="light-content" />
         <ScrollView
           contentContainerStyle={{paddingBottom: H.bottomNav + 24}}
@@ -100,6 +102,7 @@ export default function DetailsScreen() {
             title={mock.activity.title}
             tabs={mock.activity.tabs}
             advice={mock.activity.advice}
+            score={mock.activity.score}
           />
         </View>
       </ScrollView>
