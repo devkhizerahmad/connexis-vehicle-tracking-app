@@ -18,7 +18,9 @@ export const C = {
   orange: '#F5A623',
   red: '#E03131',
   sadRed: '#D93025',
-  ringGray: '#9AA0A6',
+  ringGray: '#5F656C', // Fix4: dark slate gray arc
+  orangeDot: '#F79C1D', // Fix4: orange dot at start tip
+  trackGray: '#E8EAED',
   grayText: '#7A8288',
   border: '#C9CED4',
   tabIdle: '#E4E7EA',
@@ -26,7 +28,8 @@ export const C = {
   plateGreen: '#5FCC00',
   brick: '#C4454A',
   grayStrong: '#4A4F54',
-  outlineGray: '#8A8F98',
+  outlineGray: '#8A9199', // Fix1: button border
+  btnPin: '#6B7280', // Fix1: Live Location pin gray
   navyLine: '#3A4450',
   // Support colors (from spec texts)
   white: '#FFFFFF',
@@ -34,7 +37,7 @@ export const C = {
   mid: '#444444',
   sub: '#9AA0A6',
   navGray: '#8A9199',
-  dark: '#333333',
+  dark: '#3A3F45', // Fix4: center score text bold 15pt #3A3F45
   badgeAmber: '#F0B429',
   dash: '#D7DBE0',
   hairline: '#ECEEF1',
@@ -95,11 +98,12 @@ export const FS = {
   tileLabel: 10,
   tileValue: 13,
   trend: 10,
-  cyanTitle: 12,
-  cyanBody: 11.5,
-  cyanBodyLh: 17.25,
-  spLabel: 12,
-  spValue: 12,
+  cyanTitle: 11,
+  cyanBody: 9,
+  cyanBodyLh: 13.5,
+  spLabel: 10.5,
+  spValue: 10.5,
+  spLh: 15, // Stat text line height
   navLabel: 9,
   advice: 11,
   banner: 11,
@@ -114,20 +118,23 @@ export const SZ = {
   sedanW: 115,
   sedanH: 68,
   imgL: 14,
-  imgT: 26,
-  cardBottomPad: 24,
-  colGap: 22,
-  cyanTopGap: 12,
+  imgT: 27,
+  cardBottomPad: 23, // Fix1: card bottom = Live Location button bottom + 23
+  colGap: 20, // Fix1: right column vertical row gap
+  cyanTopGap: 22, // Fix1: cyan top = car-image bottom + 22
   cyanPad: 12,
   kpiAfterCyan: 18,
-  btnH: 26,
+  btnH: 30, // Fix1: Live Location button height
   btnPadH: 14,
   leftColPct: 45,
   rightColPct: 55,
-  cyanWpct: 52,
+  rightColPadL: 4, // Fix1: column left = cyan right + gap
+  colTopPad: 24, // Fix1: right column top padding
+  btnPinGapL: 26, // Fix1: button left offset = icon 18 + gap 8
+  cyanWpct: 56, // Fix1: cyan overlay width = 56% of card
   donut: 84,
-  ringW: 10,
-  dotSize: 8,
+  ringW: 18.5, // Fix4: stroke width = 22% of 84 = 18.5pt
+  dotSize: 16, // Fix4: dot diameter = 0.85 * 18.5 = 16pt
   sadCircle: 40,
   badge: 22,
   kpiIcon: 22,
