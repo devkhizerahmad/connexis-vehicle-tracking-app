@@ -1,18 +1,22 @@
-// PlateStatusRow.tsx — 50/50 black plate | green status, height 38
+// PlateStatusRow.tsx — 59% black plate | 41% green status (+check), height 44, contiguous
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {C, FS, H, R} from '../../theme/detailsTokens';
+import {CheckMark} from './Icons';
+import {C, FS, H, R, SZ} from '../../theme/detailsTokens';
 
 export function PlateStatusRow({plate, status}: {plate: string; status: string}) {
   return (
     <View style={[styles.row, {height: H.plateRow, borderRadius: R.plateRow}]}>
-      <View style={[styles.seg, {backgroundColor: C.black, alignItems: 'flex-start'}]}>
-        <Text style={{color: C.white, fontSize: FS.plate, fontWeight: '600', marginLeft: 12}} numberOfLines={1}>
+      <View style={[styles.seg, {flex: SZ.plateBlackPct, backgroundColor: C.black, alignItems: 'flex-start'}]}>
+        <Text style={{color: C.white, fontSize: FS.plate, fontWeight: '700', marginLeft: 12}} numberOfLines={1}>
           {plate}
         </Text>
       </View>
-      <View style={[styles.seg, {backgroundColor: C.green}]}>
-        <Text style={{color: C.white, fontSize: FS.plate, fontWeight: '700'}}>{status}</Text>
+      <View style={[styles.seg, {flex: SZ.plateGreenPct, backgroundColor: C.plateGreen}]}>
+        <View style={{flexDirection: 'row', alignItems: 'center', gap: 5}}>
+          <CheckMark color={C.white} size={16} />
+          <Text style={{color: C.white, fontSize: FS.plate, fontWeight: '700'}}>{status}</Text>
+        </View>
       </View>
     </View>
   );
@@ -24,8 +28,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   seg: {
-    flex: 1,
-    alignItems: 'center',
     justifyContent: 'center',
   },
 });

@@ -1,8 +1,9 @@
-// VehicleInfoCard.tsx — sedan illustration, speed/update rows, cyan Last Location callout + Live Location button
+// VehicleInfoCard.tsx — 45/55 split, van image, brick-red stats, Live Location button,
+// cyan Last-Location overlay that hangs ~1/3 below the card (card overflow visible)
 import React from 'react';
 import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
-import {Clock, Pin, Speedo} from './Icons';
-import {C, FS, L, R, S, SZ} from '../../theme/detailsTokens';
+import {ArrowCircle, Clock, Pin, Speedo} from './Icons';
+import {C, FS, R, SZ} from '../../theme/detailsTokens';
 
 interface Props {
   speedLabel: string;
@@ -13,62 +14,88 @@ interface Props {
   location: string;
   liveLocation: string;
   onLiveLocation?: () => void;
+  /** measured height of the cyan overlay (for downstream spacing) */
+  onCyanHeight?: (h: number) => void;
 }
+
+const cyanTop = SZ.imgT + SZ.sedanH + SZ.cyanTopGap;
 
 export function VehicleInfoCard(p: Props) {
   return (
-    <View style={[styles.card, {borderRadius: R.vehicleCard, padding: S.vehicleCardPad}]}>
+    <View style={styles.card}>
       <View style={{flexDirection: 'row'}}>
-        <Image
-          source={require('../../assets/img_car_sedan.png')}
-          style={{width: SZ.sedanW, height: SZ.sedanH}}
-          resizeMode="contain"
-        />
-        <View style={{flex: 1, justifyContent: 'center', paddingLeft: 8, gap: 6}}>
-          <View style={{flexDirection: 'row', alignItems: 'center', gap: 4}}>
-            <Speedo color={C.red} size={16} />
-            <Text style={styles.label}>{p.speedLabel}</Text>
-            <Text style={[styles.value, {fontWeight: '700'}]}>{p.speed}</Text>
+        {/* Left column 45% — van image anchored at (14, 26) */}
+        <View style={{width: `${SZ.leftColPct}%`}}>
+          <Image
+            source={require('../../assets/img_car_sedan.png')}
+            style={{
+              position: 'absolute',
+              left: SZ.imgL,
+              top: SZ.imgT,
+              width: SZ.sedanW,
+              height: SZ.sedanH,
+            }}
+            resizeMode="contain"
+          />
+        </View>
+
+        {/* Right column 55% — stats + button (defines card height) */}
+        <View style={{width: `${SZ.rightColPct}%`, paddingTop: SZ.imgT, gap: SZ.colGap}}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Speedo color={C.brick} size={18} />
+            <Text numberOfLines={1} style={{flex: 1, marginLeft: 6}}>
+              <Text style={{fontWeight: '700', color: C.grayStrong, fontSize: FS.spLabel}}>{p.speedLabel}</Text>
+              <Text style={{color: C.grayText, fontSize: FS.spValue}}>{p.speed}</Text>
+            </Text>
           </View>
-          <View style={{flexDirection: 'row', alignItems: 'center', gap: 4}}>
-            <Clock color={C.red} size={14} />
-            <Text style={styles.label}>{p.updateLabel}</Text>
-            <Text style={styles.value}>{p.update}</Text>
+
+          <View style={{flexDirection: 'row', alignItems: 'flex-start'}}>
+            <Clock color={C.brick} size={18} />
+            <Text numberOfLines={2} style={{flex: 1, marginLeft: 6}}>
+              <Text style={{fontWeight: '700', color: C.grayStrong, fontSize: FS.spLabel}}>{p.updateLabel}</Text>
+              <Text style={{color: C.grayText, fontSize: FS.spValue}}>{p.update}</Text>
+            </Text>
+          </View>
+
+          <View style={{alignSelf: 'flex-start'}}>
+            <Pressable
+              onPress={p.onLiveLocation}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: 6,
+                height: SZ.btnH,
+                paddingHorizontal: SZ.btnPadH,
+                borderWidth: 1.5,
+                borderColor: C.outlineGray,
+                borderRadius: R.button,
+              }}>
+              <Pin color={C.outlineGray} size={14} />
+              <Text style={{color: C.grayStrong, fontSize: FS.spValue}}>{p.liveLocation}</Text>
+            </Pressable>
           </View>
         </View>
       </View>
 
-      <View style={{flexDirection: 'row', gap: L.gridGap, marginTop: 10, alignItems: 'center'}}>
-        {/* Cyan callout ~60% width */}
-        <View style={{flex: L.calloutFlex, backgroundColor: C.cyan, borderRadius: R.tile, padding: S.tilePad + 2, flexDirection: 'row', gap: 6}}>
-          <View style={{paddingTop: 2}}>
-            <Pin color={C.cyanText} size={13} />
-          </View>
-          <View style={{flex: 1}}>
-            <Text style={{color: C.cyanText, fontSize: FS.cyanTitle, fontWeight: '700'}}>{p.lastLocationLabel}</Text>
-            <Text style={{color: C.cyanText, fontSize: FS.cyanBody, marginTop: 2, lineHeight: FS.cyanBody + 3}}>
-              {p.location}
-            </Text>
-          </View>
+      {/* 24pt bottom padding (card stops at Live Location + 24) */}
+      <View style={{height: SZ.cardBottomPad}} />
+
+      {/* CYAN OVERLAY — absolute, hangs below card bottom (card must not clip it) */}
+      <View
+        pointerEvents="none"
+        onLayout={e => p.onCyanHeight?.(e.nativeEvent.layout.height)}
+        style={[styles.cyanBox, {top: cyanTop, padding: SZ.cyanPad}]}>
+        <ArrowCircle color={C.cyanText} size={14} />
+        <View style={{flex: 1, marginLeft: 8}}>
+          <Text style={{fontSize: FS.cyanTitle, fontWeight: '700', color: C.cyanText}}>
+            {p.lastLocationLabel}
+          </Text>
+          <Text
+            numberOfLines={3}
+            style={{fontSize: FS.cyanBody, color: C.cyanText, lineHeight: FS.cyanBodyLh, marginTop: 3}}>
+            {p.location}
+          </Text>
         </View>
-        {/* Outlined Live Location button */}
-        <Pressable
-          onPress={p.onLiveLocation}
-          style={{
-            flex: L.sideFlex,
-            backgroundColor: C.white,
-            borderWidth: 1,
-            borderColor: C.border,
-            borderRadius: R.button,
-            paddingVertical: 10,
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexDirection: 'row',
-            gap: 5,
-          }}>
-          <Pin color={C.textDark} size={12} />
-          <Text style={{color: C.textDark, fontSize: FS.body}}>{p.liveLocation}</Text>
-        </Pressable>
       </View>
     </View>
   );
@@ -77,12 +104,21 @@ export function VehicleInfoCard(p: Props) {
 const styles = StyleSheet.create({
   card: {
     backgroundColor: C.white,
+    borderRadius: R.vehicleCard,
     shadowColor: C.black,
     shadowOpacity: 0.06,
     shadowRadius: 6,
     shadowOffset: {width: 0, height: 2},
     elevation: 2,
+    /* no overflow:sitenote — children may paint outside bounds */
   },
-  label: {color: C.grayText, fontSize: FS.body},
-  value: {color: C.textDark, fontSize: FS.body, fontWeight: '600'},
+  cyanBox: {
+    position: 'absolute',
+    left: 0,
+    width: `${SZ.cyanWpct}%`,
+    backgroundColor: C.cyan,
+    borderRadius: 6,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
 });

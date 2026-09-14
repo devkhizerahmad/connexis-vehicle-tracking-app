@@ -22,6 +22,12 @@ export const C = {
   grayText: '#7A8288',
   border: '#C9CED4',
   tabIdle: '#E4E7EA',
+  // Phase 1 additions (PlateRow + VehicleInfoCard)
+  plateGreen: '#5FCC00',
+  brick: '#C4454A',
+  grayStrong: '#4A4F54',
+  outlineGray: '#8A8F98',
+  navyLine: '#3A4450',
   // Support colors (from spec texts)
   white: '#FFFFFF',
   textDark: '#222222',
@@ -52,21 +58,21 @@ export const S = {
 };
 
 export const R = {
-  vehicleCard: 10,
+  vehicleCard: 4,
   card: 8,
   tile: 8,
   banner: 6,
   tab: 4,
-  plateRow: 6,
+  plateRow: 8,
   navActive: 10,
-  button: 6,
+  button: 8,
   badge: 4,
   chip: 6,
 };
 
 export const H = {
-  plateRow: 38,
-  sectionHeader: 40,
+  plateRow: 44,
+  sectionHeader: 44,
   sensorTileMin: 64,
   reportTile: 62,
   tabRow: 30,
@@ -78,7 +84,7 @@ export const H = {
 
 export const FS = {
   title: 18,
-  plate: 12,
+  plate: 13,
   sectionTitle: 14,
   body: 11,
   small: 10,
@@ -89,7 +95,10 @@ export const FS = {
   tileValue: 13,
   trend: 10,
   cyanTitle: 12,
-  cyanBody: 10.5,
+  cyanBody: 11.5,
+  cyanBodyLh: 17.25,
+  spLabel: 12,
+  spValue: 12,
   navLabel: 9,
   advice: 11,
   banner: 11,
@@ -101,8 +110,20 @@ export const FS = {
 
 export const SZ = {
   avatar: 32,
-  sedanW: 110,
-  sedanH: 70,
+  sedanW: 115,
+  sedanH: 68,
+  imgL: 14,
+  imgT: 26,
+  cardBottomPad: 24,
+  colGap: 22,
+  cyanTopGap: 12,
+  cyanPad: 12,
+  kpiAfterCyan: 18,
+  btnH: 26,
+  btnPadH: 14,
+  leftColPct: 45,
+  rightColPct: 55,
+  cyanWpct: 52,
   donut: 84,
   ringW: 10,
   dotSize: 8,
@@ -113,6 +134,8 @@ export const SZ = {
   headerIcon: 18,
   navIcon: 16,
   reportIcon: 18,
+  plateGreenPct: 41,
+  plateBlackPct: 59,
 };
 
 export const L = {

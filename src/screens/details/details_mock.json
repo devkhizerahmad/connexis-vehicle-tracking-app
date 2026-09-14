@@ -1,12 +1,12 @@
 {
-  "plate": "Honda Civic (LFA-1484)",
+  "plate": "Honda Civic (LFA-1464)",
   "status": "Running",
   "speedLabel": "Current Speed:",
-  "speed": "65 km/hr",
+  "speed": " 65 km/Hr",
   "updateLabel": "Last Update:",
-  "update": "2/10/25 (08:23 AM)",
-  "lastLocationLabel": "Last Location:",
-  "location": "Near lalura Singh Road interchange, Ferozepur village, Near Dheed Punjabian Road, Lahore district, Punjab.",
+  "update": " 2/10/25 (08:25 AM)",
+  "lastLocationLabel": "Last Location",
+  "location": "Near Lahore Ring Road Interchange, Kamaran Village Area, Close to Bedian Road, Lahore District, Punjab",
   "liveLocation": "Live Location",
   "kpis": [
     {"icon": "stop", "label": "Stop Time Today", "value": "3hr 5Min"},

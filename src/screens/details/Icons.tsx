@@ -650,3 +650,24 @@ export const ReportIcon = ({name, color, size}: {name: string; color: string; si
 
 
 
+export const CheckMark = ({color, size}: IconProps) => (
+  <Text style={{color, fontSize: size, fontWeight: '800', lineHeight: size * 1.2, textAlign: 'center'}}>
+    ✓
+  </Text>
+);
+
+export const ArrowCircle = ({color, size}: IconProps) => (
+  <View
+    style={{
+      width: size,
+      height: size,
+      borderRadius: size / 2,
+      backgroundColor: color,
+      alignItems: 'center',
+      justifyContent: 'center',
+    }}>
+    <Text style={{color: C.white, fontSize: size * 0.62, fontWeight: '800', lineHeight: size * 0.7, textAlign: 'center'}}>
+      ▲
+    </Text>
+  </View>
+);

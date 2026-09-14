@@ -12,12 +12,19 @@ import {RoutesCard} from './RoutesCard';
 import {QuickReportGrid} from './QuickReportGrid';
 import {OverallActivity} from './OverallActivity';
 import {BottomNav} from './BottomNav';
-import {C, H, L, S} from '../../theme/detailsTokens';
+import {C, H, L, S, SZ} from '../../theme/detailsTokens';
 
 export default function DetailsScreen() {
   const [toast, setToast] = useState<string | null>(null);
   const toastAnim = useRef(new Animated.Value(0)).current;
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [cardH, setCardH] = useState(0);
+  const [cyH, setCyH] = useState(0);
+  const cyanTop = SZ.imgT + SZ.sedanH + SZ.cyanTopGap;
+  const kpiGap =
+    cardH > 0 && cyH > 0
+      ? Math.max(L.gridGap, SZ.kpiAfterCyan + cyanTop + cyH - cardH)
+      : L.gridGap;
 
   const showToast = useCallback(
     (msg: string) => {
@@ -45,18 +52,23 @@ export default function DetailsScreen() {
           <View style={{paddingHorizontal: S.pageMargin, paddingTop: L.gridGap, gap: L.gridGap}}>
           <PlateStatusRow plate={mock.plate} status={mock.status} />
 
-          <VehicleInfoCard
-            speedLabel={mock.speedLabel}
-            speed={mock.speed}
-            updateLabel={mock.updateLabel}
-            update={mock.update}
-            lastLocationLabel={mock.lastLocationLabel}
-            location={mock.location}
-            liveLocation={mock.liveLocation}
-            onLiveLocation={() => showToast('Opening Live Location…')}
-          />
+          <View onLayout={e => setCardH(e.nativeEvent.layout.height)}>
+            <VehicleInfoCard
+              speedLabel={mock.speedLabel}
+              speed={mock.speed}
+              updateLabel={mock.updateLabel}
+              update={mock.update}
+              lastLocationLabel={mock.lastLocationLabel}
+              location={mock.location}
+              liveLocation={mock.liveLocation}
+              onLiveLocation={() => showToast('Opening Live Location…')}
+              onCyanHeight={setCyH}
+            />
+          </View>
 
-          <KpiRow kpis={mock.kpis} />
+          <View style={{marginTop: Math.max(0, kpiGap - L.gridGap)}}>
+            <KpiRow kpis={mock.kpis} />
+          </View>
 
           <SensorBlock
             title={mock.fuelSensor.title}
