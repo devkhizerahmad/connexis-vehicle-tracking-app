@@ -1,0 +1,23 @@
+// common.ts — shared application types
+export interface NavTabItem {
+  key: string;
+  label: string;
+  badge?: string;
+  active?: boolean;
+}
+
+export interface HeaderProps {
+  onBack?: () => void;
+  title?: string;
+}
+
+export interface ToastState {
+  message: string | null;
+  visible: boolean;
+}
+
+/** A single color stop of a (multi-stop) gradient. */
+export interface GradientStop {
+  offset: number;
+  color: string;
+}
