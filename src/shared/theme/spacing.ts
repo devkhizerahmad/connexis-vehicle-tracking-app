@@ -1,0 +1,28 @@
+// spacing.ts — semantic typed spacing scale & layout constants
+export const spacing = {
+  xxs: 2,
+  xs: 4,
+  sm: 8,
+  md: 12,
+  lg: 16,
+  xl: 24,
+  // Layout specific spacings copied verbatim from spec
+  pageMargin: 12,
+  cardGap: 8,
+  vehicleCardPad: 12,
+  tilePad: 8,
+  headerPadH: 12,
+  sectionPadH: 14,
+  statusPadH: 16,
+  chipPadH: 8,
+  gridGap: 8,
+  toastMs: 1800,
+  collapseMs: 250,
+  dropdownWpct: 30,
+  calloutFlex: 3,
+  sideFlex: 2,
+  gridCols: 3,
+} as const;
+
+export const S = spacing;
+export const L = spacing;
