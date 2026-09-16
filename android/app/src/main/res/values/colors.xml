@@ -1,0 +1,4 @@
+<resources>
+    <!-- Splash / window background — one source of truth with src/shared/theme/colors.ts (colors.splash) -->
+    <color name="splashBackground">#F8F3F3</color>
+</resources>
