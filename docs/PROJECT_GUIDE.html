@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ConnexisTracker — Project Guide</title>
+<style>
+  body { font-family: 'Segoe UI', Arial, sans-serif; max-width: 900px; margin: 24px auto; padding: 0 16px; color: #222; line-height: 1.55; }
+  h1 { color: #7A1507; } h2 { color: #A0340E; border-bottom: 1px solid #ECEEF1; padding-bottom: 4px; margin-top: 32px; }
+  pre { background: #F5F6F8; border: 1px solid #E8EAED; border-radius: 8px; padding: 14px; overflow-x: auto; font-size: 13px; }
+  code { background: #F5F6F8; padding: 1px 5px; border-radius: 4px; font-size: 13px; }
+  .note { background: #FFF7E0; border-left: 4px solid #F0B429; padding: 10px 14px; border-radius: 4px; }
+  table { border-collapse: collapse; } td, th { border: 1px solid #C9CED4; padding: 6px 10px; text-align: left; }
+</style>
+</head>
+<body>
+<h1>ConnexisTracker — Project Guide</h1>
+<p>React Native vehicle-tracking app (Connexis). UI pixel specs live in <code>ui-baseline/baseline_record.json</code>.</p>
+
+<h2>S1 — Boot Flow</h2>
+<pre>
+index.js (AppRegistry)
+  └─&gt; App.tsx
+        ├─ RootNavigator mounts IMMEDIATELY on first frame (exactly once, never remounts)
+        └─ SplashOverlay (absolute-fill, zIndex 1000, bg colors.splash #F8F3F3) sits ON TOP
+             ├─ logo spring + 800ms fade (both useNativeDriver: true)
+             ├─ dismiss condition: NavigationContainer.onReady fired AND &gt;= 2400ms elapsed
+             ├─ fade 1 -&gt; 0 over 300ms, then overlay unmounts (splashGone)
+             └─ native safety net: android:windowBackground=@color/splashBackground
+                (android/app/src/main/res/values/styles.xml + colors.xml)
+</pre>
+<p>Result: cold-start sequence is <strong>cream splash → smooth 300ms fade → Home painted</strong>; no black flash.</p>
+<div class="note"><strong>Source of truth:</strong> <code>colors.splash = '#F8F3F3'</code> in <code>src/shared/theme/colors.ts</code> must match <code>&lt;color name="splashBackground"&gt;#F8F3F3&lt;/color&gt;</code> in <code>android/app/src/main/res/values/colors.xml</code>.<br><strong>NOTE:</strong> native XML changes require a full rebuild (<code>npx react-native run-android</code>), not a Metro reload.</div>
+
+<h2>S2 — Navigation</h2>
+<ul>
+  <li><code>src/navigation/RootNavigator.tsx</code>: bottom-tab navigator (Home, Report, Engine Control, Map, Profile) with custom <code>BottomNav</code> tab bar; accepts optional <code>onReady</code> wired to <code>NavigationContainer.onReady</code>.</li>
+  <li>Tab bar hidden on <code>ProfileTab</code> (Profile renders its own full-bleed header + no tab bar).</li>
+  <li>Stacks use <code>headerShown: false</code>; screens use the shared <code>AppHeader</code>.</li>
+</ul>
+
+<h2>S3 — Shared header rule</h2>
+<p><code>AppHeader</code> = device inset + 100dp total height; title center at inset + 60 (<code>contentHeight</code> / <code>contentCenterOffset</code> props). Profile avatar overlaps the gradient by exactly 10dp.</p>
+
+<h2>S4 — Baselines / regression</h2>
+<p><code>ui-baseline/</code> holds 16 frozen reference PNGs + <code>baseline_record.json</code> (SHA-256 per crop + interaction notes: Details fixed header on scroll; scroll round-trip 0 differing rows; avatar overlap 10dp). Compare at 390×844dp (device 780×1688 @2x), excluding the right-edge stride artifact (x ≥ 374).</p>
+
+<h2>S5 — Performance contract (G10)</h2>
+<table>
+  <tr><th>Rule</th><th>Target</th></tr>
+  <tr><td>Home idle re-renders after settle</td><td>0</td></tr>
+  <tr><td><code>console.*</code> in <code>src/</code></td><td>0</td></tr>
+  <tr><td>Static <code>style={{...}}</code> in new/patched code</td><td>0 (use styleFactories / theme tokens)</td></tr>
+</table>
+</body>
+</html>
