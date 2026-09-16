@@ -1,0 +1,65 @@
+{
+  "plate": "Honda Civic (LFA-1464)",
+  "status": "Running",
+  "speedLabel": "Current Speed:",
+  "speed": " 65 km/Hr",
+  "updateLabel": "Last Update:",
+  "update": " 2/10/25 (08:25\u00a0AM)",
+  "lastLocationLabel": "Last Location",
+  "location": "Near Lahore Ring Road Interchange, Kamaran Village Area, Close to Bedian Road, Lahore District, Punjab",
+  "liveLocation": "Live Location",
+  "kpis": [
+    {"icon": "stop", "label": "Stop Time Today", "value": "3hr 5Min"},
+    {"icon": "clock", "label": "Idle Time Today", "value": "0hr 5Min"},
+    {"icon": "route", "label": "KM Driven Today", "value": "23.5 Km"}
+  ],
+  "fuelSensor": {
+    "title": "Fuel Sensor",
+    "dropdown": "Select",
+    "accent": "amber",
+    "tiles": [
+      {"icon": "gauge", "label": "Consumption", "value": "3 Ltr", "trend": "▼ 2%", "trendColor": "red"},
+      {"icon": "droplet", "label": "Tank Volume", "value": "276.3 Ltr", "trend": "▲ 8%", "trendColor": "green"},
+      {"icon": "droplet", "label": "Filling IN", "value": "18 Ltr", "trend": "▲ 8%", "trendColor": "green"},
+      {"icon": "shield", "label": "Fuel Theft", "value": "No"},
+      {"icon": "tank", "label": "Tank Capacity", "value": "200 Ltr"},
+      {"icon": "ruler", "label": "Fuel Level", "value": "45 cm"}
+    ],
+    "banner": {"kind": "alert", "text": "A Sudden Fuel Drop- 3 Ltr observed on : 3/10/25 (08:23 AM)"}
+  },
+  "tempSensor": {
+    "title": "Temperature Sensor",
+    "dropdown": "Select",
+    "accent": "blue",
+    "tiles": [
+      {"icon": "thermo", "label": "Current Temp", "value": "23.5 °C", "status": "Low", "statusColor": "red"},
+      {"icon": "wind", "label": "Co2", "value": "420 ppm", "status": "Good", "statusColor": "green"},
+      {"icon": "droplet", "label": "Humidity", "value": "60 %", "status": "Moderate", "statusColor": "orange"},
+      {"icon": "droplet", "label": "Dew Point", "value": "16.8 °C", "status": "Moderate", "statusColor": "orange"},
+      {"icon": "leaf", "label": "Air Quality Index", "value": "12 µg/m3", "status": "Good", "statusColor": "green"},
+      {"icon": "gauge", "label": "Pressure", "value": "1013.3 Hpa", "status": "Good", "statusColor": "green"}
+    ],
+    "banner": {"kind": "success", "text": "Good Humidity observation : 3/10/25 (12:25 AM)"}
+  },
+  "routes": [
+    {"n": "1", "color": "green", "address": "Gar fish Farm kotli Behram Sialkot, Punjab", "time": "10:08 PM-10:40 PM", "status": "Moving", "statusColor": "green", "duration": "40m- 8s"},
+    {"n": "2", "color": "amber", "address": "H 3 Phase 2 Johar Town Lahore, Punjab", "time": "9:40 PM-10:08 PM", "status": "Idling", "statusColor": "amber", "duration": "20m- 28s"},
+    {"n": "3", "color": "red", "address": "Lda Avenue Phase 1 Lahore, Punjab", "time": "8:08 PM-9:40 PM", "status": "Stop", "statusColor": "black", "duration": "38m- 28s"}
+  ],
+  "viewMore": "View More ->",
+  "reports": [
+    {"icon": "steering", "label": "Journey Report", "color": "blue1"},
+    {"icon": "flag", "label": "History Report", "color": "slate"},
+    {"icon": "fence", "label": "Geofence Report", "color": "sky"},
+    {"icon": "group", "label": "Geofence Report", "color": "teal"},
+    {"icon": "map", "label": "Trip Report", "color": "brick"},
+    {"icon": "box", "label": "Other", "color": "gold"}
+  ],
+  "activity": {
+    "title": "Overall Activity (Last 4 Weeks)",
+    "tabs": ["Driving Score", "Mileage", "Fuel"],
+    "score": 64,
+    "advice": "Please Control ' OVER SPEED ' To Ensure Your Safety"
+  },
+  "nav": ["Home", "Report", "Engine Control", "Map", "Profile"]
+}
