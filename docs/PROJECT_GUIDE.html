@@ -4,53 +4,294 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ConnexisTracker — Project Guide</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
 <style>
-  body { font-family: 'Segoe UI', Arial, sans-serif; max-width: 900px; margin: 24px auto; padding: 0 16px; color: #222; line-height: 1.55; }
-  h1 { color: #7A1507; } h2 { color: #A0340E; border-bottom: 1px solid #ECEEF1; padding-bottom: 4px; margin-top: 32px; }
-  pre { background: #F5F6F8; border: 1px solid #E8EAED; border-radius: 8px; padding: 14px; overflow-x: auto; font-size: 13px; }
-  code { background: #F5F6F8; padding: 1px 5px; border-radius: 4px; font-size: 13px; }
-  .note { background: #FFF7E0; border-left: 4px solid #F0B429; padding: 10px 14px; border-radius: 4px; }
-  table { border-collapse: collapse; } td, th { border: 1px solid #C9CED4; padding: 6px 10px; text-align: left; }
+  body { font-family:'Segoe UI',Arial,sans-serif; max-width:960px; margin:24px auto; padding:0 16px; color:#222; line-height:1.55; }
+  h1 { color:#7A1507; } h2 { color:#A0340E; border-bottom:1px solid #ECEEF1; padding-bottom:4px; margin-top:34px; } h3 { color:#333; margin-bottom:4px; }
+  pre { background:#F5F6F8; border:1px solid #E8EAED; border-radius:8px; padding:14px; overflow-x:auto; font-size:13px; }
+  code { background:#F5F6F8; padding:1px 5px; border-radius:4px; font-size:13px; }
+  a { color:#A0340E; }
+  .note { background:#FFF7E0; border-left:4px solid #F0B429; padding:10px 14px; border-radius:4px; }
+  .ctx { background:#EAF4FF; border-left:4px solid #29B6F6; padding:12px 16px; border-radius:4px; }
+  table { border-collapse:collapse; width:100%; margin:8px 0; } td,th { border:1px solid #C9CED4; padding:6px 10px; text-align:left; font-size:13px; vertical-align:top; }
+  nav.toc { position:sticky; top:0; background:#fff; border-bottom:1px solid #E8EAED; padding:8px 4px; z-index:10; font-size:13px; }
+  nav.toc a { margin-right:10px; text-decoration:none; }
+  .legend { font-size:12.5px; margin:6px 0 2px; } .badge { display:inline-block; padding:2px 8px; border-radius:10px; margin:2px 4px 2px 0; border:1px solid; }
+  .b-ui{background:#DCFCE7;border-color:#16A34A;} .b-nav{background:#DBEAFE;border-color:#2563EB;} .b-data{background:#FFEDD5;border-color:#EA580C;}
+  .b-native{background:#EDE9FE;border-color:#7C3AED;} .b-theme{background:#F3E8D8;border-color:#B08954;} .b-dec{background:#FFF;border-color:#666;}
+  details { margin:6px 0; } summary { cursor:pointer; color:#555; font-size:13px; }
+  ul.tree { list-style:none; padding-left:18px; } ul.tree li { margin:2px 0; } ul.tree>li { padding-left:0; }
+  .mermaid { background:#FCFCFD; border:1px solid #ECEEF1; border-radius:8px; padding:10px; text-align:center; }
+  .meta { color:#777; font-size:12.5px; }
 </style>
 </head>
 <body>
 <h1>ConnexisTracker — Project Guide</h1>
-<p>React Native vehicle-tracking app (Connexis). UI pixel specs live in <code>ui-baseline/baseline_record.json</code>.</p>
+<p class="meta">Last verified: 2026-09-17 · Stack: bare React Native CLI + Hermes + TypeScript (no Expo) · Formats: <code>docs/PROJECT_GUIDE.html</code> + <code>docs/PROJECT_GUIDE.md</code> (same content)</p>
 
-<h2>S1 — Boot Flow</h2>
+<div class="legend"><strong>Shape legend (har diagram me):</strong>
+<span class="badge b-ui">▭ screen / component</span><span class="badge b-nav">▭ navigation</span><span class="badge b-data">⬭ hook / (cyl) data-service-mock</span><span class="badge b-dec">◇ decision</span><span class="badge b-native">⬡ native / config</span><span class="badge b-theme">▱ theme token</span>
+</div>
+
+<nav class="toc">
+<a href="#s0">S0 AI Context</a><a href="#s1">S1 Boot</a><a href="#s2">S2 Navigation</a><a href="#s3">S3 Screen Hierarchy</a><a href="#s4">S4 Folder Map</a><a href="#s5">S5 Change-Where</a><a href="#s6">S6 Data Flow</a><a href="#s7">S7 Styling</a><a href="#s8">S8 Performance</a><a href="#s9">S9 Debugging</a><a href="#s10">S10 Glossary</a><a href="#s11">S11 Docs Rule</a>
+</nav>
+
+<h2 id="s0">S0 — AI-Agent Quick Context (sirf ye box parh kar kaam shuru kren)</h2>
+<div class="ctx">
+<ol>
+<li><strong>Stack:</strong> bare React Native CLI + Hermes, TypeScript. Entry: <a href="../index.js">index.js</a> → <a href="../App.tsx">App.tsx</a>.</li>
+<li><strong>Architecture:</strong> feature-first — <code>src/features/*</code> (screens+components+hooks+services+mocks), <code>src/shared/*</code> (reusable), <code>src/navigation/*</code>.</li>
+<li><strong>Path aliases:</strong> <code>@shared/*, @features/*, @navigation/*</code> — <a href="../babel.config.js">babel.config.js</a> + <a href="../tsconfig.json">tsconfig.json</a> me <em>hamesha dono sath</em> edit kren.</li>
+<li><strong>Boot:</strong> RootNavigator pehle frame pe mount (ek baar), SplashOverlay upar fade hota hai (<code>onReady &amp;&amp; ≥2400ms</code>), native safety-net <code>windowBackground #F8F3F3</code>.</li>
+<li><strong>Tabs (custom BottomNav):</strong> Home, Report, Engine Control, Map, Profile. Built screens: <strong>Details</strong> (HomeStack), <strong>Profile</strong> (ProfileStack). Baqi shells.</li>
+<li><strong>UI-FREEZE contract:</strong> approved screens pixel-frozen; baselines <a href="../ui-baseline/baseline_record.json">ui-baseline/baseline_record.json</a> + 16 PNGs; compare 390×844dp, right-edge stride x≥374 exclude.</li>
+<li><strong>Performance contract G1–G10:</strong> memo/useCallback/useMemo, FlatList rules, useNativeDriver, StyleSheet.create, zero console.log — gate results har task me report.</li>
+<li><strong>Styling:</strong> theme tokens → <code>styles.ts</code> (StyleSheet.create); JSX me static inline style = 0; hex sirf <code>src/shared/theme/</code> me.</li>
+<li><strong>Data:</strong> screen → hook → service → mock JSON (API-ready signatures); screens mocks directly import nahi karti.</li>
+<li><strong>Docs rule:</strong> koi bhi structural change = dono guide files usi task me update.</li>
+</ol>
+</div>
+
+<h2 id="s1">S1 — Boot &amp; Splash Flow</h2>
+<div class="mermaid">
+flowchart TD
+  U[/User launches app/] --> N{{index.js · AppRegistry}}
+  N --> A[App.tsx]
+  A --> R[RootNavigator · mounts ONCE]
+  A --> S[SplashOverlay · absoluteFill z1000 · #F8F3F3]
+  R --> T[Tab.Navigator + 5 stacks]
+  T --> D{NavigationContainer.onReady AND elapsed ≥ 2400ms?}
+  D -- no --> D
+  D -- yes --> F[Fade 1→0 · 300ms · useNativeDriver]
+  F --> G[SplashOverlay unmounts]
+  W{{android styles.xml · windowBackground #F8F3F3}} -. safety net .-> A
+  classDef nav fill:#DBEAFE,stroke:#2563EB; classDef ui fill:#DCFCE7,stroke:#16A34A; classDef native fill:#EDE9FE,stroke:#7C3AED;
+  class R,T nav; class A,S,F,G ui; class N,W native;
+</div>
+<details><summary>ASCII fallback</summary>
 <pre>
 index.js (AppRegistry)
-  └─&gt; App.tsx
-        ├─ RootNavigator mounts IMMEDIATELY on first frame (exactly once, never remounts)
-        └─ SplashOverlay (absolute-fill, zIndex 1000, bg colors.splash #F8F3F3) sits ON TOP
-             ├─ logo spring + 800ms fade (both useNativeDriver: true)
-             ├─ dismiss condition: NavigationContainer.onReady fired AND &gt;= 2400ms elapsed
-             ├─ fade 1 -&gt; 0 over 300ms, then overlay unmounts (splashGone)
-             └─ native safety net: android:windowBackground=@color/splashBackground
-                (android/app/src/main/res/values/styles.xml + colors.xml)
-</pre>
-<p>Result: cold-start sequence is <strong>cream splash → smooth 300ms fade → Home painted</strong>; no black flash.</p>
-<div class="note"><strong>Source of truth:</strong> <code>colors.splash = '#F8F3F3'</code> in <code>src/shared/theme/colors.ts</code> must match <code>&lt;color name="splashBackground"&gt;#F8F3F3&lt;/color&gt;</code> in <code>android/app/src/main/res/values/colors.xml</code>.<br><strong>NOTE:</strong> native XML changes require a full rebuild (<code>npx react-native run-android</code>), not a Metro reload.</div>
+ └─&gt; App.tsx
+      ├─ RootNavigator (mounts immediately, once) ──&gt; Tab.Navigator (5 stacks)
+      └─ SplashOverlay (absoluteFill, z1000, #F8F3F3) ON TOP
+           ├─ logo spring + fade (useNativeDriver: true)
+           ├─ dismiss: onReady fired AND ≥2400ms ──&gt; fade 300ms ──&gt; unmount
+           └─ safety net: android:windowBackground=@color/splashBackground
+</pre></details>
+<p>Cold-start sequence: <strong>cream splash → 300ms fade → Home</strong>; koi black frame nahi.</p>
+<div class="note"><strong>Source of truth:</strong> <code>colors.splash='#F8F3F3'</code> in <a href="../src/shared/theme/colors.ts">src/shared/theme/colors.ts</a> must equal <code>&lt;color name="splashBackground"&gt;</code> in <a href="../android/app/src/main/res/values/colors.xml">android/…/colors.xml</a>. Native XML change = full rebuild (<code>npx react-native run-android</code>), Metro reload nahi.</div>
 
-<h2>S2 — Navigation</h2>
-<ul>
-  <li><code>src/navigation/RootNavigator.tsx</code>: bottom-tab navigator (Home, Report, Engine Control, Map, Profile) with custom <code>BottomNav</code> tab bar; accepts optional <code>onReady</code> wired to <code>NavigationContainer.onReady</code>.</li>
-  <li>Tab bar hidden on <code>ProfileTab</code> (Profile renders its own full-bleed header + no tab bar).</li>
-  <li>Stacks use <code>headerShown: false</code>; screens use the shared <code>AppHeader</code>.</li>
-</ul>
-
-<h2>S3 — Shared header rule</h2>
-<p><code>AppHeader</code> = device inset + 100dp total height; title center at inset + 60 (<code>contentHeight</code> / <code>contentCenterOffset</code> props). Profile avatar overlaps the gradient by exactly 10dp.</p>
-
-<h2>S4 — Baselines / regression</h2>
-<p><code>ui-baseline/</code> holds 16 frozen reference PNGs + <code>baseline_record.json</code> (SHA-256 per crop + interaction notes: Details fixed header on scroll; scroll round-trip 0 differing rows; avatar overlap 10dp). Compare at 390×844dp (device 780×1688 @2x), excluding the right-edge stride artifact (x ≥ 374).</p>
-
-<h2>S5 — Performance contract (G10)</h2>
+<h2 id="s2">S2 — Navigation Map</h2>
+<div class="mermaid">
+flowchart TD
+  RT[RootNavigator · custom BottomNav] --> HS[HomeStack]
+  RT --> MS[MapStack]
+  RT --> RS[ReportStack · shell]
+  RT --> ES[EngineControlStack · shell]
+  RT --> PS[ProfileStack]
+  HS --> HO[HomeScreen · shell]
+  HO -- tap asset card --> DE[DetailsScreen ✅]
+  MS --> LM[LiveMapScreen · shell]
+  LM -- View History --> HI[HistoryScreen · shell]
+  HI -- Reports --> RE[ReportsScreen · shell]
+  DE -- View on Map · goToLiveMap --> LM
+  PS --> PR[ProfileScreen ✅]
+  classDef nav fill:#DBEAFE,stroke:#2563EB; classDef ui fill:#DCFCE7,stroke:#16A34A;
+  class RT,HS,MS,RS,ES,PS nav; class HO,DE,LM,HI,RE,PR ui;
+</div>
 <table>
-  <tr><th>Rule</th><th>Target</th></tr>
-  <tr><td>Home idle re-renders after settle</td><td>0</td></tr>
-  <tr><td><code>console.*</code> in <code>src/</code></td><td>0</td></tr>
-  <tr><td>Static <code>style={{...}}</code> in new/patched code</td><td>0 (use styleFactories / theme tokens)</td></tr>
+<tr><th>Screen</th><th>Route / Stack</th><th>Params</th><th>Reached from</th><th>File</th><th>Status</th></tr>
+<tr><td>Home</td><td>HomeStack/Home</td><td>–</td><td>tab</td><td><a href="../src/features/home/screens/HomeScreen/">features/home/screens/HomeScreen/</a></td><td>shell</td></tr>
+<tr><td>Details</td><td>HomeStack/Details</td><td>vehicleId</td><td>Home card tap / TEMP INITIAL_ROUTE</td><td><a href="../src/features/home/screens/DetailsScreen/">features/home/screens/DetailsScreen/</a></td><td>built ✅</td></tr>
+<tr><td>LiveMap</td><td>MapStack/LiveMap</td><td>vehicleId?</td><td>tab / goToLiveMap()</td><td><a href="../src/features/map/screens/">features/map/screens/LiveMapScreen/</a></td><td>shell</td></tr>
+<tr><td>History</td><td>MapStack/History</td><td>vehicleId</td><td>LiveMap "View History"</td><td><a href="../src/features/map/screens/">features/map/screens/HistoryScreen/</a></td><td>shell</td></tr>
+<tr><td>Reports</td><td>MapStack/Reports</td><td>vehicleId?</td><td>History</td><td><a href="../src/features/reports/screens/">features/reports/screens/ReportsScreen/</a></td><td>shell</td></tr>
+<tr><td>Profile</td><td>ProfileStack/Profile</td><td>–</td><td>tab (tab bar hidden)</td><td><a href="../src/features/profile/screens/ProfileScreen/">features/profile/screens/ProfileScreen/</a></td><td>built ✅</td></tr>
 </table>
+<p>Cross-tab helper: <a href="../src/shared/utils/navigationHelpers.ts">shared/utils/navigationHelpers.ts</a> → <code>goToLiveMap(vehicleId)</code>. Stacks: <code>headerShown:false</code>; screens shared <a href="../src/shared/components/layout/AppHeader/AppHeader.tsx">AppHeader</a> use karti hain.</p>
+
+<h2 id="s3">S3 — Screen Visual Hierarchy (built screens)</h2>
+<h3>DetailsScreen ❄ frozen</h3>
+<ul class="tree">
+<li><a href="../src/features/home/screens/DetailsScreen/DetailsScreen.tsx">DetailsScreen</a> → <a href="../src/features/home/screens/DetailsScreen/styles.ts">styles.ts</a>
+  <ul class="tree">
+  <li><a href="../src/shared/components/layout/AppHeader/AppHeader.tsx">AppHeader</a> — <strong>ScrollView ke bahar (fixed)</strong></li>
+  <li>ScrollView
+    <ul class="tree">
+    <li><a href="../src/shared/components/vehicle/PlateStatusRow/">PlateStatusRow</a> (59/41 tabs)</li>
+    <li><a href="../src/shared/components/vehicle/VehicleInfoCard/">VehicleInfoCard</a> + <a href="../src/shared/components/vehicle/CyanLocationBox/">CyanLocationBox</a> (overlay, card ke bahar hang)</li>
+    <li><a href="../src/features/home/components/KpiRow/">KpiRow</a></li>
+    <li><a href="../src/features/home/components/SensorBlock/">SensorBlock</a> ×2 (Fuel, Temperature)</li>
+    <li><a href="../src/features/home/components/RoutesCard/">RoutesCard</a> (collapsible)</li>
+    <li><a href="../src/features/home/components/QuickReportGrid/">QuickReportGrid</a> (collapsible)</li>
+    <li><a href="../src/features/home/components/OverallActivity/">OverallActivity</a> (tabs + donut)</li>
+    </ul></li>
+  </ul></li>
+</ul>
+<table>
+<tr><th>Frozen geometry ❄</th><th>Value</th></tr>
+<tr><td>Plate row</td><td>h44 · 59/45 split · green tab + check icon</td></tr>
+<tr><td>Car image</td><td>115×68 @ (left 14, top 27) · face right</td></tr>
+<tr><td>Cyan box</td><td>56% width · top = car bottom + 22 · ~27pt card ke neeche hang · body 3 lines</td></tr>
+<tr><td>Live Location button</td><td>top = cyan top · left = right-col text start</td></tr>
+<tr><td>Card bottom / KPI gap</td><td>button + 23 · cyan bottom + 18</td></tr>
+<tr><td>Donut</td><td>gap-first fill = score% · dot 3–4pt alag · 64% default</td></tr>
+<tr><td>Header</td><td>scroll pe fixed (content slides under)</td></tr>
+</table>
+<h3>ProfileScreen ❄ frozen</h3>
+<ul class="tree">
+<li><a href="../src/features/profile/screens/ProfileScreen/ProfileScreen.tsx">ProfileScreen</a>
+  <ul class="tree">
+  <li><a href="../src/features/profile/components/ProfileHeader/">ProfileHeader</a> (delegates to shared AppHeader)</li>
+  <li><a href="../src/features/profile/components/ProfileAvatar/">ProfileAvatar</a> (zIndex above header)</li>
+  <li>Form card → <a href="../src/features/profile/components/ProfileFormField/">ProfileFormField</a> ×5 (memoized)</li>
+  <li><a href="../src/features/profile/components/ProfileActions/">ProfileActions</a> (Update + Logout)</li>
+  </ul></li>
+</ul>
+<table>
+<tr><th>Frozen geometry ❄</th><th>Value</th></tr>
+<tr><td>Header</td><td>inset + 100 total · title center inset + 60 (contentCenterOffset 32)</td></tr>
+<tr><td>Avatar</td><td>80pt · overlap 10pt ON TOP of gradient · full circle visible</td></tr>
+<tr><td>Form card</td><td>top = avatar bottom + 15 · marginH 35 · dividers rows 1–4 only</td></tr>
+<tr><td>Update button</td><td>marginH 42 · h52 · r2 · #CD0716 · marginTop 32</td></tr>
+<tr><td>Logout</td><td>marginTop 40 · letterSpacing · muted red text only</td></tr>
+</table>
+
+<h2 id="s4">S4 — Folder Map</h2>
+<pre>
+src/
+├─ navigation/      RootNavigator, stacks/, types.ts        (routes yahan)
+├─ shared/
+│  ├─ components/   layout/ vehicle/ controls/ feedback/ icons/
+│  ├─ theme/        colors spacing sizes radii typography shadows profile
+│  ├─ hooks/        useCollapsible, useDonutProgress
+│  ├─ utils/        format, styleFactories, navigationHelpers
+│  └─ types/        vehicle, common
+├─ features/
+│  ├─ home/         screens(Details✅,Home) components hooks services types mocks
+│  ├─ profile/      screens(Profile✅) components hooks services types mocks
+│  ├─ map/          screens(shells) components services types
+│  ├─ reports/      screens(shell) components services
+│  ├─ engineControl/ └─ profile placeholders
+android/app/src/main/res/values/   styles.xml, colors.xml (windowBackground)
+ui-baseline/        16 PNGs + baseline_record.json (SHA-256)
+</pre>
+<table>
+<tr><th>Path</th><th>Responsibility</th><th>Yahan change karo jab…</th></tr>
+<tr><td><a href="../src/navigation/RootNavigator.tsx">navigation/RootNavigator.tsx</a></td><td>tabs + custom tab bar + onReady</td><td>naya tab / tab order</td></tr>
+<tr><td><a href="../src/navigation/stacks/">navigation/stacks/</a></td><td>har tab ka stack</td><td>nayi screen route</td></tr>
+<tr><td><a href="../src/shared/theme/">shared/theme/</a></td><td>saare colors/sizes/spacing/radii/typography/shadows</td><td>koi bhi visual value</td></tr>
+<tr><td><a href="../src/shared/components/vehicle/">shared/components/vehicle/</a></td><td>PlateStatusRow, VehicleInfoCard, CyanLocationBox, VehicleChip</td><td>vehicle cards (Home/Details/LiveMap shared)</td></tr>
+<tr><td><a href="../src/shared/hooks/">shared/hooks/</a></td><td>collapse + donut logic</td><td>animation/state behavior</td></tr>
+<tr><td><a href="../src/features/home/services/vehicleService.ts">home/services/vehicleService.ts</a></td><td>getVehicleList / getVehicleDetails</td><td>API lagani ho (mock replace)</td></tr>
+<tr><td><a href="../src/features/home/mocks/">home/mocks/</a></td><td>details/vehicles mock JSON</td><td>display text/data (API se pehle)</td></tr>
+<tr><td><a href="../src/features/profile/services/profileService.ts">profile/services/profileService.ts</a></td><td>getProfile / updateProfile stub</td><td>profile API</td></tr>
+</table>
+
+<h2 id="s5">S5 — What To Change Where</h2>
+<table>
+<tr><th>Task</th><th>File(s)</th><th>Example</th></tr>
+<tr><td>Koi bhi color</td><td><a href="../src/shared/theme/colors.ts">theme/colors.ts</a></td><td><code>status.running</code></td></tr>
+<tr><td>Spacing / heights / sizes</td><td><a href="../src/shared/theme/spacing.ts">spacing.ts</a> · <a href="../src/shared/theme/sizes.ts">sizes.ts</a></td><td><code>sizes.plateRowH</code></td></tr>
+<tr><td>Radius / shadow</td><td><a href="../src/shared/theme/radii.ts">radii.ts</a> · <a href="../src/shared/theme/shadows.ts">shadows.ts</a></td><td><code>radii.card</code></td></tr>
+<tr><td>Splash color</td><td>colors.ts + android colors.xml + styles.xml (teeno sath)</td><td><code>#F8F3F3</code></td></tr>
+<tr><td>Header height / title offset</td><td><a href="../src/shared/components/layout/AppHeader/AppHeader.tsx">AppHeader.tsx</a> props</td><td><code>contentHeight</code>, <code>contentCenterOffset</code></td></tr>
+<tr><td>Avatar overlap / z-order</td><td>ProfileAvatar styles + ProfileScreen</td><td>overlap 10, zIndex</td></tr>
+<tr><td>Details ka text/data</td><td><a href="../src/features/home/mocks/details.mock.json">details.mock.json</a></td><td>address string</td></tr>
+<tr><td>Kisi card ka layout</td><td>component .tsx + us ka styles.ts</td><td>VehicleInfoCard</td></tr>
+<tr><td>Naya icon</td><td><a href="../src/shared/components/icons/">shared/components/icons/</a> + barrel</td><td>export name keep</td></tr>
+<tr><td>Nayi screen (Home stack)</td><td>stacks/HomeStack.tsx + navigation/types.ts</td><td>params typed</td></tr>
+<tr><td>Donut behavior</td><td><a href="../src/shared/hooks/useDonutProgress.ts">useDonutProgress.ts</a> + OverallActivity</td><td>sweep math</td></tr>
+<tr><td>Collapse behavior</td><td><a href="../src/shared/hooks/useCollapsible.ts">useCollapsible.ts</a> + Collapsible/</td><td>250ms timing</td></tr>
+<tr><td>Path aliases</td><td>babel.config.js + tsconfig.json (dono sath)</td><td>@shared/*</td></tr>
+<tr><td>Baselines re-capture</td><td>ui-baseline/ (PNGs + record.json hashes)</td><td>har freeze ke baad</td></tr>
+</table>
+
+<h2 id="s6">S6 — Data Flow</h2>
+<div class="mermaid">
+sequenceDiagram
+  participant S as Screen
+  participant H as hook (stadium)
+  participant V as service
+  participant M as mock JSON
+  S->>H: render
+  H->>V: getVehicleDetails(vehicleId)
+  V->>M: read (today)
+  M-->>V: data
+  V-->>H: Promise&lt;data&gt;
+  H-->>S: memoized state
+  Note over V,M: future: mock read → HTTP API (signature same)
+</div>
+<details><summary>ASCII fallback</summary>
+<pre>Screen ──&gt; useVehicleDetails(id) ──&gt; vehicleService.getVehicleDetails(id) ──&gt; details.mock.json
+   ▲                                        (future: HTTP API, same signature)
+   └──────── memoized state ◄──────── Promise&lt;data&gt;</pre></details>
+<p>Rule: screens mocks directly import nahi karti; route params me sirf <code>vehicleId</code> pass hota hai.</p>
+
+<h2 id="s7">S7 — Styling System</h2>
+<div class="mermaid">
+flowchart LR
+  T[(theme tokens)] --> ST[styles.ts · StyleSheet.create]
+  ST --> C[Component JSX]
+  SF([styleFactories · dynamic only]) --> C
+  classDef theme fill:#F3E8D8,stroke:#B08954; classDef ui fill:#DCFCE7,stroke:#16A34A;
+  class T theme; class ST,C ui;
+</div>
+<p><strong>3 bans:</strong> (1) JSX me static <code>style={{...}}</code> = 0; (2) hex/magic numbers sirf theme me; (3) legacy <code>C/SZ/R/FS</code> identifiers = 0.</p>
+<pre>// WRONG                          // RIGHT
+&lt;View style={{marginTop: 12}}&gt;    &lt;View style={styles.card}&gt;   // styles.ts: card:{marginTop: spacing.md}</pre>
+
+<h2 id="s8">S8 — Performance Contract (G1–G10)</h2>
+<table>
+<tr><th>Rule</th><th>Target</th><th>Kaise verify kren</th></tr>
+<tr><td>G1 Hermes + light deps</td><td>enabled / justified</td><td>gradle hermesEnabled; task report</td></tr>
+<tr><td>G2 Render minimalism</td><td>memo/useCallback/useMemo; stable keys</td><td>profiler: idle re-renders 0</td></tr>
+<tr><td>G3 Lists</td><td>FlatList &gt;10 rows, virtualized</td><td>scroll profiling</td></tr>
+<tr><td>G4 Styles</td><td>module-scope StyleSheet.create</td><td>grep static inline = 0</td></tr>
+<tr><td>G5 Animations</td><td>useNativeDriver:true (transform/opacity)</td><td>grep driver flags</td></tr>
+<tr><td>G6 Images</td><td>require + explicit w/h + resizeMethod</td><td>code review</td></tr>
+<tr><td>G7 JS-thread hygiene</td><td>no console.log / render-time parsing</td><td>grep console.* = 0</td></tr>
+<tr><td>G8 Startup</td><td>thin App.tsx, lazy screens</td><td>bundle entry compare</td></tr>
+<tr><td>G9 Context</td><td>split + static</td><td>review</td></tr>
+<tr><td>G10 Gates per task</td><td>profiler idle 0 · scroll smooth · grep clean</td><td>task summary table</td></tr>
+</table>
+
+<h2 id="s9">S9 — Debugging Guide</h2>
+<pre>npx react-native start --reset-cache     # Metro + cache clear
+npm run android                          # build+run (native changes ke liye zaroori)
+adb reverse tcp:8081 tcp:8081            # device → Metro
+adb logcat | grep ReactNativeJS          # runtime logs
+adb exec-out screencap -p &gt; shot.png     # baseline-class screenshot
+# Windows stale cache: Task Manager → sab node.exe kill → dobara start</pre>
+<table>
+<tr><th>Red-screen type</th><th>Pehchan</th><th>Fix order</th></tr>
+<tr><td>UnableToResolveError (HTTP 500)</td><td>alias/module not found</td><td>1 alias babel+tsconfig dono · 2 extensions list (.ts,.tsx,…) · 3 <code>--reset-cache</code> · 4 node.exe kill</td></tr>
+<tr><td>Runtime TypeError</td><td>stack trace me pehli app-file line aap ki hai</td><td>file:line kholen → last change recall → guard/optional chain</td></tr>
+<tr><td>Yellow warnings</td><td>non-fatal</td><td>deprecated API/deps update; ignore if documented</td></tr>
+</table>
+<ol><li>Error header parho (type identify).</li><li>File:line kholen.</li><li>Last change yaad kren (diff soch).</li><li>Cache reset + restart.</li><li>Logs ke sath reproduce kren.</li></ol>
+<div class="note"><strong>UI-FREEZE check:</strong> 390×844dp screenshot len → <code>ui-baseline/</code> PNGs ke sath overlay (full + crops); right-edge stride x≥374 exclude; koi diff = task fail. <strong>Case study:</strong> black flash = splash unmount → navigator init gap → default black windowBackground; fix = overlay+onReady fade + windowBackground #F8F3F3 (S1).</div>
+
+<h2 id="s10">S10 — Glossary</h2>
+<table>
+<tr><td>Metro</td><td>RN ka bundler/dev-server (red-screens isi se aati hain)</td></tr>
+<tr><td>Babel + module-resolver</td><td>compile-time transforms + path alias rewrite</td></tr>
+<tr><td>Alias</td><td>@shared/@features/@navigation — babel+tsconfig dono me</td></tr>
+<tr><td>Tab vs Stack</td><td>Tab = 5 parallel roots; Stack = ek tab ke andar push screens</td></tr>
+<tr><td>Hook</td><td>state/logic reuse (useCollapsible, useDonutProgress)</td></tr>
+<tr><td>Service</td><td>data layer (mock today, API kal)</td></tr>
+<tr><td>Token</td><td>theme ki named value (colors.splash)</td></tr>
+<tr><td>React.memo / useCallback</td><td>re-render rokne ke tools</td></tr>
+<tr><td>StyleSheet.create</td><td>RN-standard static styles (module scope)</td></tr>
+<tr><td>onReady</td><td>NavigationContainer ka "navigator tayyar" event</td></tr>
+<tr><td>windowBackground</td><td>Android native window color (gap frames me dikhta hai)</td></tr>
+<tr><td>zIndex / elevation</td><td>paint order (iOS / Android) — avatar-over-header isi se</td></tr>
+</table>
+
+<h2 id="s11">S11 — Keep Docs Alive</h2>
+<p>Nayi screen, alias, dependency, token module ya native change = <strong>dono</strong> guide files usi task me update (S9 rule). Footer: <em>Last verified 2026-09-17 · verified paths: is file ke saare links disk pe mojood hain.</em></p>
+
+<script>mermaid.initialize({ startOnLoad:true, theme:'neutral' });</script>
 </body>
 </html>
