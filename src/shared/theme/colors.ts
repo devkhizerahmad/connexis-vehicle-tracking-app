@@ -99,6 +99,9 @@ export const colors = {
   reportTeal: '#009688',
   reportBrick: '#C0392B',
   reportGold: '#EFAF00',
+  // PATCH I2: shared AppHeader gradient — bright red top fading to black bottom.
+  // Used by react-native-linear-gradient (LinearGradient) in AppHeader.
+  gradientHeader: ['#EA0E0E', '#000000'] as const,
   // PATCH H1: splash bg — must match android .../values/colors.xml splashBackground
   splash: '#F8F3F3',
 } as const;
