@@ -1,11 +1,12 @@
-// AppHeader.tsx — single shared edge-to-edge gradient header (Details + Profile)
+// AppHeader.tsx — single shared edge-to-edge gradient header (Details + Profile).
+// PATCH I3: gradient band is now a native LinearGradient (react-native-linear-gradient)
+// using colors.gradientHeader (#EA0E0E → #000000, vertical). Content layer unchanged.
 import React from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { MultiStopGradient, VerticalGradient } from '@shared/components/feedback/Gradient';
 import { Chevron } from '@shared/components/icons';
 import { colors, sizes } from '@shared/theme';
-import { GradientStop } from '@shared/types/common';
 import { makeHeightStyle } from '@shared/utils/styleFactories';
 import { styles } from './styles';
 
@@ -14,7 +15,6 @@ export function AppHeader({
   title = 'Details',
   contentHeight = sizes.appBar,
   contentCenterOffset = 0,
-  gradientStops,
   showAvatar = true,
 }: {
   onBack?: () => void;
@@ -23,19 +23,21 @@ export function AppHeader({
   contentHeight?: number;
   /** Vertical offset so a taller band can place the title row's centre lower. */
   contentCenterOffset?: number;
-  /** Multi-stop gradient override (e.g. the Profile artboard stops). */
-  gradientStops?: readonly GradientStop[];
   showAvatar?: boolean;
 }) {
   const insets = useSafeAreaInsets();
   return (
-    <View style={styles.container}>
-      {gradientStops ? (
-        <MultiStopGradient height={insets.top + contentHeight} stops={gradientStops} />
-      ) : (
-        <VerticalGradient height={insets.top + contentHeight} />
-      )}
-      <View style={StyleSheet.absoluteFill}>
+    // PATCH I3: explicit height (inset + content band) — the native gradient is
+    // absolute-filled, so the container itself must size the header again.
+    <View style={[styles.container, makeHeightStyle(insets.top + contentHeight)]}>
+      {/* PATCH I3: native vertical gradient — top #EA0E0E to bottom #000000 */}
+      <LinearGradient
+        colors={[...colors.gradientHeader]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 1 }}
+        style={styles.gradientFill}
+      />
+      <View style={[StyleSheet.absoluteFill, styles.contentLayer]}>
         <View style={makeHeightStyle(insets.top + contentCenterOffset)} />
         <View style={styles.appBar}>
           <View style={styles.leftContainer}>

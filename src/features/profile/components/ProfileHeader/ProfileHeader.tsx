@@ -1,5 +1,7 @@
 // ProfileHeader.tsx — thin wrapper: the single shared AppHeader with the
-// Profile artboard configuration (100pt content band + profile gradient stops).
+// Profile configuration (100pt content band + lower title centre).
+// PATCH I3: gradient now comes from the shared AppHeader (colors.gradientHeader);
+// the per-feature gradientStops override was removed.
 import React from 'react';
 import AppHeader from '@shared/components/layout/AppHeader';
 import { profileTokens } from '@shared/theme';
@@ -17,7 +19,6 @@ export function ProfileHeader({
       onBack={onBack}
       contentHeight={profileTokens.size.headerBar}
       contentCenterOffset={profileTokens.size.headerCenterOffset}
-      gradientStops={profileTokens.gradientStops}
       showAvatar={false}
     />
   );
