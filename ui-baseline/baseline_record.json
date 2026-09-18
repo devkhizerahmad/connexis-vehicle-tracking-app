@@ -1,109 +1,114 @@
-﻿{
-    "targetResolution":  "390x844",
-    "deviceCapture":  "780x1688 @2x (R9YR30BS1LJ, wm 780x1688 / 320dpi)",
-    "baselineTimestamp":  "2026-09-16T14:18:49+05:00",
-    "components":  [
-                       "AppHeader",
-                       "PlateStatusRow",
-                       "VehicleInfoCard (with CyanLocationBox overflow)",
-                       "KpiRow",
-                       "SensorBlock (Fuel)",
-                       "SensorBlock (Temp)",
-                       "RoutesCard (Collapsible)",
-                       "QuickReportGrid (Collapsible)",
-                       "OverallActivity (Donut 64% with dot separated by 3-4pt)",
-                       "BottomNav (5 tabs)",
-                       "ProfileScreen (header+avatar, form card, actions)"
-                   ],
-    "interactionBaseline":  {
-                                "routesCollapsible":  "starts expanded, toggles smoothly on tap",
-                                "quickReportCollapsible":  "starts expanded, toggles smoothly on tap",
-                                "donutFinalScore":  64,
-                                "donutDotOffset":  "3-4pt separated from arc",
-                                "toastMs":  1800,
-                                "detailsHeader":  "fixed above ScrollView (PATCH D); scroll round-trip pixel-identical",
-                                "profileAvatar":  "80dp circle, 10dp overlap above gradient (PATCH F)"
-                            },
-    "crops":  [
-                  {
-                      "file":  "details_bottomNav.png",
-                      "bytes":  6945,
-                      "sha256":  "f2e029f24ec71709f58bf29a871a63e9e9dc46d2ba5031cb6b43f7e923ccd954"
-                  },
-                  {
-                      "file":  "details_fuelBlock.png",
-                      "bytes":  42193,
-                      "sha256":  "1f57ef20cb9401b14e321173c170fd43e4977f2e21306bccbcf32c67fb0497c2"
-                  },
-                  {
-                      "file":  "details_full.png",
-                      "bytes":  77016,
-                      "sha256":  "b4e7b89431d6f55b24b6b0595e03a175a9b0dba486bd0911945fe9e431ecc34e"
-                  },
-                  {
-                      "file":  "details_header.png",
-                      "bytes":  11137,
-                      "sha256":  "301704ad2990ddfe9b6e8f54eca2f4069451e28464f974e1a45bc09c7eb9efd3"
-                  },
-                  {
-                      "file":  "details_kpiRow.png",
-                      "bytes":  14306,
-                      "sha256":  "47c17db8a5439e8ec9e43d944d9624b3fd4517efa5e3413a46fbb3e83ba3fa11"
-                  },
-                  {
-                      "file":  "details_overallActivity.png",
-                      "bytes":  28559,
-                      "sha256":  "15a7b5314f4d3aeec1a35925091b69fe333f0ac77e1a188aadaac0bbf64bd175"
-                  },
-                  {
-                      "file":  "details_plateRow.png",
-                      "bytes":  8546,
-                      "sha256":  "7757d8aa8b9dc2785ebd52ffca2ce560fc077ef2775c5603ae22b4898ce60956"
-                  },
-                  {
-                      "file":  "details_quickReportExpanded.png",
-                      "bytes":  28227,
-                      "sha256":  "0d6e3076e86063be57eecbdeed214afd51ec9c7e4ac94bb2a1ff34a27580346a"
-                  },
-                  {
-                      "file":  "details_routesExpanded.png",
-                      "bytes":  41194,
-                      "sha256":  "8637ed9002a6023e37e751e6972c6905b8a8b70c7852ba40352215295f4f2f65"
-                  },
-                  {
-                      "file":  "details_tempBlock.png",
-                      "bytes":  48772,
-                      "sha256":  "cc99203318fd5a89bbc4fcb73f7d7b2158c1a0d57db0519facc2a2b1cd309e17"
-                  },
-                  {
-                      "file":  "details_vehicleCard_cyanOverlay.png",
-                      "bytes":  82442,
-                      "sha256":  "553b1b0e76ab4c06bbc54731f746b852b2969a0cb4de3f14250827a9374a7f0d"
-                  },
-                  {
-                      "file":  "profile_button.png",
-                      "bytes":  4532,
-                      "sha256":  "1d33139b4c7c70900dd8aade34aeae3d28223d5049ec57910fe1e358630f71e8"
-                  },
-                  {
-                      "file":  "profile_card.png",
-                      "bytes":  35609,
-                      "sha256":  "8bbc887ed1dab4c45c83c5cd2b69aa6a160e854daccd1f858738b2aaa0b1c7bb"
-                  },
-                  {
-                      "file":  "profile_full.png",
-                      "bytes":  42149,
-                      "sha256":  "fca9661a20d66369bd09236cb214b1323e907fe596965dc4ae3a3f7dfbc0838d"
-                  },
-                  {
-                      "file":  "profile_headerAvatar.png",
-                      "bytes":  62774,
-                      "sha256":  "66500fae7b6dbdc4654c586951e13a170c98eb32bb9de90d8f77a474757ef77f"
-                  },
-                  {
-                      "file":  "profile_logout.png",
-                      "bytes":  2718,
-                      "sha256":  "2a7650427a37cd51ea5d2ac465f05e1bfa84382893196090f89cb95f0c08ed3d"
-                  }
-              ]
+{
+    "targetResolution": "390x844",
+    "deviceCapture": "780x1688 @2x (R9YR30BS1LJ, wm 780x1688 / 320dpi)",
+    "baselineTimestamp": "2026-09-18T00:00:00+05:00",
+    "components": [
+        "AppHeader",
+        "PlateStatusRow",
+        "VehicleInfoCard (with CyanLocationBox overflow)",
+        "KpiRow",
+        "SensorBlock (Fuel)",
+        "SensorBlock (Temp)",
+        "RoutesCard (Collapsible)",
+        "QuickReportGrid (Collapsible)",
+        "OverallActivity (Donut 64% with dot separated by 3-4pt)",
+        "BottomNav (5 tabs)",
+        "ProfileScreen (header+avatar, form card, actions)"
+    ],
+    "interactionBaseline": {
+        "routesCollapsible": "starts expanded, toggles smoothly on tap",
+        "quickReportCollapsible": "starts expanded, toggles smoothly on tap",
+        "donutFinalScore": 64,
+        "donutDotOffset": "3-4pt separated from arc",
+        "toastMs": 1800,
+        "detailsHeader": "fixed above ScrollView (PATCH D); scroll round-trip pixel-identical",
+        "profileAvatar": "80dp circle, 10dp overlap above gradient (PATCH F)"
+    },
+    "crops": [
+        {
+            "file": "details_bottomNav.png",
+            "bytes": 6945,
+            "sha256": "f2e029f24ec71709f58bf29a871a63e9e9dc46d2ba5031cb6b43f7e923ccd954"
+        },
+        {
+            "file": "details_fuelBlock.png",
+            "bytes": 42193,
+            "sha256": "1f57ef20cb9401b14e321173c170fd43e4977f2e21306bccbcf32c67fb0497c2"
+        },
+        {
+            "file": "details_full.png",
+            "bytes": 197317,
+            "sha256": "e256a3acd826c3ff249081c642e9aaabbd9ef77d7a1b67029c48612cc94246e9"
+        },
+        {
+            "file": "details_header.png",
+            "bytes": 11137,
+            "sha256": "301704ad2990ddfe9b6e8f54eca2f4069451e28464f974e1a45bc09c7eb9efd3"
+        },
+        {
+            "file": "details_kpiRow.png",
+            "bytes": 14306,
+            "sha256": "47c17db8a5439e8ec9e43d944d9624b3fd4517efa5e3413a46fbb3e83ba3fa11"
+        },
+        {
+            "file": "details_overallActivity.png",
+            "bytes": 28559,
+            "sha256": "15a7b5314f4d3aeec1a35925091b69fe333f0ac77e1a188aadaac0bbf64bd175"
+        },
+        {
+            "file": "details_plateRow.png",
+            "bytes": 8546,
+            "sha256": "7757d8aa8b9dc2785ebd52ffca2ce560fc077ef2775c5603ae22b4898ce60956"
+        },
+        {
+            "file": "details_quickReportExpanded.png",
+            "bytes": 28227,
+            "sha256": "0d6e3076e86063be57eecbdeed214afd51ec9c7e4ac94bb2a1ff34a27580346a"
+        },
+        {
+            "file": "details_routesExpanded.png",
+            "bytes": 41194,
+            "sha256": "8637ed9002a6023e37e751e6972c6905b8a8b70c7852ba40352215295f4f2f65"
+        },
+        {
+            "file": "details_tempBlock.png",
+            "bytes": 48772,
+            "sha256": "cc99203318fd5a89bbc4fcb73f7d7b2158c1a0d57db0519facc2a2b1cd309e17"
+        },
+        {
+            "file": "details_vehicleCard_cyanOverlay.png",
+            "bytes": 82442,
+            "sha256": "553b1b0e76ab4c06bbc54731f746b852b2969a0cb4de3f14250827a9374a7f0d"
+        },
+        {
+            "file": "profile_button.png",
+            "bytes": 4532,
+            "sha256": "1d33139b4c7c70900dd8aade34aeae3d28223d5049ec57910fe1e358630f71e8"
+        },
+        {
+            "file": "profile_card.png",
+            "bytes": 35609,
+            "sha256": "8bbc887ed1dab4c45c83c5cd2b69aa6a160e854daccd1f858738b2aaa0b1c7bb"
+        },
+        {
+            "file": "profile_full.png",
+            "bytes": 103485,
+            "sha256": "a96e1423189cdb6dab808b00113632fb64d61b9aabaacee523c8e1201ec21a7d"
+        },
+        {
+            "file": "profile_headerAvatar.png",
+            "bytes": 62774,
+            "sha256": "66500fae7b6dbdc4654c586951e13a170c98eb32bb9de90d8f77a474757ef77f"
+        },
+        {
+            "file": "profile_logout.png",
+            "bytes": 2718,
+            "sha256": "2a7650427a37cd51ea5d2ac465f05e1bfa84382893196090f89cb95f0c08ed3d"
+        }
+    ],
+    "gradientNote": "gradient set to Figma-exact #B2250C(0%) -> #160F12(100%) on 2026-09-18 (PATCH J1). details_full + profile_full re-captured (780x1688 raws in /raw/bl_*_figma_grad.png). Header-area crops (details_header, profile_headerAvatar) still contain the previous #EA0E0E->#000000 gradient — pending re-crop.",
+    "gradientSamples": {
+        "details": "y2 #B0250C / y60 #761D0E / y120 #3A1411 / y155 #180F12 (linear, ±2)",
+        "profile": "y2 #B0250C / y120 #651A0F / y240 #190F12 (linear, ±2)"
+    }
 }
