@@ -1,6 +1,6 @@
 // AppHeader.tsx — single shared edge-to-edge gradient header (Details + Profile).
-// PATCH I3: gradient band is now a native LinearGradient (react-native-linear-gradient)
-// using colors.gradientHeader (#EA0E0E → #000000, vertical). Content layer unchanged.
+// PATCH J1: gradient band is a native LinearGradient (react-native-linear-gradient)
+// using Figma-exact colors.gradientHeader (#B2250C 0% → #160F12 100%, vertical 180°).
 import React from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
@@ -30,7 +30,7 @@ export function AppHeader({
     // PATCH I3: explicit height (inset + content band) — the native gradient is
     // absolute-filled, so the container itself must size the header again.
     <View style={[styles.container, makeHeightStyle(insets.top + contentHeight)]}>
-      {/* PATCH I3: native vertical gradient — top #EA0E0E to bottom #000000 */}
+      {/* PATCH J1: Figma-exact vertical gradient — top #B2250C to bottom #160F12 */}
       <LinearGradient
         colors={[...colors.gradientHeader]}
         start={{ x: 0, y: 0 }}
