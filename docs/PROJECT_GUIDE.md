@@ -18,7 +18,7 @@ Bare **React Native CLI** vehicle-tracking app. Yeh guide repo ke **current stat
 | 6 | Perf contract | **G1–G10** global performance contract — S8 checklist; gates: `tsc`, `eslint --quiet`, `jest`, grep (`console.*` = 0, inline `style={{` = 0) |
 | 7 | Baselines | `/ui-baseline/` — 16 PNGs + [baseline_record.json](../ui-baseline/baseline_record.json) (SHA-256 per crop + interaction notes). Naya visual change = naya baseline |
 | 8 | Splash/window | `colors.splash = '#F8F3F3'` JS + native `windowBackground` — **dono match hone chahiye** |
-| 9 | Header gradient | Shared `colors.gradientHeader = ['#EA0E0E','#000000']` (LinearGradient, vertical) — Details + Profile same header |
+| 9 | Header gradient | Shared `colors.gradientHeader = ['#B2250C','#160F12']` (LinearGradient vertical, Figma-exact) — Details + Profile same header |
 | 10 | Docs sync rule | Koi bhi naya screen/alias/token/native change → **yeh dono files (MD+HTML) usi task me update karo** (S11) |
 
 **Shape legend (har diagram me same):** rectangle = screen/component · stadium = hook · cylinder = service/mock/data · diamond = decision/condition · hexagon = native/config file · parallelogram = user action/event.
@@ -132,7 +132,7 @@ Stack files: [HomeStack.tsx](../src/navigation/stacks/HomeStack.tsx) · [MapStac
 Component tree (parent → children), nodes files se linked:
 
 - [DetailsScreen/DetailsScreen.tsx](../src/features/home/screens/DetailsScreen/DetailsScreen.tsx) + [styles.ts](../src/features/home/screens/DetailsScreen/styles.ts)
-  - [AppHeader.tsx](../src/shared/components/layout/AppHeader/AppHeader.tsx) — **fixed, ScrollView ke BAHAR**; LinearGradient [#EA0E0E→#000000 vertical] ❄
+  - [AppHeader.tsx](../src/shared/components/layout/AppHeader/AppHeader.tsx) — **fixed, ScrollView ke BAHAR**; LinearGradient [#B2250C→#160F12 vertical, Figma-exact] ❄
   - `ScrollView` (content fixed header ke neeche slide karti hai)
     - [PlateStatusRow](../src/shared/components/vehicle/PlateStatusRow/PlateStatusRow.tsx) + [styles](../src/shared/components/vehicle/PlateStatusRow/styles.ts) — black 59% / green 41% ❄
     - [VehicleInfoCard](../src/shared/components/vehicle/VehicleInfoCard/VehicleInfoCard.tsx) + [styles](../src/shared/components/vehicle/VehicleInfoCard/styles.ts)
@@ -175,7 +175,7 @@ Geometry cheat-table (source: [profile.ts](../src/shared/theme/profile.ts)):
 | Avatar ❄ | 80dp, ring 1dp, radius 40, overlap 10dp | [profile_headerAvatar.png](../ui-baseline/profile_headerAvatar.png) | [profile.ts](../src/shared/theme/profile.ts) · [ProfileAvatar](../src/features/profile/components/ProfileAvatar/ProfileAvatar.tsx) |
 | Button ❄ | UPDATE PROFILE h=52, marginH=42, card se 32dp neeche | [profile_button.png](../ui-baseline/profile_button.png) | [ProfileActions](../src/features/profile/components/ProfileActions/ProfileActions.tsx) |
 | LOGOUT ❄ | button se 40dp neeche, text `#B05656` | [profile_logout.png](../ui-baseline/profile_logout.png) | [profile.ts](../src/shared/theme/profile.ts) |
-| Gradient ❄ | **#EA0E0E → #000000 vertical** (LinearGradient, PATCH I3) | dono headers same token | [colors.ts `gradientHeader`](../src/shared/theme/colors.ts) · [AppHeader.tsx](../src/shared/components/layout/AppHeader/AppHeader.tsx) |
+| Gradient ❄ | **#B2250C (0%) → #160F12 (100%) vertical, Figma-exact** (LinearGradient, PATCH J1) | dono headers same token | [colors.ts `gradientHeader`](../src/shared/theme/colors.ts) · [AppHeader.tsx](../src/shared/components/layout/AppHeader/AppHeader.tsx) |
 
 ---
 
@@ -209,7 +209,7 @@ Geometry cheat-table (source: [profile.ts](../src/shared/theme/profile.ts)):
 | 2 | Spacing / sizes | [spacing.ts](../src/shared/theme/spacing.ts) · [sizes.ts](../src/shared/theme/sizes.ts) | px values sirf yahan |
 | 3 | Radius / shadows | [radii.ts](../src/shared/theme/radii.ts) · [shadows.ts](../src/shared/theme/shadows.ts) | card=4, button=2 (Profile) |
 | 4 | Splash color | [colors.ts `splash`](../src/shared/theme/colors.ts) + [colors.xml](../android/app/src/main/res/values/colors.xml) | dono SAME hex; phir rebuild |
-| 5 | Header gradient | [colors.ts `gradientHeader`](../src/shared/theme/colors.ts) + [AppHeader.tsx](../src/shared/components/layout/AppHeader/AppHeader.tsx) | **#EA0E0E→#000000** (PATCH I3, LinearGradient) |
+| 5 | Header gradient | [colors.ts `gradientHeader`](../src/shared/theme/colors.ts) + [AppHeader.tsx](../src/shared/components/layout/AppHeader/AppHeader.tsx) | **#B2250C→#160F12** (PATCH J1, Figma-exact, LinearGradient) |
 | 6 | Header heights / title offset | [AppHeader.tsx](../src/shared/components/layout/AppHeader/AppHeader.tsx) props `contentHeight`/`contentCenterOffset` | Details=56/0, Profile=100/32 ([ProfileHeader](../src/features/profile/components/ProfileHeader/ProfileHeader.tsx)) |
 | 7 | Sticky-header structure | [DetailsScreen.tsx](../src/features/home/screens/DetailsScreen/DetailsScreen.tsx) (header BAHAR) vs [ProfileScreen.tsx](../src/features/profile/screens/ProfileScreen/ProfileScreen.tsx) (header ANDAR) | Profile andar isliye: avatar z-order (PATCH F) |
 | 8 | Avatar overlap / z-order | [profile.ts `avatarOverlap`](../src/shared/theme/profile.ts) + [ProfileAvatar](../src/features/profile/components/ProfileAvatar/ProfileAvatar.tsx) | 10dp ❄ |
@@ -396,7 +396,7 @@ Theme files: [colors.ts](../src/shared/theme/colors.ts) · [sizes.ts](../src/sha
 
 ---
 
-*Last verified: 2026-09-17 — verified paths: 60+ (har link is guide me aaj disk par exist karta hai; gradient state = PATCH I3 `#EA0E0E→#000000`)*
+*Last verified: 2026-09-18 — verified paths: 60+ (har link is guide me aaj disk par exist karta hai; gradient state = PATCH J1 Figma-exact `#B2250C→#160F12`)*
 
 
 
