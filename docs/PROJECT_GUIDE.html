@@ -52,7 +52,7 @@
 <tr><td>6</td><td>Perf contract</td><td><strong>G1–G10</strong> (S8); gates: <code>tsc</code>, <code>eslint --quiet</code>, <code>jest</code>, grep (console=0, inline style=0)</td></tr>
 <tr><td>7</td><td>Baselines</td><td><a href="../ui-baseline/baseline_record.json">ui-baseline/baseline_record.json</a> — SHA-256 + interaction notes; naya visual = naya baseline</td></tr>
 <tr><td>8</td><td>Splash/window</td><td><code>colors.splash='#F8F3F3'</code> JS + native <code>windowBackground</code> — dono match</td></tr>
-<tr><td>9</td><td>Header gradient</td><td><code>colors.gradientHeader=['#EA0E0E','#000000']</code> (LinearGradient vertical) — Details+Profile same</td></tr>
+<tr><td>9</td><td>Header gradient</td><td><code>colors.gradientHeader=['#B2250C','#160F12']</code> (LinearGradient vertical, Figma-exact) — Details+Profile same</td></tr>
 <tr><td>10</td><td>Docs sync</td><td>Naya screen/alias/token/native change → MD+HTML dono usi task me (S11)</td></tr>
 </table></div>
 </details>
@@ -146,7 +146,7 @@ flowchart TD
 <h3>3.1 Details (UI-FROZEN ❄)</h3>
 <pre>
 [DetailsScreen.tsx] + [styles.ts]
- |-- [AppHeader]  FIXED, ScrollView ke BAHAR — LinearGradient #EA0E0E→#000000 ❄
+ |-- [AppHeader]  FIXED, ScrollView ke BAHAR — LinearGradient #B2250C→#160F12 (Figma-exact) ❄
  |-- ScrollView (content header ke neeche slide)
  |     |-- [PlateStatusRow]      black 59% / green 41% ❄
  |     |-- [VehicleInfoCard]
@@ -187,7 +187,7 @@ flowchart TD
 <tr><td>Avatar ❄</td><td>80dp, ring 1dp, radius 40, overlap 10dp</td><td><a href="../ui-baseline/profile_headerAvatar.png">profile_headerAvatar.png</a></td><td><a href="../src/features/profile/components/ProfileAvatar/ProfileAvatar.tsx">ProfileAvatar.tsx</a></td></tr>
 <tr><td>Button ❄</td><td>h=52, marginH=42, card se 32dp neeche</td><td><a href="../ui-baseline/profile_button.png">profile_button.png</a></td><td><a href="../src/features/profile/components/ProfileActions/ProfileActions.tsx">ProfileActions.tsx</a></td></tr>
 <tr><td>LOGOUT ❄</td><td>button se 40dp neeche, text <code>#B05656</code></td><td><a href="../ui-baseline/profile_logout.png">profile_logout.png</a></td><td><a href="../src/shared/theme/profile.ts">profile.ts</a></td></tr>
-<tr><td>Gradient ❄</td><td><strong>#EA0E0E → #000000 vertical</strong> (LinearGradient, PATCH I3)</td><td>dono headers same token</td><td><a href="../src/shared/theme/colors.ts">colors.ts</a> · <a href="../src/shared/components/layout/AppHeader/AppHeader.tsx">AppHeader.tsx</a></td></tr>
+<tr><td>Gradient ❄</td><td><strong>#B2250C (0%) → #160F12 (100%) vertical, Figma-exact</strong> (LinearGradient, PATCH J1)</td><td>dono headers same token</td><td><a href="../src/shared/theme/colors.ts">colors.ts</a> · <a href="../src/shared/components/layout/AppHeader/AppHeader.tsx">AppHeader.tsx</a></td></tr>
 </table>
 </details>
 
@@ -219,7 +219,7 @@ flowchart TD
 <tr><td>2</td><td>Spacing / sizes</td><td><a href="../src/shared/theme/spacing.ts">spacing.ts</a> · <a href="../src/shared/theme/sizes.ts">sizes.ts</a></td><td>px values sirf yahan</td></tr>
 <tr><td>3</td><td>Radius / shadows</td><td><a href="../src/shared/theme/radii.ts">radii.ts</a> · <a href="../src/shared/theme/shadows.ts">shadows.ts</a></td><td>card=4, button=2 (Profile)</td></tr>
 <tr><td>4</td><td>Splash color</td><td><a href="../src/shared/theme/colors.ts">colors.ts <code>splash</code></a> + <a href="../android/app/src/main/res/values/colors.xml">colors.xml</a></td><td>dono SAME hex; phir rebuild</td></tr>
-<tr><td>5</td><td><strong>Header gradient</strong></td><td><a href="../src/shared/theme/colors.ts">colors.ts <code>gradientHeader</code></a> + <a href="../src/shared/components/layout/AppHeader/AppHeader.tsx">AppHeader.tsx</a> (LinearGradient)</td><td><strong>#EA0E0E→#000000</strong> (PATCH I3)</td></tr>
+<tr><td>5</td><td><strong>Header gradient</strong></td><td><a href="../src/shared/theme/colors.ts">colors.ts <code>gradientHeader</code></a> + <a href="../src/shared/components/layout/AppHeader/AppHeader.tsx">AppHeader.tsx</a> (LinearGradient)</td><td><strong>#B2250C→#160F12</strong> (PATCH J1, Figma-exact)</td></tr>
 <tr><td>6</td><td>Header heights / title offset</td><td><a href="../src/shared/components/layout/AppHeader/AppHeader.tsx">AppHeader.tsx</a> props <code>contentHeight</code>/<code>contentCenterOffset</code></td><td>Details=56/0, Profile=100/32 (<a href="../src/features/profile/components/ProfileHeader/ProfileHeader.tsx">ProfileHeader</a>)</td></tr>
 <tr><td>7</td><td>Sticky-header structure</td><td><a href="../src/features/home/screens/DetailsScreen/DetailsScreen.tsx">DetailsScreen</a> (BAHAR) vs <a href="../src/features/profile/screens/ProfileScreen/ProfileScreen.tsx">ProfileScreen</a> (ANDAR)</td><td>Profile andar: avatar z-order (PATCH F)</td></tr>
 <tr><td>8</td><td>Avatar overlap / z-order</td><td><a href="../src/shared/theme/profile.ts">profile.ts <code>avatarOverlap</code></a> + <a href="../src/features/profile/components/ProfileAvatar/ProfileAvatar.tsx">ProfileAvatar</a></td><td>10dp ❄</td></tr>
@@ -386,7 +386,7 @@ import { makeHeightStyle } from '@shared/utils/styleFactories';
 </ul>
 </details>
 
-<footer>Last verified: 2026-09-17 — verified paths: 60+ (har link aaj disk par exist karta hai; gradient state = PATCH I3 #EA0E0E→#000000)</footer>
+<footer>Last verified: 2026-09-18 — verified paths: 60+ (har link aaj disk par exist karta hai; gradient state = PATCH J1 Figma-exact #B2250C→#160F12)</footer>
 </main>
 </body>
 </html>
