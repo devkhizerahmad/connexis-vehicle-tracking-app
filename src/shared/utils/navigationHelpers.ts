@@ -1,3 +1,5 @@
+// RESERVED: pending LiveMap screen (typed cross-tab navigation)
+
 // navigationHelpers.ts — typed navigation helper utilities
 import { NavigationProp } from '@react-navigation/native';
 import { RootTabParamList } from '@navigation/types';

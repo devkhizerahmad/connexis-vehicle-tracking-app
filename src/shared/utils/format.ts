@@ -1,3 +1,5 @@
+// RESERVED: pending History/Reports screens (date/duration formatting)
+
 // format.ts — standard date, duration, and string formatting utilities (no heavy date libs)
 
 export const formatDate = (date: Date | string): string => {

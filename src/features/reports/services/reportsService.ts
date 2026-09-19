@@ -1,3 +1,5 @@
+// RESERVED: pending Reports screen
+
 // reportsService.ts — Reports service stub
 export const reportsService = {
   getAvailableReports: async () => {

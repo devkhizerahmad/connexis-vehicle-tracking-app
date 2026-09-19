@@ -1,3 +1,5 @@
+// RESERVED: pending Home screen (donut score count-up)
+
 // useDonutProgress.ts — memoized sweep angle + throttled count-up listener hook for donut animation
 import { useEffect, useRef, useState } from 'react';
 import { Animated, Easing } from 'react-native';

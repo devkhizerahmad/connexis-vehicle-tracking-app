@@ -1,3 +1,5 @@
+// RESERVED: pending LiveMap screen
+
 // mapService.ts — Map service stub
 export const mapService = {
   getLiveLocation: async (_vehicleId: string) => {
