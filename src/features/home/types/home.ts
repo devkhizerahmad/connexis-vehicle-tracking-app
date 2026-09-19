@@ -6,6 +6,7 @@ export interface VehicleSummary {
   model: string;
 }
 
+// RESERVED: pending Home screen (feed payload)
 export interface HomeFeedData {
   totalAssets: number;
   activeAssets: number;

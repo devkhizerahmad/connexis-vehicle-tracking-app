@@ -6,11 +6,13 @@ export interface NavTabItem {
   active?: boolean;
 }
 
+// RESERVED: pending screens (generic header props)
 export interface HeaderProps {
   onBack?: () => void;
   title?: string;
 }
 
+// RESERVED: pending screens (toast state shape)
 export interface ToastState {
   message: string | null;
   visible: boolean;

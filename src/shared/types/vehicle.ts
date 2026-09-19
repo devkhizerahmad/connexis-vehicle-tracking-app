@@ -5,6 +5,7 @@ export interface VehiclePlateStatus {
   number?: string;
 }
 
+// RESERVED: pending LiveMap screen
 export interface VehicleStatusInfo {
   state?: 'running' | 'idle' | 'stop' | 'noData' | string;
   time?: string;
