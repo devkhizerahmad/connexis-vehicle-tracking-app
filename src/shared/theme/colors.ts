@@ -1,13 +1,6 @@
 // colors.ts — semantic typed token module for colors
 export const colors = {
-  brand: {
-    headerGradientStart: '#A0340E',
-    headerGradientMid: '#7A1507',
-    headerGradientEnd: '#55100A',
-    navActive: '#E03131',
-    gradTop: '#7A1507',
-    gradBottom: '#9E2A0B',
-  },
+  brand: {},
   status: {
     running: '#5FCC00',
     idle: '#EFAF00',
