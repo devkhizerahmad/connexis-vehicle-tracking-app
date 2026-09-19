@@ -1,8 +1,6 @@
 module.exports = {
   // RN 0.72+ ke liye:
   presets: ['module:@react-native/babel-preset'],
-  // RN 0.71 ya purani ho to upar wali line ki jagah:
-  // presets: ['module:metro-react-native-babel-preset'],
   plugins: [
     [
       'module-resolver',
