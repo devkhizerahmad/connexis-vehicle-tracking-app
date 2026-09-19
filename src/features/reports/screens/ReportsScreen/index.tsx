@@ -7,7 +7,7 @@ import { colors } from '@shared/theme';
 export function ReportsScreen() {
   return (
     <View style={styles.container}>
-      <AppHeader title="Reports" />
+      <AppHeader variant="standard" title="Reports" />
       <View style={styles.body}>
         <Text style={styles.text}>Reports</Text>
       </View>

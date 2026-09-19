@@ -44,6 +44,16 @@ export const sizes = {
   plateGreenPct: 41,
   plateBlackPct: 59,
 
+  // PATCH K1 — HEADER STANDARD (3-zone model):
+  // Zone 2 nav row: fixed height on EVERY screen; centre = safeAreaInset + navRowH / 2
+  navRowH: 56,
+  // Zone 3 extended band: optional per-screen band below the nav row (default height)
+  extendedBandH: 44,
+  // Minimum touch target for header interactive elements (back/actions)
+  touchTarget: 48,
+  // Immersive variant: floating circular back button diameter
+  immersiveBackSize: 48,
+
   // Height definitions
   plateRow: 44,
   sectionHeader: 44,

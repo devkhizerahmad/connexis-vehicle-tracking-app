@@ -7,7 +7,7 @@ import { colors } from '@shared/theme';
 export function HistoryScreen() {
   return (
     <View style={styles.container}>
-      <AppHeader title="Route History" />
+      <AppHeader variant="standard" title="Route History" />
       <View style={styles.body}>
         <Text style={styles.text}>Route Playback & History</Text>
       </View>

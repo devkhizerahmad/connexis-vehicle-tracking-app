@@ -7,7 +7,8 @@ import { colors } from '@shared/theme';
 export function HomeScreen() {
   return (
     <View style={styles.container}>
-      <AppHeader title="Home" />
+      {/* HEADER STANDARD (K2): declared variant — future screens must state theirs */}
+      <AppHeader variant="standard" title="Home" />
       <View style={styles.body}>
         <Text style={styles.text}>Home Feed</Text>
       </View>

@@ -7,7 +7,8 @@ import { colors } from '@shared/theme';
 export function LiveMapScreen() {
   return (
     <View style={styles.container}>
-      <AppHeader title="Live Map" />
+      {/* HEADER STANDARD (K2): will become variant="immersive" when real map lands */}
+      <AppHeader variant="standard" title="Live Map" />
       <View style={styles.body}>
         <Text style={styles.text}>Live Map View</Text>
       </View>

@@ -37,8 +37,8 @@
         },
         {
             "file": "details_full.png",
-            "bytes": 197317,
-            "sha256": "e256a3acd826c3ff249081c642e9aaabbd9ef77d7a1b67029c48612cc94246e9"
+            "bytes": 110604,
+            "sha256": "1b80a99c54a71e24c49a5e460d42fd7ba6ee18f80f720556a6fa6418a4c59437"
         },
         {
             "file": "details_header.png",
@@ -92,8 +92,8 @@
         },
         {
             "file": "profile_full.png",
-            "bytes": 103485,
-            "sha256": "a96e1423189cdb6dab808b00113632fb64d61b9aabaacee523c8e1201ec21a7d"
+            "bytes": 54196,
+            "sha256": "5981b98330f604362e9a7bde9e52e876ea57057b8cd7855e55215f3ebb53caa7"
         },
         {
             "file": "profile_headerAvatar.png",
@@ -106,7 +106,7 @@
             "sha256": "2a7650427a37cd51ea5d2ac465f05e1bfa84382893196090f89cb95f0c08ed3d"
         }
     ],
-    "gradientNote": "gradient set to Figma-exact #B2250C(0%) -> #160F12(100%) on 2026-09-18 (PATCH J1). details_full + profile_full re-captured (780x1688 raws in /raw/bl_*_figma_grad.png). Header-area crops (details_header, profile_headerAvatar) still contain the previous #EA0E0E->#000000 gradient — pending re-crop.",
+    "gradientNote": "gradient set to Figma-exact #B2250C(0%) -> #160F12(100%) (PATCH J1). details_full/profile_full re-captured at 390x844 (780x1688 raws in /raw/bl_*_figma_grad.png). Header-area crops (details_header, profile_headerAvatar) still contain the previous #EA0E0E->#000000 gradient — pending re-crop.",
     "gradientSamples": {
         "details": "y2 #B0250C / y60 #761D0E / y120 #3A1411 / y155 #180F12 (linear, ±2)",
         "profile": "y2 #B0250C / y120 #651A0F / y240 #190F12 (linear, ±2)"

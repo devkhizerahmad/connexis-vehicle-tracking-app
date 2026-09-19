@@ -14,6 +14,9 @@ export function ProfileHeader({
   onBack?: () => void;
 }) {
   return (
+    // LEGACY-EXCEPTION: frozen reference design (Profile) — contentHeight/contentCenterOffset
+    // replicate the pre-K2 layout exactly (header = inset+100, title centre = inset+60).
+    // DO NOT copy these props into new screens — use variant="standard"/"extended".
     <AppHeader
       title={title}
       onBack={onBack}

@@ -77,7 +77,7 @@ export function DetailsScreen({ route, navigation }: DetailsScreenProps) {
     <SafeAreaProvider>
       <View style={styles.screen}>
         <StatusBar barStyle="light-content" />
-        <AppHeader onBack={() => showToast('Back pressed')} />
+        <AppHeader variant="standard" onBack={() => showToast('Back pressed')} />
 
         <ScrollView
           contentContainerStyle={styles.scrollViewContent}

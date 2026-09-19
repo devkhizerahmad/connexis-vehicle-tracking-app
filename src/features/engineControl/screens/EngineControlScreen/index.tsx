@@ -7,7 +7,7 @@ import { colors } from '@shared/theme';
 export function EngineControlScreen() {
   return (
     <View style={styles.container}>
-      <AppHeader title="Engine Control" />
+      <AppHeader variant="standard" title="Engine Control" />
       <View style={styles.body}>
         <Text style={styles.text}>Engine Control</Text>
       </View>
