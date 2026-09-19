@@ -23,6 +23,3 @@ export const spacing = {
   sideFlex: 2,
   gridCols: 3,
 } as const;
-
-export const S = spacing;
-export const L = spacing;

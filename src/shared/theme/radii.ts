@@ -16,5 +16,3 @@ export const radii = {
   badge: 4,
   chip: 6,
 } as const;
-
-export const R = radii;

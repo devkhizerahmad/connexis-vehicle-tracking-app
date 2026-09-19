@@ -65,6 +65,3 @@ export const sizes = {
   appBar: 56,
   chip: 26,
 } as const;
-
-export const SZ = sizes;
-export const H = sizes;
