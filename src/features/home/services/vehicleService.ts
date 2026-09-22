@@ -2,11 +2,12 @@
 import detailsMock from '@features/home/mocks/details.mock.json';
 import vehiclesMock from '@features/home/mocks/vehicles.mock.json';
 import { VehicleDetailsData } from '@features/home/types/details';
-import { VehicleSummary } from '@features/home/types/home';
+import { HomeFeedData } from '@features/home/types/home';
 
 export const vehicleService = {
-  getVehicleList: async (): Promise<VehicleSummary[]> => {
-    return (vehiclesMock as unknown) as VehicleSummary[];
+  /** Home tab feed: summary counters + vehicle cards + promo slot (mock today). */
+  getVehicleList: async (): Promise<HomeFeedData> => {
+    return (vehiclesMock as unknown) as HomeFeedData;
   },
 
   getVehicleDetails: async (_id: string): Promise<VehicleDetailsData> => {
