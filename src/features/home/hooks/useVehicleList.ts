@@ -1,20 +1,31 @@
-// RESERVED: pending Home screen (vehicle list)
-
-// useVehicleList.ts — Hook for vehicle list
+// useVehicleList.ts — Home feed hook (summary + vehicles + promo)
 import { useEffect, useState } from 'react';
 import { vehicleService } from '@features/home/services/vehicleService';
-import { VehicleSummary } from '@features/home/types/home';
+import { HomeFeedData } from '@features/home/types/home';
 
+/**
+ * Consumes vehicleService.getVehicleList() once on mount.
+ * `feed` is a single memoized state object so memoized card rows only re-render
+ * when the feed itself changes (G1/G2).
+ */
 export function useVehicleList() {
-  const [vehicles, setVehicles] = useState<VehicleSummary[]>([]);
+  const [feed, setFeed] = useState<HomeFeedData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let mounted = true;
     vehicleService.getVehicleList().then(data => {
-      setVehicles(data);
-      setLoading(false);
+      if (mounted) {
+        setFeed(data);
+        setLoading(false);
+      }
     });
+    return () => {
+      mounted = false;
+    };
   }, []);
 
-  return { vehicles, loading };
+  return { feed, loading };
 }
+
+export default useVehicleList;
