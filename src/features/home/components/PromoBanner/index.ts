@@ -1,5 +1,3 @@
-// RESERVED: pending Home screen (promotional banner)
-
-// PromoBanner stub index.ts
-export const PromoBanner = () => null;
-export default PromoBanner;
+﻿export { PromoBanner } from './PromoBanner';
+export { default } from './PromoBanner';
+export type { PromoBannerProps } from './PromoBanner';
