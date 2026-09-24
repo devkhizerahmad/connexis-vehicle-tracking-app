@@ -96,6 +96,27 @@ export const colors = {
   // 0% #B2250C (opacity 100) -> 100% #160F12 (opacity 100), Linear 180° (vertical).
   // Used by react-native-linear-gradient (LinearGradient) in AppHeader.
   gradientHeader: ['#B2250C', '#160F12'] as const,
+  // PATCH HOME: HomeScreen tokens (reference mock; summary cards / chip / sensor strip)
+  home: {
+    totalGradStart: '#4E555E',
+    totalGradEnd: '#22262B',
+    runningValueGreen: '#47A000',
+    idleValueAmber: '#D9A62E',
+    stopValueRed: '#D9534F',
+    chipGray: '#B9B9B9',
+    sensorDivider: '#E0E0E0',
+    thermoOrange: '#F57C00',
+    doorPurple: '#6A4FC0',
+    premiumMaroon: '#4A0E0E',
+    bodyText: '#333333',
+    // PATCH HOME/H-C: Assets List title + refresh icon ink
+    assetsTitle: '#1A1A1A',
+    // PATCH HOME/H-D: "More Details" link ink + premium bar label ink
+    moreDetails: '#8A9199',
+    premiumLabel: '#C9CED4',
+    // PATCH HOME/H-D: Reports button fill
+    reportsBtn: '#9AA0A6',
+  },
   // PATCH H1: splash bg — must match android .../values/colors.xml splashBackground
   splash: '#F8F3F3',
 } as const;
