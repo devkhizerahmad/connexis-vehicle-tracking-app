@@ -7,8 +7,8 @@ import { HomeStackParamList } from '@navigation/types';
 
 const Stack = createNativeStackNavigator<HomeStackParamList>();
 
-// TODO: Flip INITIAL_ROUTE to 'Home' once HomeScreen is fully built
-const INITIAL_ROUTE: keyof HomeStackParamList = 'Details';
+// Home feed is built — Home is the entry-point screen of HomeTab.
+const INITIAL_ROUTE: keyof HomeStackParamList = 'Home';
 
 export function HomeStack() {
   return (
