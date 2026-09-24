@@ -51,6 +51,72 @@
       "signal": "Medium",
       "batteryVoltage": "24V",
       "satelliteSignal": "25"
+    },
+    {
+      "id": "TBR-2020-2",
+      "plate": "TBR-2020",
+      "name": "Kia Carnival (TBR-2020)",
+      "status": "idle",
+      "image": "van",
+      "speed": "0 km/Hr",
+      "location": "House # 240 Block J Phase 1 Johar Town down-arrow Punjab, Lahore",
+      "update": "1/10/25 (09:01 PM)",
+      "signal": "Medium",
+      "batteryVoltage": "24V",
+      "satelliteSignal": "25"
+    },
+    {
+      "id": "RWP-5544",
+      "plate": "RWP-5544",
+      "name": "Toyota Corolla (RWP-5544)",
+      "status": "running",
+      "image": "sedan",
+      "speed": "80 km/Hr",
+      "location": "Murree Road, Near Faizabad, Rawalpindi ->",
+      "update": "5/10/25 (10:15 AM)",
+      "signal": "Strong",
+      "batteryVoltage": "12V",
+      "satelliteSignal": "28",
+      "sensorStrip": { "temp": "24 °C", "fuel": "35 Ltr", "door": "Closed" }
+    },
+    {
+      "id": "LHR-9922",
+      "plate": "LHR-9922",
+      "name": "Hyundai Tucson (LHR-9922)",
+      "status": "stop",
+      "image": "van",
+      "speed": "0 km/Hr",
+      "location": "Gulberg III, Main Boulevard, Lahore",
+      "update": "5/10/25 (09:30 AM)",
+      "signal": "Strong",
+      "batteryVoltage": "12V",
+      "satelliteSignal": "22"
+    },
+    {
+      "id": "ISB-1122",
+      "plate": "ISB-1122",
+      "name": "Suzuki Alto (ISB-1122)",
+      "status": "running",
+      "image": "sedan",
+      "speed": "45 km/Hr",
+      "location": "Blue Area, Jinnah Avenue, Islamabad ->",
+      "update": "5/10/25 (10:20 AM)",
+      "signal": "Medium",
+      "batteryVoltage": "12V",
+      "satelliteSignal": "20"
+    },
+    {
+      "id": "FSD-7788",
+      "plate": "FSD-7788",
+      "name": "Toyota Hilux (FSD-7788)",
+      "status": "idle",
+      "image": "van",
+      "speed": "0 km/Hr",
+      "location": "Peoples Colony No. 1, Faisalabad",
+      "update": "5/10/25 (08:45 AM)",
+      "signal": "Strong",
+      "batteryVoltage": "24V",
+      "satelliteSignal": "27"
     }
   ],
   "promo": {
