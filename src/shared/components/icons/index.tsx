@@ -666,3 +666,173 @@ export const ArrowCircle = ({ color, size }: IconProps) => (
     </Text>
   </View>
 );
+
+// ─── HOME SCREEN glyphs (additive, PATCH HOME) ───────────────────────────────
+
+/** Notification bell — Home header actions slot. */
+export const BellIcon = ({ color, size }: IconProps) => (
+  <View style={{ width: size, height: size, alignItems: 'center' }}>
+    <View
+      style={{
+        width: size * 0.58,
+        height: size * 0.52,
+        borderTopWidth: size * 0.15,
+        borderLeftWidth: size * 0.15,
+        borderRightWidth: size * 0.15,
+        borderColor: color,
+        borderTopLeftRadius: size * 0.3,
+        borderTopRightRadius: size * 0.3,
+      }}
+    />
+    <View style={{ width: size * 0.76, height: size * 0.15, backgroundColor: color, borderRadius: 1 }} />
+    <View style={{ width: size * 0.18, height: size * 0.12, borderRadius: size * 0.06, backgroundColor: color, marginTop: 1 }} />
+  </View>
+);
+
+/** 3x3 grid — Total summary card. */
+export const GridIcon = ({ color, size }: IconProps) => (
+  <View style={{ width: size, height: size, flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
+    {[0, 1, 2, 3, 4, 5, 6, 7, 8].map(i => (
+      <View key={i} style={{ width: size * 0.22, height: size * 0.22, backgroundColor: color, borderRadius: 1, margin: size * 0.055 }} />
+    ))}
+  </View>
+);
+
+/** Car silhouette — Running summary card. */
+export const CarGlyph = ({ color, size }: IconProps) => (
+  <View style={{ width: size, height: size * 0.62, alignItems: 'center' }}>
+    <View
+      style={{
+        width: size * 0.8,
+        height: size * 0.34,
+        borderTopWidth: size * 0.1,
+        borderLeftWidth: size * 0.1,
+        borderRightWidth: size * 0.1,
+        borderColor: color,
+        borderTopLeftRadius: size * 0.2,
+        borderTopRightRadius: size * 0.2,
+      }}
+    />
+    <View style={{ width: size, height: size * 0.14, backgroundColor: color, borderRadius: 2 }} />
+    <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: size * 0.9 }}>
+      <View style={{ width: size * 0.18, height: size * 0.18, borderRadius: size * 0.09, backgroundColor: color, marginTop: -1 }} />
+      <View style={{ width: size * 0.18, height: size * 0.18, borderRadius: size * 0.09, backgroundColor: color, marginTop: -1 }} />
+    </View>
+  </View>
+);
+
+/**
+ * Refresh CIRCULAR double-arrow — Assets List row (PATCH H-C).
+ * Composed from a ring with the top+bottom quadrants transparent (=> two side arcs) plus two
+ * triangular arrowheads, reproducing the reference's circular sync glyph (NOT a "⇆" swap arrow).
+ */
+export const RefreshIcon = ({ color, size }: IconProps) => (
+  <View style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}>
+    <View
+      style={{
+        width: size,
+        height: size,
+        borderRadius: size / 2,
+        borderWidth: size * 0.11,
+        borderColor: color,
+        borderTopColor: 'transparent',
+        borderBottomColor: 'transparent',
+      }}
+    />
+    {/* top arrowhead — clockwise */}
+    <View
+      style={{
+        position: 'absolute',
+        top: 0,
+        right: size * 0.1,
+        width: 0,
+        height: 0,
+        borderLeftWidth: size * 0.3,
+        borderLeftColor: color,
+        borderTopWidth: size * 0.17,
+        borderTopColor: 'transparent',
+        borderBottomWidth: size * 0.17,
+        borderBottomColor: 'transparent',
+      }}
+    />
+    {/* bottom arrowhead — clockwise */}
+    <View
+      style={{
+        position: 'absolute',
+        bottom: 0,
+        left: size * 0.1,
+        width: 0,
+        height: 0,
+        borderRightWidth: size * 0.3,
+        borderRightColor: color,
+        borderTopWidth: size * 0.17,
+        borderTopColor: 'transparent',
+        borderBottomWidth: size * 0.17,
+        borderBottomColor: 'transparent',
+      }}
+    />
+  </View>
+);
+
+/** Battery (red/yellow/green variants by color) — AssetCard mini-list. */
+export const BatteryGlyph = ({ color, size }: IconProps) => (
+  <View style={{ width: size, height: size * 0.55, flexDirection: 'row', alignItems: 'center' }}>
+    <View style={{ width: size * 0.78, height: size * 0.5, borderWidth: size * 0.1, borderColor: color, borderRadius: 1.5 }} />
+    <View style={{ width: size * 0.14, height: size * 0.22, backgroundColor: color, marginLeft: 0.5, borderRadius: 0.5 }} />
+  </View>
+);
+
+/** Ascending signal bars (green) — AssetCard mini-list. */
+export const SignalBars = ({ color, size }: IconProps) => (
+  <View style={{ width: size, height: size * 0.62, flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+    {[0.34, 0.55, 0.78, 1].map((h, i) => (
+      <View key={i} style={{ width: size * 0.16, height: size * 0.62 * h, backgroundColor: color, borderRadius: 0.5 }} />
+    ))}
+  </View>
+);
+
+/** Star — Premium bar. */
+export const StarIcon = ({ color, size }: IconProps) => (
+  <Text style={{ color, fontSize: size, lineHeight: size * 1.2, textAlign: 'center' }}>★</Text>
+);
+
+/** Vehicle door — sensor strip. */
+export const DoorIcon = ({ color, size }: IconProps) => (
+  <View style={{ width: size * 0.66, height: size, borderWidth: size * 0.11, borderColor: color, borderRadius: 1.5, alignItems: 'flex-end', justifyContent: 'center', paddingRight: size * 0.12 }}>
+    <View style={{ width: size * 0.1, height: size * 0.1, borderRadius: size * 0.05, backgroundColor: color }} />
+  </View>
+);
+
+/** Warning triangle — No Data summary card. */
+export const WarningTriangle = ({ color, size }: IconProps) => (
+  <Text style={{ color, fontSize: size, lineHeight: size * 1.2, textAlign: 'center' }}>⚠</Text>
+);
+
+/** PATCH HOME/H-D: right arrow glyph — "More Details" link on AssetCard. */
+export const ArrowRight = ({ color, size }: IconProps) => (
+  <Text style={{ color, fontSize: size, lineHeight: size * 1.2, textAlign: 'center' }}>→</Text>
+);
+
+/** PATCH HOME/H-D: red circle-play glyph — "Last Location" row on AssetCard. */
+export const CirclePlay = ({ color, size }: IconProps) => (
+  <View
+    style={{
+      width: size,
+      height: size,
+      borderRadius: size / 2,
+      backgroundColor: color,
+      alignItems: 'center',
+      justifyContent: 'center',
+    }}>
+    <Text style={{ color: colors.white, fontSize: size * 0.44, lineHeight: size * 0.5, marginLeft: size * 0.06 }}>▶</Text>
+  </View>
+);
+
+/** List/document glyph — Reports button on AssetCard. */
+export const ListIcon = ({ color, size }: IconProps) => (
+  <View style={{ width: size * 0.8, height: size, justifyContent: 'space-evenly', alignItems: 'center' }}>
+    {[0, 1, 2].map(i => (
+      <View key={i} style={{ width: size * 0.7, height: size * 0.09, backgroundColor: color, borderRadius: 0.5 }} />
+    ))}
+  </View>
+);
