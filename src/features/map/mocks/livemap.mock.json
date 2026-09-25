@@ -1,0 +1,116 @@
+{
+  "defaultVehicleId": "LFA-1464",
+  "trafficSegment": { "startIndex": 4, "endIndex": 8 },
+  "dashedSegment": { "startIndex": 8, "endIndex": 10 },
+  "pins": [
+    { "kind": "pin", "id": "pin-1", "coordinate": [31.456, 74.352] },
+    { "kind": "pin", "id": "pin-2", "coordinate": [31.4685, 74.3495] },
+    { "kind": "pin", "id": "pin-3", "coordinate": [31.4795, 74.3565] },
+    { "kind": "pin", "id": "pin-4", "coordinate": [31.4915, 74.364] },
+    { "kind": "pin", "id": "pin-5", "coordinate": [31.504, 74.369] },
+    { "kind": "pin", "id": "pin-6", "coordinate": [31.5175, 74.3745] },
+    { "kind": "pin", "id": "pin-7", "coordinate": [31.53, 74.386] }
+  ],
+  "dots": [
+    { "kind": "dot", "id": "dot-1", "coordinate": [31.455, 74.342] },
+    { "kind": "dot", "id": "dot-2", "coordinate": [31.462, 74.363] },
+    { "kind": "dot", "id": "dot-3", "coordinate": [31.474, 74.346] },
+    { "kind": "dot", "id": "dot-4", "coordinate": [31.4865, 74.3755] },
+    { "kind": "dot", "id": "dot-5", "coordinate": [31.4985, 74.356] },
+    { "kind": "dot", "id": "dot-6", "coordinate": [31.508, 74.383] },
+    { "kind": "dot", "id": "dot-7", "coordinate": [31.52, 74.363] },
+    { "kind": "dot", "id": "dot-8", "coordinate": [31.533, 74.396] },
+    { "kind": "dot", "id": "dot-9", "coordinate": [31.544, 74.376] },
+    { "kind": "dot", "id": "dot-10", "coordinate": [31.554, 74.409] }
+  ],
+  "vehicles": [
+    {
+      "id": "LFA-1464",
+      "name": "Honda Civic (LFA-1464)",
+      "status": "running",
+      "statusLabel": "Running",
+      "speed": "65 km/Hr",
+      "update": "2/10/25 (08:23 AM)",
+      "locationText": "Near Lahore Ring Road Interchange, Bedian Road, Lahore District, Punjab",
+      "route": [
+        [31.452, 74.348],
+        [31.461, 74.352],
+        [31.47, 74.356],
+        [31.479, 74.361],
+        [31.488, 74.366],
+        [31.497, 74.37],
+        [31.506, 74.375],
+        [31.515, 74.38],
+        [31.524, 74.385],
+        [31.533, 74.39],
+        [31.542, 74.395],
+        [31.551, 74.4]
+      ],
+      "car": { "coordinate": [31.455, 74.3495], "heading": 45 }
+    },
+    {
+      "id": "LZA-8735-2",
+      "name": "Kia Sportage (LZA-8735)",
+      "status": "idle",
+      "statusLabel": "Idle",
+      "speed": "0 km/Hr",
+      "update": "1/10/25 (09:01 PM)",
+      "locationText": "House # 120 Block J Phase 1 Johar Town, Punjab, Lahore",
+      "route": [
+        [31.551, 74.4],
+        [31.542, 74.395],
+        [31.533, 74.39],
+        [31.524, 74.385],
+        [31.515, 74.38],
+        [31.506, 74.375],
+        [31.497, 74.37],
+        [31.488, 74.366],
+        [31.479, 74.361],
+        [31.47, 74.356],
+        [31.461, 74.352],
+        [31.452, 74.348]
+      ],
+      "car": { "coordinate": [31.548, 74.3975], "heading": 225 }
+    },
+    {
+      "id": "JSB-8735",
+      "name": "Toyota Vitz (JSB-8735)",
+      "status": "stop",
+      "statusLabel": "Stop",
+      "speed": "0 km/Hr",
+      "update": "1/10/25 (06:07 PM)",
+      "locationText": "Sector G-8 House # 17, Islamabad",
+      "route": [
+        [31.452, 74.348],
+        [31.461, 74.352],
+        [31.47, 74.356],
+        [31.479, 74.361],
+        [31.488, 74.366],
+        [31.497, 74.37]
+      ],
+      "car": { "coordinate": [31.497, 74.37], "heading": 45 }
+    },
+    {
+      "id": "RWP-5544",
+      "name": "Toyota Corolla (RWP-5544)",
+      "status": "running",
+      "statusLabel": "Running",
+      "speed": "80 km/Hr",
+      "update": "5/10/25 (10:15 AM)",
+      "locationText": "Murree Road, Near Faizabad, Rawalpindi",
+      "route": [
+        [31.515, 74.38],
+        [31.506, 74.375],
+        [31.497, 74.37],
+        [31.488, 74.366],
+        [31.479, 74.361],
+        [31.47, 74.356],
+        [31.461, 74.352],
+        [31.452, 74.348],
+        [31.456, 74.3435],
+        [31.464, 74.34]
+      ],
+      "car": { "coordinate": [31.452, 74.348], "heading": 200 }
+    }
+  ]
+}
