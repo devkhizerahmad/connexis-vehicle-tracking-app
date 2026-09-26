@@ -84,6 +84,9 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        // Google Maps key comes ONLY from android/gradle.properties (MAPS_API_KEY,
+        // gitignored) — never from source control or JS.
+        manifestPlaceholders += [MAPS_API_KEY: MAPS_API_KEY]
     }
     signingConfigs {
         debug {

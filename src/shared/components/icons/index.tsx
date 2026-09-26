@@ -33,6 +33,27 @@ export const Chevron = ({
   );
 };
 
+/**
+ * PATCH L5: V-shape chevron (down) — dropdown affordance. Dependency-free: two
+ * borders on a rotated square. Added alongside `Chevron` (whose filled ▾ glyph is
+ * left untouched so frozen Details/Profile dropdowns render byte-identically).
+ */
+export const ChevronDown = ({ color, size }: IconProps) => (
+  <View style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}>
+    <View
+      style={{
+        width: size * 0.55,
+        height: size * 0.55,
+        borderRightWidth: 2,
+        borderBottomWidth: 2,
+        borderColor: color,
+        transform: [{ rotate: '45deg' }],
+        marginTop: -size * 0.18,
+      }}
+    />
+  </View>
+);
+
 export const StatusIcons = () => (
   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
     <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>

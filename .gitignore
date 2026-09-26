@@ -77,5 +77,8 @@ yarn-error.log
 #credentials
 .env
 
+# Android Gradle Properties
+/android/gradle.properties
+
 #logs
 /logs
