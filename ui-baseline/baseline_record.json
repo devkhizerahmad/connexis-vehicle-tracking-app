@@ -31,7 +31,8 @@
                                                       "hondaChevron":  "premium-bar chevron toggles sensor strip 250ms (down=collapsed, up=expanded per PATCH H-D)",
                                                       "stubToasts":  "Reports / bell / More Info / refresh show stub toasts",
                                                       "listConfig":  "FlatList removeClippedSubviews, initialNumToRender 6, maxToRenderPerBatch 4, windowSize 5, keyExtractor=name"
-                                                  }
+                                                  },
+                                "reportsToggleScroll":  "Reports toggle+scroll fix 2026-09-20."
                             },
     "crops":  [
                   {
