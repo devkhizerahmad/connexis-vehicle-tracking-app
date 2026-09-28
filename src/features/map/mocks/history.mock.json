@@ -1,0 +1,101 @@
+{
+  "defaultVehicleId": "LFA-1464",
+  "defaultRange": { "from": "2018-12-13", "until": "2018-12-24" },
+  "defaultMonth": { "year": 2018, "month": 11 },
+  "defaultHour": "2",
+  "defaultMinute": "05",
+  "playback": {
+    "speed": "35 km/h",
+    "state": "Moving",
+    "stateLabel": "Moving",
+    "stamp": "28-April-2024 (2:45 AM)",
+    "durationMinutes": 18,
+    "initialProgress": 0.34
+  },
+  "summary": {
+    "totalKm": "23.5",
+    "totalKmUnit": "Km",
+    "runningLabel": "TOTAL Running",
+    "runningValue": "18 minutes",
+    "idleLabel": "TOTAL Idle",
+    "idleValue": "1 hour 30 minutes",
+    "runningRatio": 0.28,
+    "idleRatio": 0.55
+  },
+  "alert": {
+    "text": "Near Lahore Ring Road Interchange, Bedian Road, Lahore District, Punjab"
+  },
+  "map": {
+    "dashedSegment": { "startIndex": 0, "endIndex": 5 },
+    "solidSegment": { "startIndex": 5, "endIndex": 11 },
+    "junctionPinCoordinate": [31.4975, 74.3705],
+    "carCoordinate": [31.4625, 74.3535],
+    "route": [
+      [31.452, 74.348],
+      [31.458, 74.3495],
+      [31.464, 74.3525],
+      [31.470, 74.3565],
+      [31.479, 74.3615],
+      [31.488, 74.3665],
+      [31.497, 74.37],
+      [31.506, 74.375],
+      [31.515, 74.38],
+      [31.524, 74.385],
+      [31.542, 74.395],
+      [31.551, 74.4]
+    ]
+  },
+  "hourOptions": ["1", "2", "3", "4"],
+  "minuteOptions": ["00", "05", "10", "15"],
+  "stops": [
+    {
+      "id": "stop-1",
+      "time": "10:08 PM",
+      "kind": "moving",
+      "address": "Lda Avenue Phase 1 Lahore,Punjab",
+      "duration": "6 min.",
+      "distance": "5.12 km",
+      "speed": "47 mph"
+    },
+    {
+      "id": "stop-2",
+      "time": "09:12 PM",
+      "kind": "idle",
+      "address": "H3, Phase 2 Johar Town, Lahore Punjab",
+      "duration": "1 min",
+      "distance": "",
+      "speed": ""
+    },
+    {
+      "id": "stop-3",
+      "time": "09:11 PM",
+      "kind": "stop",
+      "address": "H3, Phase 2 Johar Town, Lahore Punjab",
+      "duration": "20 Hr-20min",
+      "distance": "",
+      "speed": ""
+    }
+  ],
+  "vehicles": [
+    {
+      "id": "LFA-1464",
+      "name": "Honda Civic (LFA-1464)",
+      "plate": "LFA-1464"
+    },
+    {
+      "id": "LZA-8735-2",
+      "name": "Kia Sportage (LZA-8735)",
+      "plate": "LZA-8735"
+    },
+    {
+      "id": "JSB-8735",
+      "name": "Toyota Vitz (JSB-8735)",
+      "plate": "JSB-8735"
+    },
+    {
+      "id": "RWP-5544",
+      "name": "Toyota Corolla (RWP-5544)",
+      "plate": "RWP-5544"
+    }
+  ]
+}

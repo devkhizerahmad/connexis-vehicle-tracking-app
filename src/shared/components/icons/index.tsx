@@ -857,3 +857,108 @@ export const ListIcon = ({ color, size }: IconProps) => (
     ))}
   </View>
 );
+
+/**
+ * PATCH T-HISTORY: thin left arrow — the "View Live" link on the S2 chip row.
+ * Dependency-free (text glyph) so frozen screens keep their existing icons.
+ */
+export const ArrowLeft = ({ color, size }: IconProps) => (
+  <Text style={{ color, fontSize: size, lineHeight: size * 1.15, textAlign: 'center' }}>←</Text>
+);
+
+/** PATCH T-HISTORY: filled navigation arrow tilted up-right — S6 alert banner. */
+export const NavArrow = ({ color, size }: IconProps) => (
+  <Text
+    style={{
+      color,
+      fontSize: size,
+      lineHeight: size * 1.1,
+      textAlign: 'center',
+      transform: [{ rotate: '-45deg' }],
+    }}>
+    ➤
+  </Text>
+);
+
+/** PATCH T-HISTORY: solid caret ('◀' / '▶') — S8 hour/minute jump arrows. */
+export const CaretSolid = ({
+  color,
+  size,
+  dir = 'left',
+}: IconProps & { dir?: 'left' | 'right' }) => (
+  <Text style={{ color, fontSize: size, lineHeight: size * 1.15, textAlign: 'center' }}>
+    {dir === 'left' ? '◀' : '▶'}
+  </Text>
+);
+
+/** PATCH T-HISTORY: ring dot (coloured ring, white centre) — S7 playback state pill. */
+export const StatusRing = ({ color, size }: IconProps) => (
+  <View
+    style={{
+      width: size,
+      height: size,
+      borderRadius: size / 2,
+      borderWidth: Math.max(2, size * 0.3),
+      borderColor: color,
+      backgroundColor: colors.white,
+    }}
+  />
+);
+
+/** PATCH T-HISTORY: outlined calendar shell — S7 playback timestamp row. */
+export const CalendarGlyph = ({ color, size }: IconProps) => (
+  <View style={{ width: size, height: size, alignItems: 'center' }}>
+    <View
+      style={{
+        width: size,
+        height: size * 0.88,
+        borderWidth: Math.max(1.5, size * 0.11),
+        borderColor: color,
+        borderRadius: size * 0.16,
+        marginTop: size * 0.12,
+        justifyContent: 'center',
+      }}>
+      <View style={{ height: Math.max(1.5, size * 0.1), backgroundColor: color }} />
+    </View>
+    <View
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: size * 0.18,
+        width: Math.max(1.5, size * 0.1),
+        height: size * 0.24,
+        backgroundColor: color,
+        borderRadius: 1,
+      }}
+    />
+    <View
+      style={{
+        position: 'absolute',
+        top: 0,
+        right: size * 0.18,
+        width: Math.max(1.5, size * 0.1),
+        height: size * 0.24,
+        backgroundColor: color,
+        borderRadius: 1,
+      }}
+    />
+  </View>
+);
+
+/** PATCH T-HISTORY: transport glyphs (skip-back / play / pause / skip-forward). */
+export const TransportGlyph = ({
+  color,
+  size,
+  glyph,
+}: IconProps & { glyph: 'prev' | 'play' | 'pause' | 'next' }) => (
+  <Text
+    style={{
+      color,
+      fontSize: size,
+      lineHeight: size * 1.15,
+      textAlign: 'center',
+    }}>
+    {glyph === 'prev' ? '⏮' : glyph === 'next' ? '⏭' : glyph === 'pause' ? '❚❚' : '▶'}
+  </Text>
+);
+
