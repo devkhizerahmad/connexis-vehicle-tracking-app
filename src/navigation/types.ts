@@ -6,14 +6,19 @@ export type HomeStackParamList = {
   Details: { vehicleId?: string } | undefined;
 };
 
+// PATCH T-REPORTS: the `Reports` route was MIGRATED out of MapStack and into
+// ReportStack (where it is the root). LiveMap + History stay here untouched.
 export type MapStackParamList = {
   LiveMap: { vehicleId?: string } | undefined;
   History: { vehicleId: string };
-  Reports: { vehicleId?: string } | undefined;
 };
 
+// Reports is the ROOT of the REPORT stack (not a MapStack route) so that the
+// bottom "Report" tab opens it and the REPORT tab stays highlighted. The
+// reference artboard shows the MAP tab highlighted here; that is a design
+// inconsistency, intentionally corrected per user decision.
 export type ReportStackParamList = {
-  ReportsMain: undefined;
+  Reports: { vehicleId?: string } | undefined;
 };
 
 export type EngineControlStackParamList = {

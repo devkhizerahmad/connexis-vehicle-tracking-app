@@ -962,3 +962,181 @@ export const TransportGlyph = ({
   </Text>
 );
 
+/* ------------------------------------------------------------------ *
+ * Reports screen glyphs (dependency-free, drawn with borders/rects).
+ * New icons only — nothing above this block is touched, so the frozen
+ * Home/Details/Profile/LiveMap/History icon output stays byte-identical.
+ * ------------------------------------------------------------------ */
+
+/** Reports S7–S9: road/highway glyph (two rails + a centre divider). */
+export const HighwayGlyph = ({ color, size }: IconProps) => (
+  <View
+    style={{
+      width: size,
+      height: size,
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingVertical: size * 0.08,
+    }}>
+    <View
+      style={{
+        position: 'absolute',
+        left: size * 0.16,
+        top: 0,
+        bottom: 0,
+        width: size * 0.1,
+        backgroundColor: color,
+        borderRadius: size * 0.05,
+      }}
+    />
+    <View
+      style={{
+        position: 'absolute',
+        right: size * 0.16,
+        top: 0,
+        bottom: 0,
+        width: size * 0.1,
+        backgroundColor: color,
+        borderRadius: size * 0.05,
+      }}
+    />
+    {[0, 1, 2].map(i => (
+      <View
+        key={i}
+        style={{
+          width: size * 0.12,
+          height: size * 0.16,
+          backgroundColor: color,
+          borderRadius: size * 0.04,
+        }}
+      />
+    ))}
+  </View>
+);
+
+/** Reports S7–S9: geofence glyph (location pin over a dashed boundary). */
+export const GeofenceGlyph = ({ color, size }: IconProps) => (
+  <View style={{ width: size, height: size, alignItems: 'center', justifyContent: 'flex-start' }}>
+    <View
+      style={{
+        width: size * 0.44,
+        height: size * 0.44,
+        borderRadius: size * 0.22,
+        borderWidth: Math.max(1.2, size * 0.09),
+        borderColor: color,
+        marginTop: size * 0.1,
+      }}
+    />
+    <View
+      style={{
+        marginTop: -size * 0.06,
+        width: size * 0.2,
+        height: size * 0.2,
+        borderRadius: size * 0.1,
+        backgroundColor: color,
+      }}
+    />
+    <View
+      style={{
+        marginTop: size * 0.04,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: size * 0.8,
+      }}>
+      {[0, 1, 2, 3].map(i => (
+        <View
+          key={i}
+          style={{
+            width: size * 0.14,
+            height: size * 0.08,
+            backgroundColor: color,
+            borderRadius: size * 0.04,
+          }}
+        />
+      ))}
+    </View>
+  </View>
+);
+
+/** Reports S7–S9: share glyph (three dots joined by two rails). */
+export const ShareGlyph = ({ color, size }: IconProps) => (
+  <View style={{ width: size, height: size, justifyContent: 'space-between' }}>
+    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+      <View
+        style={{
+          width: size * 0.24,
+          height: size * 0.24,
+          borderRadius: size * 0.12,
+          backgroundColor: color,
+        }}
+      />
+      <View
+        style={{
+          flex: 1,
+          height: Math.max(1, size * 0.1),
+          marginHorizontal: size * 0.06,
+          backgroundColor: color,
+        }}
+      />
+      <View
+        style={{
+          width: size * 0.24,
+          height: size * 0.24,
+          borderRadius: size * 0.12,
+          backgroundColor: color,
+        }}
+      />
+    </View>
+    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+      <View
+        style={{
+          width: size * 0.24,
+          height: size * 0.24,
+          borderRadius: size * 0.12,
+          backgroundColor: color,
+        }}
+      />
+      <View
+        style={{
+          flex: 1,
+          height: Math.max(1, size * 0.1),
+          marginHorizontal: size * 0.06,
+          backgroundColor: color,
+        }}
+      />
+    </View>
+  </View>
+);
+
+/** Reports S7–S9: green circular "+" affordance (bottom-right of a tile body). */
+export const PlusCircleGlyph = ({ color, size }: IconProps) => (
+  <View
+    style={{
+      width: size,
+      height: size,
+      borderRadius: size / 2,
+      backgroundColor: color,
+      alignItems: 'center',
+      justifyContent: 'center',
+    }}>
+    <View
+      style={{
+        position: 'absolute',
+        width: size * 0.5,
+        height: Math.max(1.4, size * 0.12),
+        borderRadius: size * 0.06,
+        backgroundColor: colors.white,
+      }}
+    />
+    <View
+      style={{
+        position: 'absolute',
+        height: size * 0.5,
+        width: Math.max(1.4, size * 0.12),
+        borderRadius: size * 0.06,
+        backgroundColor: colors.white,
+      }}
+    />
+  </View>
+);
+

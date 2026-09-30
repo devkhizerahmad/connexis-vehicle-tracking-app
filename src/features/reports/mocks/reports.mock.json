@@ -1,0 +1,78 @@
+{
+  "vehicleOptions": [
+    { "id": "LFA-1464", "name": "Honda Civic (LFA-1464)" },
+    { "id": "LZA-8735-2", "name": "Kia Sportage (LZA-8735)" },
+    { "id": "JSB-8735", "name": "Toyota Vitz (JSB-8735)" },
+    { "id": "RWP-5544", "name": "Toyota Corolla (RWP-5544)" }
+  ],
+  "dateTimeExpanded": true,
+  "calendar": {
+    "fromLabel": "13.12.18",
+    "untilLabel": "24.12.18",
+    "monthLabel": "December 2018",
+    "yearMonth": { "y": 2018, "m": 11 },
+    "startDay": 13,
+    "blueDays": [14, 15, 23, 24]
+  },
+  "hourRow": { "label": "Hour", "chips": ["1 AM", "2 AM", "3 AM", "4 AM"], "selected": 1 },
+  "minRow": { "label": "Min", "chips": ["00", "05", "10", "15"], "selected": 1 },
+  "categories": [
+    {
+      "title": "Monitoring & Analysis of Events and Alerts",
+      "tiles": [
+        {
+          "color": "#1E88E5",
+          "iconKey": "list",
+          "title": "Events & Alerts Report",
+          "desc": "Comprehensive log of all triggered events.",
+          "showPlus": true
+        },
+        {
+          "color": "#D84315",
+          "iconKey": "flag",
+          "title": "History Report",
+          "desc": "Summarizes historical data on activities.",
+          "showPlus": true
+        }
+      ]
+    },
+    {
+      "title": "Comprehensive Analysis of Vehicle Movement",
+      "tiles": [
+        {
+          "color": "#009688",
+          "iconKey": "highway",
+          "title": "Events & Alerts Report",
+          "desc": "Tracks and logs vehicle movement",
+          "showPlus": true
+        },
+        {
+          "color": "#F9A825",
+          "iconKey": "steering",
+          "title": "Journey Report",
+          "desc": "Details routes and vehicle journeys",
+          "showPlus": true
+        }
+      ]
+    },
+    {
+      "title": "Geofence Monitoring & Compliance",
+      "tiles": [
+        {
+          "color": "#37474F",
+          "iconKey": "geofence",
+          "title": "Geofence Report",
+          "desc": "Records individual trips by vehicle.",
+          "showPlus": true
+        },
+        {
+          "color": "#9E9E9E",
+          "iconKey": "other",
+          "title": "Other",
+          "desc": "View More Reports here",
+          "showPlus": false
+        }
+      ]
+    }
+  ]
+}
