@@ -1,0 +1,197 @@
+﻿== rows | engine control enhance version.png 724x2172 | A=200,345,430,520,800,860,940,1200,1660,1880,2010,2100 tol=12 minRun=5
+-- row y=200
+x=   0..  18 w=  19  #FAFCFD
+x=  22..  85 w=  64  #FDFDFD
+x= 170.. 180 w=  11  #0C0F13
+x= 198.. 211 w=  14  #FAFAFA
+x= 212.. 400 w= 189  #FFFFFF
+x= 404.. 420 w=  17  #FAFCFD
+x= 425.. 450 w=  26  #EC021B
+x= 451.. 463 w=  13  #E90621
+x= 464.. 470 w=   7  #F4081F
+x= 471.. 701 w= 231  #EA0620
+x= 706.. 723 w=  18  #FBFCFC
+
+-- row y=345
+x=   0..  18 w=  19  #FAFCFD
+x=  22.. 400 w= 379  #FCFDFD
+x= 404.. 701 w= 298  #FBFDFE
+x= 706.. 723 w=  18  #F8FAFC
+
+-- row y=430
+x=   0..  28 w=  29  #FAFCFD
+x=  33..  52 w=  20  #FBFCFC
+x=  57.. 122 w=  66  #FDFCFC
+x= 123.. 128 w=   6  #F7F8F8
+x= 129.. 153 w=  25  #FCFCFC
+x= 154.. 161 w=   8  #F7F7F8
+x= 162.. 187 w=  26  #FCFBFC
+x= 194.. 209 w=  16  #FBFCFD
+x= 210.. 215 w=   6  #F2F5FC
+x= 216.. 249 w=  34  #F9FBFD
+x= 250.. 254 w=   5  #F2F7FA
+x= 255.. 354 w= 100  #FAFBFD
+x= 355.. 360 w=   6  #F2F7FE
+x= 361.. 369 w=   9  #FBFDFD
+x= 370.. 374 w=   5  #F5F7F8
+x= 375.. 398 w=  24  #F9FBFD
+x= 403.. 437 w=  35  #F7FAFC
+x= 438.. 445 w=   8  #FFFEFD
+x= 446.. 453 w=   8  #F6FAFC
+x= 454.. 464 w=  11  #FDFEFF
+x= 469.. 479 w=  11  #FDFEFE
+x= 480.. 484 w=   5  #F5F9FE
+x= 485.. 723 w= 239  #FEFEFD
+
+-- row y=520
+x=   0..  22 w=  23  #FAFCFD
+x=  68..  73 w=   6  #D7C9B7
+x= 150.. 154 w=   5  #EDC59F
+x= 352.. 357 w=   6  #78BCF6
+x= 360.. 364 w=   5  #6FB9F8
+x= 398.. 402 w=   5  #F7F5F6
+x= 464.. 468 w=   5  #DDD5CD
+x= 584.. 588 w=   5  #C1BECB
+x= 630.. 634 w=   5  #CDBCB6
+x= 667.. 671 w=   5  #56ADF3
+x= 702.. 723 w=  22  #F8FCFC
+
+-- row y=800
+x=   0..  23 w=  24  #FBFCFD
+x=  27.. 696 w= 670  #FBFEFC
+x= 702.. 723 w=  22  #F9FCFD
+
+-- row y=860
+x=   0.. 723 w= 724  #FBFCFD
+
+-- row y=940
+x=   0..  24 w=  25  #FAFCFD
+x=  28..  49 w=  22  #FBFCFE
+x=  54..  59 w=   6  #57D805
+x=  60..  78 w=  19  #56CD03
+x=  82..  99 w=  18  #53CB03
+x= 104.. 125 w=  22  #FBFDF7
+x= 126.. 130 w=   5  #FFFFFF
+x= 145.. 151 w=   7  #FEFEFD
+x= 152.. 158 w=   7  #F7F8F9
+x= 159.. 165 w=   7  #FFFFFF
+x= 181.. 186 w=   6  #FFFFFF
+x= 192.. 204 w=  13  #FBFBFC
+x= 224.. 228 w=   5  #F9FAFB
+x= 229.. 242 w=  14  #FFFFFE
+x= 243.. 247 w=   5  #F8F8F9
+x= 248.. 256 w=   9  #FDFDFD
+x= 265.. 269 w=   5  #FDFDFC
+x= 270.. 274 w=   5  #F8F8F9
+x= 314.. 318 w=   5  #FAFAFB
+x= 319.. 323 w=   5  #FFFFFF
+x= 331.. 338 w=   8  #FAFBFA
+x= 339.. 347 w=   9  #FFFFFF
+x= 348.. 362 w=  15  #FAFBFB
+x= 374.. 695 w= 322  #FEFEFE
+x= 701.. 723 w=  23  #FAFCFD
+
+-- row y=1200
+x=   0..  24 w=  25  #FAFCFD
+x=  28..  50 w=  23  #FBFDFE
+x=  59..  65 w=   7  #EF8590
+x=  66..  94 w=  29  #F48B93
+x= 103.. 695 w= 593  #FEFEFE
+x= 700.. 723 w=  24  #F9FCFD
+
+-- row y=1660
+x=   0..  24 w=  25  #FAFCFD
+x=  29..  61 w=  33  #FFFFFE
+x=  73..  78 w=   6  #071A33
+x=  79.. 651 w= 573  #011D37
+x= 658.. 669 w=  12  #F8FAFB
+x= 670.. 695 w=  26  #FFFEFE
+x= 701.. 723 w=  23  #FBFDFE
+
+-- row y=1880
+x=   0..  24 w=  25  #FBFCFD
+x=  29..  83 w=  55  #FBFCFE
+x=  84..  91 w=   8  #F7F8F9
+x=  92.. 146 w=  55  #FDFDFD
+x= 147.. 158 w=  12  #F8F9F9
+x= 159.. 172 w=  14  #FDFEFE
+x= 173.. 183 w=  11  #F6F8FB
+x= 184.. 205 w=  22  #FDFEFE
+x= 206.. 212 w=   7  #F7F9FC
+x= 213.. 217 w=   5  #FEFEFE
+x= 218.. 225 w=   8  #F6F9FB
+x= 226.. 231 w=   6  #FEFEFE
+x= 232.. 241 w=  10  #F7F9FB
+x= 242.. 251 w=  10  #FEFEFE
+x= 254.. 263 w=  10  #FEFFFF
+x= 264.. 270 w=   7  #F8FAFB
+x= 271.. 288 w=  18  #FFFFFF
+x= 289.. 306 w=  18  #F8FBFB
+x= 307.. 314 w=   8  #FFFFFE
+x= 315.. 324 w=  10  #F9F9FA
+x= 329.. 334 w=   6  #FFFFFF
+x= 335.. 342 w=   8  #F9FAFB
+x= 343.. 347 w=   5  #FFFEFE
+x= 348.. 353 w=   6  #F9FAFB
+x= 354.. 360 w=   7  #FFFFFF
+x= 361.. 365 w=   5  #F8F9FC
+x= 370.. 380 w=  11  #F8F9FD
+x= 381.. 694 w= 314  #FFFFFF
+x= 699.. 723 w=  25  #F7FAFC
+
+-- row y=2010
+x=   0..  24 w=  25  #FBFDFE
+x=  29..  54 w=  26  #FBFCFD
+x=  58..  69 w=  12  #BDE5FB
+x=  70..  81 w=  12  #C6E8FC
+x=  85..  94 w=  10  #B4E1F9
+x=  95..  99 w=   5  #A8E0FA
+x= 100.. 108 w=   9  #A1DBF9
+x= 109.. 131 w=  23  #AAE0FA
+x= 132.. 137 w=   6  #A1DCFA
+x= 138.. 145 w=   8  #ABDFFB
+x= 146.. 157 w=  12  #9FDDF9
+x= 162.. 167 w=   6  #B3E4FA
+x= 168.. 179 w=  12  #A9E1FA
+x= 183.. 193 w=  11  #C1E8F9
+x= 197.. 203 w=   7  #AEDFF8
+x= 204.. 210 w=   7  #A5DCF9
+x= 213.. 219 w=   7  #B8E3F9
+x= 220.. 233 w=  14  #AEE2FB
+x= 234.. 246 w=  13  #A6DEFA
+x= 247.. 257 w=  11  #AFE1FB
+x= 258.. 265 w=   8  #A6DEFA
+x= 270.. 285 w=  16  #90D7F9
+x= 286.. 292 w=   7  #86D3F9
+x= 293.. 298 w=   6  #91DAFA
+x= 302.. 312 w=  11  #9ADDFC
+x= 323.. 330 w=   8  #A5DDFA
+x= 334.. 339 w=   6  #94D6FA
+x= 340.. 344 w=   5  #9DD9FB
+x= 349.. 354 w=   6  #88D2F8
+x= 355.. 368 w=  14  #93D6F8
+x= 379.. 383 w=   5  #93D6F8
+x= 384.. 388 w=   5  #9BDBF9
+x= 389.. 397 w=   9  #91D6FA
+x= 406.. 410 w=   5  #A9DDF8
+x= 411.. 415 w=   5  #B0DFFC
+x= 416.. 444 w=  29  #B9E2FB
+x= 447.. 505 w=  59  #D1E9FA
+x= 506.. 633 w= 128  #C8E6FC
+x= 634.. 658 w=  25  #D2EAFD
+x= 659.. 668 w=  10  #C9E7FC
+x= 670.. 694 w=  25  #FFFFFF
+x= 699.. 723 w=  25  #F7FAFC
+
+-- row y=2100
+x=   0..  71 w=  72  #FDFEFE
+x=  87..  91 w=   5  #F7F8F8
+x=  92.. 201 w= 110  #FCFDFC
+x= 212.. 221 w=  10  #414C66
+x= 226.. 294 w=  69  #FBFBFC
+x= 299.. 353 w=  55  #E5011A
+x= 374.. 424 w=  51  #EB0619
+x= 429.. 498 w=  70  #FEFFFF
+x= 520.. 635 w= 116  #FFFFFF
+x= 646.. 723 w=  78  #FFFFFF
+

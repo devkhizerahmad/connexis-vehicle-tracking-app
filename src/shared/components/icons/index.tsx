@@ -1140,3 +1140,451 @@ export const PlusCircleGlyph = ({ color, size }: IconProps) => (
   </View>
 );
 
+/* ------------------------------------------------------------------ *
+ * Engine Control screen glyphs (dependency-free, drawn with borders/rects).
+ * Additive block: nothing above this line is touched, so the frozen
+ * Home/Details/Profile/LiveMap/History/Reports icon output stays
+ * byte-identical.
+ * ------------------------------------------------------------------ */
+
+/** Engine Control S3: OUTLINED alert ring (red/amber ring + "!"). */
+export const AlertRing = ({ color, size }: IconProps) => (
+  <View
+    style={{
+      width: size,
+      height: size,
+      borderRadius: size / 2,
+      borderWidth: Math.max(1.5, size * 0.11),
+      borderColor: color,
+      alignItems: 'center',
+      justifyContent: 'center',
+    }}>
+    <Text
+      style={{
+        color,
+        fontSize: size * 0.62,
+        fontWeight: '800',
+        lineHeight: size * 0.72,
+        textAlign: 'center',
+      }}>
+      !
+    </Text>
+  </View>
+);
+
+/** Engine Control S8: closed padlock (shackle up + body). */
+export const LockGlyph = ({ color, size }: IconProps) => (
+  <View style={{ width: size, height: size, alignItems: 'center' }}>
+    <View
+      style={{
+        width: size * 0.5,
+        height: size * 0.42,
+        borderWidth: Math.max(1.5, size * 0.1),
+        borderBottomWidth: 0,
+        borderColor: color,
+        borderTopLeftRadius: size * 0.25,
+        borderTopRightRadius: size * 0.25,
+        marginTop: size * 0.04,
+      }}
+    />
+    <View
+      style={{
+        width: size * 0.8,
+        height: size * 0.5,
+        backgroundColor: color,
+        borderRadius: size * 0.12,
+        marginTop: -size * 0.06,
+      }}
+    />
+  </View>
+);
+
+/** Engine Control S8: open padlock (shackle lifted clear of the body). */
+export const UnlockGlyph = ({ color, size }: IconProps) => (
+  <View style={{ width: size, height: size, alignItems: 'flex-end' }}>
+    <View
+      style={{
+        width: size * 0.5,
+        height: size * 0.42,
+        borderWidth: Math.max(1.5, size * 0.1),
+        borderBottomWidth: 0,
+        borderColor: color,
+        borderTopLeftRadius: size * 0.25,
+        borderTopRightRadius: size * 0.25,
+        marginRight: size * 0.1,
+        marginTop: size * 0.04,
+      }}
+    />
+    <View
+      style={{
+        width: size * 0.8,
+        height: size * 0.5,
+        backgroundColor: color,
+        borderRadius: size * 0.12,
+        marginTop: -size * 0.06,
+      }}
+    />
+  </View>
+);
+
+/** Engine Control S12: support headset (band + two ear cups). */
+export const SupportGlyph = ({ color, size }: IconProps) => (
+  <View style={{ width: size, height: size, alignItems: 'center' }}>
+    <View
+      style={{
+        width: size * 0.62,
+        height: size * 0.34,
+        borderWidth: Math.max(1.5, size * 0.1),
+        borderBottomWidth: 0,
+        borderColor: color,
+        borderTopLeftRadius: size * 0.34,
+        borderTopRightRadius: size * 0.34,
+        marginTop: size * 0.08,
+      }}
+    />
+    <View
+      style={{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: size * 0.86,
+        marginTop: -size * 0.02,
+      }}>
+      <View
+        style={{
+          width: size * 0.22,
+          height: size * 0.38,
+          borderRadius: size * 0.08,
+          backgroundColor: color,
+        }}
+      />
+      <View
+        style={{
+          width: size * 0.22,
+          height: size * 0.38,
+          borderRadius: size * 0.08,
+          backgroundColor: color,
+        }}
+      />
+    </View>
+    <View
+      style={{
+        width: size * 0.34,
+        height: size * 0.18,
+        borderBottomWidth: Math.max(1.5, size * 0.1),
+        borderLeftWidth: Math.max(1.5, size * 0.1),
+        borderColor: color,
+        borderBottomLeftRadius: size * 0.16,
+        marginTop: -size * 0.06,
+        marginLeft: size * 0.2,
+      }}
+    />
+  </View>
+);
+
+/** Engine Control S5: fence chip glyph — three posts behind two rails. */
+export const FenceChipGlyph = ({ color, size }: IconProps) => {
+  const bar = Math.max(1.4, size * 0.13);
+  return (
+    <View
+      style={{
+        width: size,
+        height: size,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+      }}>
+      {[0, 1, 2].map(index => (
+        <View
+          key={index}
+          style={{
+            width: bar,
+            height: size,
+            borderRadius: bar / 2,
+            backgroundColor: color,
+          }}
+        />
+      ))}
+      <View
+        style={{
+          position: 'absolute',
+          top: size * 0.24,
+          left: 0,
+          right: 0,
+          height: bar,
+          borderRadius: bar / 2,
+          backgroundColor: color,
+        }}
+      />
+      <View
+        style={{
+          position: 'absolute',
+          bottom: size * 0.24,
+          left: 0,
+          right: 0,
+          height: bar,
+          borderRadius: bar / 2,
+          backgroundColor: color,
+        }}
+      />
+    </View>
+  );
+};
+
+/**
+ * Engine Control S2: "out of fence" pill badge — a rounded badge outline holding a
+ * small rounded square (fence post) with a centre dot, per the reference pill glyph.
+ */
+export const ZoneBadge = ({ color, size }: IconProps) => {
+  const ring = Math.max(1.5, size * 0.1);
+  return (
+    <View
+      style={{
+        width: size,
+        height: size,
+        borderWidth: ring,
+        borderColor: color,
+        borderRadius: size * 0.3,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}>
+      <View
+        style={{
+          width: size * 0.42,
+          height: size * 0.42,
+          borderWidth: ring,
+          borderColor: color,
+          borderRadius: size * 0.08,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <View style={{ width: size * 0.14, height: size * 0.14, backgroundColor: color }} />
+      </View>
+    </View>
+  );
+};
+
+/** Engine Control S2 (F3): camera-lock glyph — body + lens ring + shutter dot. */
+export const CameraLockGlyph = ({ color, size }: IconProps) => {
+  const ring = Math.max(1.2, size * 0.1);
+  return (
+    <View
+      style={{
+        width: size,
+        height: size,
+        borderWidth: ring,
+        borderColor: color,
+        borderRadius: size * 0.22,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}>
+      <View
+        style={{
+          width: size * 0.44,
+          height: size * 0.44,
+          borderWidth: ring,
+          borderColor: color,
+          borderRadius: size * 0.22,
+        }}
+      />
+      <View
+        style={{
+          position: 'absolute',
+          top: size * 0.14,
+          right: size * 0.1,
+          width: size * 0.18,
+          height: size * 0.18,
+          borderRadius: size * 0.09,
+          backgroundColor: color,
+        }}
+      />
+    </View>
+  );
+};
+
+/** Engine Control S2 (F3): open-in-new (external link) — box + diagonal arrow. */
+export const ExternalLinkGlyph = ({ color, size }: IconProps) => {
+  const bar = Math.max(1.2, size * 0.11);
+  return (
+    <View style={{ width: size, height: size, justifyContent: 'flex-end' }}>
+      <View
+        style={{
+          position: 'absolute',
+          top: 0,
+          right: 0,
+          width: size * 0.62,
+          height: size * 0.62,
+          borderTopWidth: bar,
+          borderRightWidth: bar,
+          borderColor: color,
+        }}
+      />
+      <View
+        style={{
+          position: 'absolute',
+          top: size * 0.1,
+          right: size * 0.1,
+          width: size * 0.42,
+          height: bar,
+          backgroundColor: color,
+          transform: [{ rotate: '-45deg' }],
+        }}
+      />
+      <View
+        style={{
+          width: size * 0.6,
+          height: size * 0.6,
+          marginRight: size * 0.14,
+          marginBottom: size * 0.14,
+          borderWidth: bar,
+          borderRightWidth: 0,
+          borderBottomWidth: 0,
+          borderColor: color,
+        }}
+      />
+    </View>
+  );
+};
+
+/** Engine Control S2 (F4): right-pointing play triangle (solid). */
+export const PlayTriangleGlyph = ({ color, size }: IconProps) => (
+  <View
+    style={{
+      width: 0,
+      height: 0,
+      borderTopWidth: size * 0.5,
+      borderBottomWidth: size * 0.5,
+      borderLeftWidth: size * 0.86,
+      borderTopColor: 'transparent',
+      borderBottomColor: 'transparent',
+      borderLeftColor: color,
+    }}
+  />
+);
+
+/** Engine Control S4 (F6): shield with a check — used by the "Current Fence" chip. */
+export const ShieldCheckGlyph = ({ color, size }: IconProps) => {
+  const bar = Math.max(1.2, size * 0.11);
+  return (
+    <View style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}>
+      <View
+        style={{
+          width: size * 0.82,
+          height: size * 0.9,
+          borderWidth: bar,
+          borderColor: color,
+          borderTopLeftRadius: size * 0.16,
+          borderTopRightRadius: size * 0.16,
+          borderBottomLeftRadius: size * 0.4,
+          borderBottomRightRadius: size * 0.4,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <View
+          style={{
+            width: size * 0.3,
+            height: size * 0.16,
+            borderLeftWidth: bar,
+            borderBottomWidth: bar,
+            borderColor: color,
+            transform: [{ rotate: '-45deg' }],
+            marginTop: -size * 0.12,
+          }}
+        />
+      </View>
+    </View>
+  );
+};
+
+/** Engine Control S5 (F7): shuffle — two crossing rails with two arrowheads. */
+export const ShuffleGlyph = ({ color, size }: IconProps) => {
+  const bar = Math.max(1.3, size * 0.12);
+  const rail = {
+    position: 'absolute' as const,
+    height: bar,
+    backgroundColor: color,
+    borderRadius: bar / 2,
+  };
+  const head = {
+    position: 'absolute' as const,
+    right: 0,
+    width: 0,
+    height: 0,
+    borderTopWidth: size * 0.17,
+    borderBottomWidth: size * 0.17,
+    borderLeftWidth: size * 0.2,
+    borderTopColor: 'transparent',
+    borderBottomColor: 'transparent',
+    borderLeftColor: color,
+  };
+  return (
+    <View style={{ width: size, height: size }}>
+      <View style={[rail, { top: size * 0.24, left: 0, width: size * 0.62 }]} />
+      <View style={[rail, { bottom: size * 0.24, left: 0, width: size * 0.62 }]} />
+      <View
+        style={[
+          rail,
+          {
+            top: size * 0.42,
+            left: size * 0.28,
+            width: size * 0.48,
+            transform: [{ rotate: '-34deg' }],
+          },
+        ]}
+      />
+      <View
+        style={[
+          rail,
+          {
+            bottom: size * 0.42,
+            left: size * 0.28,
+            width: size * 0.48,
+            transform: [{ rotate: '34deg' }],
+          },
+        ]}
+      />
+      <View style={[head, { top: size * 0.1 }]} />
+      <View style={[head, { bottom: size * 0.1 }]} />
+    </View>
+  );
+};
+
+/** Engine Control S4 (F10): blue diamond map marker. */
+export const DiamondMarker = ({ color, size }: IconProps) => (
+  <View
+    style={{
+      width: size,
+      height: size,
+      backgroundColor: color,
+      transform: [{ rotate: '45deg' }],
+    }}
+  />
+);
+
+/** Engine Control S4 (F10): red teardrop map pin (circle head + triangular tail). */
+export const TeardropPin = ({ color, size }: IconProps) => (
+  <View style={{ width: size, height: size * 1.25, alignItems: 'center' }}>
+    <View
+      style={{
+        width: size,
+        height: size,
+        borderRadius: size / 2,
+        backgroundColor: color,
+        borderWidth: Math.max(1.2, size * 0.08),
+        borderColor: '#FFFFFF',
+      }}
+    />
+    <View
+      style={{
+        width: 0,
+        height: 0,
+        marginTop: -size * 0.16,
+        borderLeftWidth: size * 0.26,
+        borderRightWidth: size * 0.26,
+        borderTopWidth: size * 0.36,
+        borderLeftColor: 'transparent',
+        borderRightColor: 'transparent',
+        borderTopColor: color,
+      }}
+    />
+  </View>
+);
+

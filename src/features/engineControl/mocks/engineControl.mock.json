@@ -1,0 +1,93 @@
+{
+  "vehicle": {
+    "captionPrefix": "Car | ",
+    "name": "Honda Civic (LFA-1464)",
+    "fenceState": "Out of Fence",
+    "status": "Running",
+    "addressLines": ["Phase 1: Qua Avenue,", "Lahore, Punjab"]
+  },
+  "alert": "Your Vehicle is out of Geofence, Since 3:40pm",
+  "map": {
+    "lastUpdatedLabel": "Last Updated",
+    "lastUpdatedValue": "5:40PM",
+    "fenceLabel": "Current Fence",
+    "region": {
+      "latitude": 31.5132,
+      "longitude": 74.3447,
+      "latitudeDelta": 0.0375,
+      "longitudeDelta": 0.0756
+    },
+    "fence": { "latitude": 31.5146, "longitude": 74.3492, "radius": 1500 },
+    "pin": { "latitude": 31.5148, "longitude": 74.3496 },
+    "teardrop": { "latitude": 31.5098, "longitude": 74.3571 },
+    "dots": [
+      { "id": "d1", "latitude": 31.5225, "longitude": 74.3545 },
+      { "id": "d2", "latitude": 31.5203, "longitude": 74.3438 }
+    ]
+  },
+  "changeFenceLabel": "Change Fence",
+  "routesSectionTitle": "Driving Routes",
+  "routes": [
+    {
+      "id": "route-1",
+      "index": 1,
+      "title": "Gar fish Farm kotli Behram",
+      "subtitle": "Gakotli, Punjab",
+      "time": "08:00 AM - 10:40 AM",
+      "state": "Moving",
+      "duration": "40m-8s",
+      "subBlue": true
+    },
+    {
+      "id": "route-2",
+      "index": 2,
+      "title": "H3 Phase 2, Johar Town",
+      "subtitle": "Lahore, Punjab",
+      "time": "09:10 AM - 01:00 PM",
+      "state": "Idle",
+      "duration": "20m-20s"
+    },
+    {
+      "id": "route-3",
+      "index": 3,
+      "title": "Lda Avenue Phase 1",
+      "subtitle": "Lahore, Punjab",
+      "time": "03:00 PM - 04:00 PM",
+      "state": "Stop",
+      "duration": "58m-20s"
+    }
+  ],
+  "controlSectionTitle": "Control Vehicle",
+  "controls": [
+    { "id": "live-location", "icon": "pin", "label": "Live Location" },
+    { "id": "remote-starts", "icon": "clock", "label": "Scheduled Remote Starts" }
+  ],
+  "lockLabel": "Lock",
+  "unlockLabel": "Unlock",
+  "privacyLabel": "Privacy Policy",
+  "slideLabel": "Slide to Proceed",
+  "faqTitle": "FAQ",
+  "faq": [
+    {
+      "id": "faq-1",
+      "question": "What is the Lock/Unlock (Kill Engine) feature?",
+      "answer": "It lets you remotely stop or start the vehicle's engine."
+    },
+    {
+      "id": "faq-2",
+      "question": "When should I use Kill Engine?",
+      "answer": "Only when your vehicle is out of fence and stolen."
+    },
+    {
+      "id": "faq-3",
+      "question": "What will happen after I press kill button?",
+      "answer": "The engine of the vehicle will turn off within 20/30 sec after the kill button is pressed. Even if the vehicle is on the road."
+    },
+    {
+      "id": "faq-4",
+      "question": "What will happend after press unlock button after locking it?",
+      "answer": "The Vehicle will take a 1/2 Minutes to active again."
+    }
+  ],
+  "supportLabel": "Support"
+}

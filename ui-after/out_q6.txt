@@ -1,0 +1,41 @@
+﻿== quant | engine control enhance version.png 724x2172 | A=30,788,660,84;340,375,300,40;56,1802,320,20;56,1838,320,20;56,1665,240,40 tol=20 minRun=6
+-- quant 30,788,660,84
+quant region x=30 y=788 w=660 h=84 q=4 (px=55440)
+   avg=#FCFDFD    87.01%  px=   48241   top: #FEFEFE(14111) #FDFEFE(4407) #FFFFFF(4040)
+   avg=#98CCAA     1.11%  px=     615   top: #9BCFAD(22) #98CDAA(20) #99CDAB(20)
+   avg=#D9F1E5     0.95%  px=     529   top: #DAF1E5(37) #D7F0E3(23) #DAF1E6(22)
+   avg=#B2DDC7     0.78%  px=     435   top: #B4DFC9(24) #B2DEC7(24) #B3DEC8(17)
+   avg=#097C32     0.69%  px=     384   top: #0A7F31(10) #097E31(8) #097D31(8)
+
+-- quant 340,375,300,40
+quant region x=340 y=375 w=300 h=40 q=4 (px=12000)
+   avg=#FDE3E7    81.69%  px=    9803   top: #FEE3E7(2222) #FEE4E7(828) #FDE2E6(592)
+   avg=#FDDDE2     5.54%  px=     665   top: #FEDFE3(51) #FEDFE4(47) #FEDEE3(40)
+   avg=#FEF6F7     2.39%  px=     287   top: #FFFFFF(30) #FEFFFF(7) #FFFEFE(4)
+   avg=#FDD8DB     1.94%  px=     233   top: #FDDADE(9) #FED9DF(8) #FEDADF(7)
+   avg=#FEECF1     0.67%  px=      80   top: #FEECF0(4) #FEEDF0(4) #FEEFF4(3)
+
+-- quant 56,1802,320,20
+quant region x=56 y=1802 w=320 h=20 q=4 (px=6400)
+   avg=#FBFBFC    75.34%  px=    4822   top: #FFFFFF(800) #FEFEFE(447) #FDFDFD(243)
+   avg=#E4E7EB     1.86%  px=     119   top: #E1E5EA(3) #E0E4EC(2) #EAEBEE(2)
+   avg=#8995A7     1.36%  px=      87   top: #8594AA(1) #8795A3(1) #8794AB(1)
+   avg=#D7DCE2     1.11%  px=      71   top: #D8DDE2(2) #D7DAE0(2) #D4D9E1(2)
+   avg=#C5CBD4     1.06%  px=      68   top: #CACED8(2) #C1C7D3(2) #C4CBD6(2)
+
+-- quant 56,1838,320,20
+quant region x=56 y=1838 w=320 h=20 q=4 (px=6400)
+   avg=#FCFCFC    78.59%  px=    5030   top: #FFFFFF(926) #FEFEFE(670) #FDFDFD(385)
+   avg=#E5E8EA     1.80%  px=     115   top: #E8EBEF(4) #E3E6E8(4) #E4E6EA(3)
+   avg=#263449     1.14%  px=      73   top: #243549(2) #2D364A(1) #23344D(1)
+   avg=#475466     1.13%  px=      72   top: #465367(2) #48596A(1) #4A5A6E(1)
+   avg=#374558     1.02%  px=      65   top: #344359(1) #364356(1) #344352(1)
+
+-- quant 56,1665,240,40
+quant region x=56 y=1665 w=240 h=40 q=4 (px=9600)
+   avg=#04203B    47.05%  px=    4517   top: #03203B(561) #04203B(556) #03203A(498)
+   avg=#031D38    30.34%  px=    2913   top: #031F3A(548) #041F3A(278) #031F39(265)
+   avg=#052442     6.83%  px=     656   top: #042340(29) #042441(28) #032240(24)
+   avg=#FBFCFC     2.80%  px=     269   top: #FFFFFF(143) #FEFFFF(7) #FDFDFE(3)
+   avg=#01132C     1.53%  px=     147   top: #00132F(5) #00102C(5) #00122A(4)
+

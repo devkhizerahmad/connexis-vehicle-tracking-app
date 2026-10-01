@@ -1,0 +1,45 @@
+﻿== rows | engine control enhance version.png 724x2172 | A=185,250,300 tol=6 minRun=6
+-- row y=185
+x=   0..  17 w=  18  #FAFCFD
+x=  22.. 400 w= 379  #FDFDFD
+x= 406.. 418 w=  13  #FEFEFF
+x= 425.. 439 w=  15  #E7031D
+x= 440.. 446 w=   7  #EA061C
+x= 483.. 489 w=   7  #E8051C
+x= 636.. 643 w=   8  #EB051F
+x= 681.. 699 w=  19  #E8051C
+x= 706.. 723 w=  18  #FAFCFD
+
+-- row y=250
+x=   0..  17 w=  18  #FBFCFE
+x=  22..  44 w=  23  #FDFDFD
+x=  87..  99 w=  13  #92989E
+x= 120.. 146 w=  27  #8A9198
+x= 170.. 180 w=  11  #000102
+x= 281.. 400 w= 120  #FEFEFF
+x= 406.. 425 w=  20  #FEFEFE
+x= 431.. 436 w=   6  #53DC0B
+x= 449.. 461 w=  13  #FFFFFF
+x= 582.. 701 w= 120  #FFFFFF
+x= 706.. 711 w=   6  #F9FCFD
+x= 712.. 723 w=  12  #FCFEFF
+
+-- row y=300
+x=   0..  17 w=  18  #FAFCFD
+x=  22.. 109 w=  88  #FDFDFD
+x= 110.. 117 w=   8  #FAFBFB
+x= 123.. 128 w=   6  #F3F5F5
+x= 144.. 150 w=   7  #E5E5E6
+x= 271.. 400 w= 130  #FDFEFE
+x= 407.. 465 w=  59  #FEFEFE
+x= 471.. 481 w=  11  #FDFEFE
+x= 493.. 498 w=   6  #FFFFFF
+x= 499.. 509 w=  11  #FCFCFD
+x= 510.. 519 w=  10  #FAFAFA
+x= 520.. 539 w=  20  #FDFEFE
+x= 540.. 545 w=   6  #FBFBFB
+x= 551.. 566 w=  16  #FEFEFE
+x= 574.. 579 w=   6  #FFFFFE
+x= 586.. 701 w= 116  #FDFDFE
+x= 708.. 723 w=  16  #FAFDFE
+

@@ -8,3 +8,4 @@ export * from './shadows';
 export * from './profile';
 export * from './history';
 export * from './reports';
+export * from './engineControl';

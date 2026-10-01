@@ -1,0 +1,9 @@
+PASS __tests__/mapService.test.ts (9.95 s)
+PASS __tests__/ReportsScreen.test.tsx (135.523 s)
+PASS __tests__/App.test.tsx (135.905 s)
+
+Test Suites: 3 passed, 3 total
+Tests:       21 passed, 21 total
+Snapshots:   0 total
+Time:        151.722 s
+Ran all test suites.

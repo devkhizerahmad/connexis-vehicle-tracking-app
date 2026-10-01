@@ -1,0 +1,76 @@
+﻿== region | engine control enhance version.png 724x2172 | A=0,0,724,150;0,150,724,290;0,830,724,520 tol=20 minRun=6
+-- region 0,0,724,150
+region x=0 y=0 w=724 h=150 (px=108600)
+   #F8F8F8  count=    912     0.84%
+   #FFFFFF  count=    623     0.57%
+   #11151E  count=    482     0.44%
+   #13151D  count=    382     0.35%
+   #F8F8F9  count=    377     0.35%
+   #16151C  count=    346     0.32%
+   #F4F5F6  count=    324     0.30%
+   #12151E  count=    314     0.29%
+   #1A151A  count=    295     0.27%
+   #1D161A  count=    283     0.26%
+   #15151C  count=    282     0.26%
+   #14151C  count=    274     0.25%
+   #FAF9F9  count=    268     0.25%
+   #17151B  count=    264     0.24%
+   #16151B  count=    264     0.24%
+   #2D1715  count=    261     0.24%
+   #1C161A  count=    258     0.24%
+   #19161B  count=    254     0.23%
+   #3E1911  count=    250     0.23%
+   #19151A  count=    245     0.23%
+   #6E1E07  count=    240     0.22%
+   #1E1619  count=    239     0.22%
+
+-- region 0,150,724,290
+region x=0 y=150 w=724 h=290 (px=209960)
+   #FEFEFE  count=  34502    16.43%
+   #FDFDFD  count=   9883     4.71%
+   #FDFEFE  count=   8411     4.01%
+   #FFFFFF  count=   7322     3.49%
+   #FBFDFE  count=   5477     2.61%
+   #FEE3E7  count=   4669     2.22%
+   #FEFFFF  count=   4207     2.00%
+   #FAFCFD  count=   2789     1.33%
+   #FEFDFD  count=   2747     1.31%
+   #FDFEFD  count=   2584     1.23%
+   #FEE4E7  count=   1995     0.95%
+   #FEFFFE  count=   1696     0.81%
+   #FEE2E6  count=   1660     0.79%
+   #FDFDFE  count=   1600     0.76%
+   #FAFCFE  count=   1455     0.69%
+   #FEE4E8  count=   1423     0.68%
+   #FBFCFD  count=   1393     0.66%
+   #FEFEFF  count=   1312     0.62%
+   #FFFEFE  count=   1284     0.61%
+   #FEFEFD  count=   1273     0.61%
+   #FDE2E6  count=   1222     0.58%
+   #FCFCFC  count=   1183     0.56%
+
+-- region 0,830,724,520
+region x=0 y=830 w=724 h=520 (px=376480)
+   #FEFEFE  count=  86694    23.03%
+   #FDFEFE  count=  29394     7.81%
+   #FDFDFD  count=  26905     7.15%
+   #FFFFFF  count=  18019     4.79%
+   #FBFDFE  count=  11297     3.00%
+   #FEFFFF  count=  11198     2.97%
+   #FDFEFD  count=   9394     2.50%
+   #FEFDFD  count=   6910     1.84%
+   #FEFFFE  count=   5477     1.45%
+   #FDFDFE  count=   5387     1.43%
+   #FEFEFD  count=   4167     1.11%
+   #FCFDFD  count=   3863     1.03%
+   #FCFDFE  count=   3402     0.90%
+   #FAFCFD  count=   3306     0.88%
+   #FEFEFF  count=   3050     0.81%
+   #FEFDFE  count=   2911     0.77%
+   #FBFCFD  count=   2778     0.74%
+   #FBFDFD  count=   2479     0.66%
+   #FFFEFE  count=   2304     0.61%
+   #FCFEFE  count=   2218     0.59%
+   #FDFFFF  count=   2172     0.58%
+   #FFFFFE  count=   1905     0.51%
+

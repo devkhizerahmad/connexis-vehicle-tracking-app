@@ -1,0 +1,59 @@
+﻿export interface IconProps {
+export const Chevron = ({
+export const ChevronDown = ({ color, size }: IconProps) => (
+export const StatusIcons = () => (
+export const Pin = ({ color, size }: IconProps) => (
+export const Clock = ({ color, size }: IconProps) => (
+export const Speedo = ({ color, size }: IconProps) => (
+export const FuelPump = ({ color, size }: IconProps) => (
+export const Thermo = ({ color, size }: IconProps) => (
+export const RouteIcon = ({ color, size }: IconProps) => (
+export const Clipboard = ({ color, size }: IconProps) => (
+export const StopSign = ({ color, size }: IconProps) => (
+export const CircleGlyph = ({
+export const AlertCircle = ({ color, size }: IconProps) => (
+export const CheckCircle = ({ color, size }: IconProps) => (
+export const SadFace = ({ color, size }: IconProps) => (
+export const Droplet = ({ color, size }: IconProps) => (
+export const Shield = ({ color, size }: IconProps) => (
+export const Tank = ({ color, size }: IconProps) => (
+export const Ruler = ({ color, size }: IconProps) => (
+export const Wind = ({ color, size }: IconProps) => (
+export const Leaf = ({ color, size }: IconProps) => (
+export const Steering = ({ color, size }: IconProps) => (
+export const FlagIcon = ({ color, size }: IconProps) => (
+export const Fence = ({ color, size }: IconProps) => (
+export const Group = ({ color, size }: IconProps) => (
+export const FoldedMap = ({ color, size }: IconProps) => (
+export const BoxIcon = ({ color, size }: IconProps) => (
+export const HomeIcon = ({ color, size }: IconProps) => (
+export const DocIcon = ({ color, size }: IconProps) => (
+export const KeyIcon = ({ color, size }: IconProps) => (
+export const PersonIcon = ({ color, size }: IconProps) => (
+export const MapOutline = ({ color, size }: IconProps) => (
+export const TileIcon = ({ name, color, size }: { name: string; color: string; size: number }) => {
+export const ReportIcon = ({ name, color, size }: { name: string; color: string; size: number }) => {
+export const CheckMark = ({ color, size }: IconProps) => (
+export const ArrowCircle = ({ color, size }: IconProps) => (
+export const BellIcon = ({ color, size }: IconProps) => (
+export const GridIcon = ({ color, size }: IconProps) => (
+export const CarGlyph = ({ color, size }: IconProps) => (
+export const RefreshIcon = ({ color, size }: IconProps) => (
+export const BatteryGlyph = ({ color, size }: IconProps) => (
+export const SignalBars = ({ color, size }: IconProps) => (
+export const StarIcon = ({ color, size }: IconProps) => (
+export const DoorIcon = ({ color, size }: IconProps) => (
+export const WarningTriangle = ({ color, size }: IconProps) => (
+export const ArrowRight = ({ color, size }: IconProps) => (
+export const CirclePlay = ({ color, size }: IconProps) => (
+export const ListIcon = ({ color, size }: IconProps) => (
+export const ArrowLeft = ({ color, size }: IconProps) => (
+export const NavArrow = ({ color, size }: IconProps) => (
+export const CaretSolid = ({
+export const StatusRing = ({ color, size }: IconProps) => (
+export const CalendarGlyph = ({ color, size }: IconProps) => (
+export const TransportGlyph = ({
+export const HighwayGlyph = ({ color, size }: IconProps) => (
+export const GeofenceGlyph = ({ color, size }: IconProps) => (
+export const ShareGlyph = ({ color, size }: IconProps) => (
+export const PlusCircleGlyph = ({ color, size }: IconProps) => (

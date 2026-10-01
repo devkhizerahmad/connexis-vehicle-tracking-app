@@ -1,0 +1,78 @@
+﻿== rowmap | engine control enhance version.png 724x2172 | A=24,700 tol=20 minRun=3
+y=   0..  12 h=  13  avg=#AD2402  rowShare~60%
+y=  13..  24 h=  12  avg=#9E2201  rowShare~62%
+y=  25..  36 h=  12  avg=#8E2002  rowShare~55%
+y=  37..  48 h=  12  avg=#7D1E04  rowShare~42%
+y=  49..  61 h=  13  avg=#6E1D07  rowShare~69%
+y=  62..  75 h=  14  avg=#5E1B0A  rowShare~60%
+y=  76..  82 h=   7  avg=#4E1A0D  rowShare~56%
+y=  83..  88 h=   6  avg=#461A10  rowShare~44%
+y=  89.. 102 h=  14  avg=#3E1810  rowShare~36%
+y= 103.. 119 h=  17  avg=#2E1714  rowShare~33%
+y= 120.. 139 h=  20  avg=#1E1518  rowShare~59%
+y= 144.. 155 h=  12  avg=#FAF9F9  rowShare~100%
+y= 158.. 356 h= 199  avg=#FEFEFE  rowShare~59%
+y= 359.. 367 h=   9  avg=#F2F7FB  rowShare~100%
+y= 370.. 421 h=  52  avg=#FDE4E8  rowShare~97%
+y= 424.. 433 h=  10  avg=#F2F9FE  rowShare~93%
+y= 435.. 453 h=  19  avg=#8AF66B  rowShare~26%
+y= 454.. 456 h=   3  avg=#0A1728  rowShare~11%
+y= 458.. 466 h=   9  avg=#091828  rowShare~10%
+y= 467.. 480 h=  14  avg=#88F868  rowShare~21%
+y= 481.. 498 h=  18  avg=#0A1728  rowShare~13%
+y= 504.. 521 h=  18  avg=#D6C8B9  rowShare~9%
+y= 522.. 524 h=   3  avg=#F9F9F8  rowShare~10%
+y= 528.. 532 h=   5  avg=#D4C6B8  rowShare~5%
+y= 533.. 536 h=   4  avg=#F8F8F7  rowShare~7%
+y= 537.. 544 h=   8  avg=#D5C7B8  rowShare~9%
+y= 549.. 565 h=  17  avg=#D5C7B8  rowShare~10%
+y= 567.. 569 h=   3  avg=#D6C9B6  rowShare~7%
+y= 572.. 576 h=   5  avg=#D7C8B6  rowShare~7%
+y= 578.. 586 h=   9  avg=#D7C7B6  rowShare~8%
+y= 588.. 591 h=   4  avg=#D8C7B6  rowShare~12%
+y= 593.. 613 h=  21  avg=#D7C7B7  rowShare~11%
+y= 614.. 616 h=   3  avg=#F9F9F9  rowShare~7%
+y= 617.. 630 h=  14  avg=#D6C8B6  rowShare~6%
+y= 635.. 647 h=  13  avg=#D6C8B6  rowShare~7%
+y= 648.. 650 h=   3  avg=#FAFAF9  rowShare~5%
+y= 651.. 653 h=   3  avg=#D7C8B7  rowShare~8%
+y= 663.. 701 h=  39  avg=#D5C7B8  rowShare~6%
+y= 702.. 705 h=   4  avg=#E5C7A8  rowShare~7%
+y= 708.. 721 h=  14  avg=#E7C7A5  rowShare~5%
+y= 725.. 739 h=  15  avg=#D7C8B6  rowShare~6%
+y= 741.. 744 h=   4  avg=#D7C8B7  rowShare~8%
+y= 747.. 772 h=  26  avg=#D6C7B6  rowShare~8%
+y= 775.. 786 h=  12  avg=#F3F7FB  rowShare~71%
+y= 790.. 849 h=  60  avg=#FEFEFE  rowShare~98%
+y= 853.. 868 h=  16  avg=#FEFEFE  rowShare~100%
+y= 872.. 909 h=  38  avg=#A80606  rowShare~27%
+y= 912.. 914 h=   3  avg=#A70607  rowShare~25%
+y= 917..1056 h= 140  avg=#FCFAFA  rowShare~98%
+y=1058..1190 h= 133  avg=#FEFEFE  rowShare~99%
+y=1192..1325 h= 134  avg=#F2F5F9  rowShare~98%
+y=1328..1337 h=  10  avg=#F0F4F8  rowShare~72%
+y=1340..1352 h=  13  avg=#230D10  rowShare~25%
+y=1353..1360 h=   8  avg=#220B0E  rowShare~14%
+y=1364..1366 h=   3  avg=#C80000  rowShare~15%
+y=1367..1374 h=   8  avg=#220B0E  rowShare~15%
+y=1378..1380 h=   3  avg=#240D10  rowShare~18%
+y=1386..1399 h=  14  avg=#FEFEFE  rowShare~98%
+y=1400..1452 h=  53  avg=#E8F2FB  rowShare~91%
+y=1453..1461 h=   9  avg=#F1F7FC  rowShare~91%
+y=1462..1515 h=  54  avg=#EEF6FC  rowShare~51%
+y=1516..1531 h=  16  avg=#F2F8FC  rowShare~99%
+y=1535..1603 h=  69  avg=#FDFDFE  rowShare~97%
+y=1606..1657 h=  52  avg=#FCFEFE  rowShare~99%
+y=1661..1679 h=  19  avg=#082339  rowShare~85%
+y=1680..1683 h=   4  avg=#031E39  rowShare~48%
+y=1684..1687 h=   4  avg=#03203A  rowShare~42%
+y=1688..1713 h=  26  avg=#031E39  rowShare~39%
+y=1717..1719 h=   3  avg=#062038  rowShare~59%
+y=1725..1734 h=  10  avg=#FEFEFE  rowShare~99%
+y=1738..1744 h=   7  avg=#F3F8FB  rowShare~100%
+y=1747..2009 h= 263  avg=#F8FBFC  rowShare~99%
+y=2012..2051 h=  40  avg=#0096FC  rowShare~90%
+y=2055..2066 h=  12  avg=#FEFEFE  rowShare~99%
+y=2069..2078 h=  10  avg=#F4F7FB  rowShare~100%
+y=2081..2171 h=  91  avg=#FAFBFD  rowShare~82%
+

@@ -55,12 +55,26 @@ export function BottomNav({
             {isActive ? (
               <View style={styles.activeTile}>
                 <NavIcon name={t} color={colors.white} />
-                <Text style={styles.activeText}>{t}</Text>
+                {/* F11: long tabs ("Engine Control") must stay on ONE line; short
+                    tabs already fit, so shrinking never kicks in for them. */}
+                <Text
+                  style={styles.activeText}
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
+                  minimumFontScale={0.7}>
+                  {t}
+                </Text>
               </View>
             ) : (
               <View style={styles.idleContainer}>
                 <NavIcon name={t} color={colors.icon.navGray} />
-                <Text style={styles.idleText}>{t}</Text>
+                <Text
+                  style={styles.idleText}
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
+                  minimumFontScale={0.7}>
+                  {t}
+                </Text>
               </View>
             )}
           </Pressable>

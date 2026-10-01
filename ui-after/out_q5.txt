@@ -1,0 +1,64 @@
+﻿== quant | engine control enhance version.png 724x2172 | A=30,1600,660,60;126,1085,220,30;30,1758,660,40;40,1812,600,26;150,1015,80,26;150,1150,70,26;150,1285,70,26 tol=20 minRun=6
+-- quant 30,1600,660,60
+quant region x=30 y=1600 w=660 h=60 q=4 (px=39600)
+   avg=#F4F9FC    89.19%  px=   35318   top: #F3F9FD(3717) #F4F9FD(3154) #F4F9FE(2802)
+   avg=#EDF6FC     2.64%  px=    1046   top: #EFF7FD(97) #EFF8FE(89) #EFF7FE(69)
+   avg=#101E39     0.85%  px=     337   top: #111E3A(43) #111F3A(30) #101D39(29)
+   avg=#84C9FC     0.70%  px=     276   top: #82C8FC(20) #84C9FC(17) #81C8FC(11)
+   avg=#EA2C3A     0.63%  px=     251   top: #EC2D3A(7) #EB2E3B(7) #EC2E3C(5)
+   avg=#ACB2BD     0.56%  px=     221   top: #AEB4BF(29) #ACB3BE(13) #ACB2BD(12)
+
+-- quant 126,1085,220,30
+quant region x=126 y=1085 w=220 h=30 q=4 (px=6600)
+   avg=#FCFCFC    80.11%  px=    5287   top: #FFFFFF(845) #FEFEFE(684) #FDFDFD(387)
+   avg=#768AA5     1.59%  px=     105   top: #7589A8(3) #768AA6(2) #788AA5(2)
+   avg=#A9B6C7     1.20%  px=      79   top: #AFBCCB(2) #AAB8CB(2) #A2B0C2(2)
+   avg=#E3E8EC     0.95%  px=      63   top: #E0E4E9(2) #E3E9EE(2) #E9EDED(2)
+   avg=#E8EDF2     0.95%  px=      63   top: #E9EFF3(2) #E7ECF2(2) #EBEEF2(2)
+   avg=#879AB2     0.95%  px=      63   top: #8A9DB5(2) #8698B2(2) #899CB2(2)
+
+-- quant 30,1758,660,40
+quant region x=30 y=1758 w=660 h=40 q=4 (px=26400)
+   avg=#FDFDFD    96.45%  px=   25462   top: #FEFEFE(8801) #FDFEFE(3632) #FDFDFD(3056)
+   avg=#03142B     0.42%  px=     111   top: #06172E(3) #00132B(3) #00142C(3)
+   avg=#071B33     0.29%  px=      76   top: #0F1C32(2) #061E37(2) #0E1E32(2)
+   avg=#E6E9EB     0.22%  px=      57   top: #E9ECEC(2) #EDEDEF(2) #EBECEF(2)
+   avg=#000C24     0.20%  px=      52   top: #000D22(4) #000E26(2) #000F21(2)
+   avg=#142439     0.18%  px=      48   top: #10243B(2) #12273F(2) #10233E(1)
+
+-- quant 40,1812,600,26
+quant region x=40 y=1812 w=600 h=26 q=4 (px=15600)
+   avg=#FCFDFD    88.72%  px=   13841   top: #FEFEFE(3449) #FFFFFF(1335) #FDFEFE(1329)
+   avg=#8895A9     1.13%  px=     176   top: #8594AA(2) #8A97A8(2) #8390A7(2)
+   avg=#D6DBE3     0.90%  px=     141   top: #D4D9E1(4) #DADFE7(3) #D4DBE4(3)
+   avg=#99A5B6     0.83%  px=     129   top: #9AA3B5(3) #9EA7BA(2) #9AA4B8(2)
+   avg=#ABB5C4     0.71%  px=     110   top: #A8B1C1(3) #AAB2C5(2) #ABB6C2(2)
+   avg=#E4E8EC     0.70%  px=     109   top: #E6E9ED(3) #E3E7EE(3) #E4E9ED(2)
+
+-- quant 150,1015,80,26
+quant region x=150 y=1015 w=80 h=26 q=4 (px=2080)
+   avg=#DBF7C6    25.63%  px=     533   top: #DFF8CA(20) #DFF8CB(14) #DFF9CA(9)
+   avg=#FCFDFD    23.65%  px=     492   top: #FDFEFE(112) #FCFDFD(80) #FDFDFE(42)
+   avg=#E4F9D4    16.97%  px=     353   top: #E6FAD6(8) #E2F9D0(8) #E5F9D6(7)
+   avg=#E1F8CC     7.79%  px=     162   top: #E0F9CB(10) #E0F9CD(8) #E1F8CD(7)
+   avg=#D6F6BB     4.09%  px=      85   top: #D7F7BE(4) #D8F7BF(4) #D8F8BF(2)
+   avg=#38A806     1.39%  px=      29   top: #3DA909(1) #37AD03(1) #3AAA05(1)
+
+-- quant 150,1150,70,26
+quant region x=150 y=1150 w=70 h=26 q=4 (px=1820)
+   avg=#FDFDFD    34.12%  px=     621   top: #FEFEFE(213) #FDFEFE(87) #FEFFFF(72)
+   avg=#FDF2D4    25.66%  px=     467   top: #FEF2D2(35) #FEF1D0(30) #FEF2D1(21)
+   avg=#FEF1CC    18.63%  px=     339   top: #FEF1CF(35) #FEF0CE(27) #FEF1CE(25)
+   avg=#FEEEC5     6.10%  px=     111   top: #FEEEC3(5) #FEEEC5(5) #FEEFC9(5)
+   avg=#FDF9E6     2.25%  px=      41   top: #FEF9E8(7) #FEF9E7(2) #FEFDE9(2)
+   avg=#FDA801     2.03%  px=      37   top: #FEA900(2) #FDA600(2) #FDA800(2)
+
+-- quant 150,1285,70,26
+quant region x=150 y=1285 w=70 h=26 q=4 (px=1820)
+   avg=#FDFDFD    35.77%  px=     651   top: #FEFEFE(219) #FDFEFE(126) #FDFDFD(59)
+   avg=#FDDCE1    22.47%  px=     409   top: #FDDBE0(36) #FEDBE0(33) #FEDEE2(31)
+   avg=#FDD7DC    16.76%  px=     305   top: #FEDADF(25) #FDDADF(13) #FED9DF(11)
+   avg=#FDE4E7     8.46%  px=     154   top: #FEE0E3(6) #FEE2E5(6) #FEE1E4(5)
+   avg=#FDCDD5     2.25%  px=      41   top: #FECFD7(6) #FECED6(4) #FECFD5(4)
+   avg=#E5020A     1.54%  px=      28   top: #E2000B(2) #E20509(1) #E7030B(1)
+

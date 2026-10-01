@@ -1,0 +1,19 @@
+﻿== region | engine control enhance version.png 724x2172 | A=46,1552,6,26;372,1552,6,26;450,1558,70,24 tol=20 minRun=6
+-- region 46,1552,6,26
+region x=46 y=1552 w=6 h=26 (px=156)
+   #FFFFFF  count=     50    32.05%
+   #FEFBFC  count=     10     6.41%
+   #FFFEFE  count=      8     5.13%
+
+-- region 372,1552,6,26
+region x=372 y=1552 w=6 h=26 (px=156)
+   #F9FCFF  count=     12     7.69%
+   #F1F8FE  count=     11     7.05%
+   #F1F9FE  count=      9     5.77%
+
+-- region 450,1558,70,24
+region x=450 y=1558 w=70 h=24 (px=1680)
+   #F2F9FE  count=    255    15.18%
+   #F2F8FE  count=    204    12.14%
+   #F1F8FD  count=    133     7.92%
+
