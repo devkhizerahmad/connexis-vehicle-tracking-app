@@ -1,100 +1,43 @@
 # ConnexisTracker
 
-Production-grade React Native vehicle tracking application.
+Production-grade React Native vehicle tracking application (bare RN CLI, not Expo).
 
 ## Getting Started
 
 ### Prerequisites
-- Node.js >= 22.11.0
-- React Native CLI
-- Android Studio / Xcode
+| Tool | Version / Note |
+|------|----------------|
+| Node.js | >= 22.11.0 |
+| JDK | 17 |
+| Android SDK | Latest platform-tools + build-tools (install via Android Studio) |
+| Xcode + CocoaPods | Only required if building for iOS |
 
-### Install dependencies
+> ⚠️ **Fresh clone caveat:** The following files are gitignored and will be missing on a fresh clone: `android/local.properties`, `node_modules/`, `ios/Pods/`. The setup steps below handle these automatically.
+
+### Installation & Setup
+
 ```bash
+# 1. Clone repository and install dependencies
+git clone <repo-url> && cd ConnexisTracker
 npm install
-```
 
-### Run Metro bundler
-```bash
+# 2. Configure Android SDK path (Compulsory — this file does not exist on fresh clones)
+#    Create android/local.properties with your machine-specific SDK path:
+#      Windows: sdk.dir=C\:\\Users\\<username>\\AppData\\Local\\Android\\Sdk
+#      macOS/Linux: sdk.dir=/Users/<username>/Library/Android/sdk
+
+# 3. Configure Maps API Key (Required for LiveMap / History / Engine Control screens)
+#    If the key is NOT committed in the repo, obtain it privately from the owner, then add to android/gradle.properties:
+#      MAPS_API_KEY=<your-key>
+#    ⚠️ SECURITY: Never commit the actual key value. Before distribution, restrict the key in Google Cloud Console 
+#       (package name + SHA-1 fingerprint) and rotate any exposed keys.
+
+# 4. Start Metro bundler (development server)
 npm start
-```
 
-### Run on Android
-```bash
-npm run android
-```
+# 5. Run on device/emulator (Ensure USB cable connected or emulator running)
+npm run android        # Debug build — no release keystore required
+npm run ios            # For iOS: run `cd ios && pod install` first
 
-### Run on iOS
-```bash
-npm run ios
-```
-
-### Run Tests
-```bash
+# 6. Run tests
 npm test
-```
-
----
-
-## Architecture
-
-Production-grade **feature-based modular architecture** with strict path aliases.
-
-```
-src/
-├── assets/                    # Static media (logo, vehicle images, profile)
-├── features/                  # Feature modules (self-contained)
-│   ├── home/                  # Home & Details feature
-│   │   ├── components/        # Feature-scoped UI components
-│   │   ├── hooks/             # Feature-scoped data hooks
-│   │   ├── mocks/             # Mock JSON data
-│   │   ├── screens/           # DetailsScreen (frozen), HomeScreen (shell)
-│   │   ├── services/          # vehicleService (API-ready)
-│   │   └── types/             # Feature-scoped TypeScript types
-│   ├── map/                   # LiveMap & History features
-│   ├── reports/               # Reports feature
-│   ├── engineControl/         # Engine Control feature
-│   └── profile/               # Profile feature
-├── navigation/                # React Navigation setup
-│   ├── RootNavigator.tsx      # Bottom tab navigator
-│   ├── types.ts               # Typed param lists
-│   └── stacks/                # Per-tab stack navigators
-└── shared/                    # Cross-feature utilities
-    ├── components/            # Reusable UI (layout, vehicle, controls, icons)
-    ├── hooks/                 # Shared hooks (useCollapsible, useDonutProgress)
-    ├── theme/                 # Semantic design tokens
-    ├── types/                 # Shared TypeScript types
-    └── utils/                 # format.ts, styleFactories.ts, navigationHelpers.ts
-```
-
-### Path Aliases
-| Alias | Resolves To |
-|-------|-------------|
-| `@shared/*` | `src/shared/*` |
-| `@features/*` | `src/features/*` |
-| `@navigation/*` | `src/navigation/*` |
-
-### Key Dependencies
-| Package | Purpose |
-|---------|---------|
-| `react-navigation/native` | Navigation container |
-| `react-navigation/native-stack` | Stack navigators |
-| `react-navigation/bottom-tabs` | Bottom tab navigator |
-| `react-native-screens` | Native screen optimization |
-| `react-native-safe-area-context` | Safe area insets |
-| `babel-plugin-module-resolver` | Path alias support |
-
----
-
-## Development Notes
-
-- **Initial Route**: `HomeStack` starts at `Details` screen during development (set `INITIAL_ROUTE='Home'` in `HomeStack.tsx` to switch)
-- **Mock Data**: `features/home/mocks/details.mock.json` — replace `vehicleService.getVehicleDetails()` with real API when ready
-- **Performance**: All event handlers use `useCallback`, collapse state uses `useCollapsible` hook, donut animation uses `useDonutProgress` hook
-- **Theme**: All design tokens are in `src/shared/theme/` — never use raw hex values in components
-
----
-
-## Refactor History
-
-- **v1.0** — Production refactor: Feature-based architecture, React Navigation, semantic theme tokens, data service layer, performance hardening (P0–P7)
