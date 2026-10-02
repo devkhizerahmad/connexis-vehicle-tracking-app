@@ -106,6 +106,13 @@ export const ecColors = {
   // S10 slide to proceed (sampled #03203B)
   slideBg: '#03203B',
   slideInk: '#FFFFFF',
+  /**
+   * PATCH S10-ANIM: the artboard's pill shows neither a thumb nor a trail, so
+   * these two are the slider's OWN drag feedback (revealed only while a drag is
+   * live) and stay inside the navy so the resting pill still matches the mock.
+   */
+  slideTrail: 'rgba(255, 255, 255, 0.16)',
+  slideKnob: '#FFFFFF',
 
   // S11 FAQ card
   faqTitleInk: '#03203B',
@@ -191,23 +198,43 @@ export const ecSizes = {
   controlRowH: 29,
   controlRowPadH: 12,
 
-  // S8 lock / unlock cards (1535..1603 px → 37 pt)
-  actionCardH: 37,
+  // S8 lock / unlock cards (1535..1603 px → 37 pt is the sampled FILL; the
+  // artboard's 1.5 pt red/blue border puts the border-box at 1531..1606 px →
+  // 40 pt, and RN's `height` IS the border-box, so the card needs 40 pt to
+  // render a 37 pt fill. Re-sampled from the column scans at x=190/x=450.)
+  actionCardH: 40,
   /** Seam between the two cards (x=188..201 px → 11 pt). */
   actionCardGap: 11,
 
   // S9 privacy row (1606..1657 px → 27 pt)
   privacyRowH: 27,
 
-  // S10 slide to proceed (1661..1719 px → 32 pt)
-  slideH: 32,
-  slideRadius: 16,
+  // S10 slide to proceed (re-sampled: the navy run at x=330/x=450 is
+  // 1659..1723 px → 35 pt, not the 1661..1719 px the first pass caught). The
+  // pill is a capsule, so the radius follows the height instead of a flat 16 pt.
+  slideH: 35,
+  slideRadius: 17.5,
 
-  // S11 FAQ card (1747..2009 px → 141 pt)
+  // S11 FAQ card (1747..2009 px → 141 pt of content in one white card).
+  //
+  // PATCH S11-FIT: the card renders content-driven, so matching the artboard
+  // means matching its TYPE. Sampled from the artboard's body lines (16..17 px
+  // pitch at 1.856 px/dp → ≈9 pt leading, Q&A pairs ≈24 px apart → ≈3 pt of
+  // air, long answers spanning ≈183 pt for ≈55 characters → ≈8.5 pt), so the
+  // body drops to the 9/8.5 pt the artboard itself is drawn at (the same-string
+  // width ratio measured 0.57-0.64x the old 13/12.5 pt).
+  //
+  // PATCH S11-FIT-2 (on-device): the device runs the app at a 390 pt viewport —
+  // the artboard's own width, so the answers wrap into the same lines — and with
+  // the type above the card measured 147.5 pt (1175..1469 px at 2.0 px/dp) for a
+  // 141 pt target. The text block was already right; the residual 6.5 pt sat in
+  // the padding and the air between pairs, so padV 6 -> 5 and gap 3 -> 2 (four
+  // items) remove exactly 6 pt and land the card on the artboard — every
+  // measured type size below is untouched.
   faqPadH: 14,
-  faqPadV: 12,
-  faqGap: 8,
-  faqIndent: 22,
+  faqPadV: 5,
+  faqGap: 2,
+  faqIndent: 15,
 
   // S12 support button (2014..2051 px → 20 pt)
   supportH: 20,

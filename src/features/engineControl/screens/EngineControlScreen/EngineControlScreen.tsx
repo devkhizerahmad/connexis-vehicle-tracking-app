@@ -24,8 +24,12 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Animated, Image, Pressable, ScrollView, Text, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { AppHeader } from '@shared/components/layout/AppHeader';
 import { ecSizes, sizes, spacing } from '@shared/theme';
+import { goToLiveMap } from '@shared/utils/navigationHelpers';
+import type { RootTabParamList } from '@navigation/types';
 import { ChangeFenceButton } from '@features/engineControl/components/ChangeFenceButton';
 import { ControlRows } from '@features/engineControl/components/ControlRows';
 import { FaqCard } from '@features/engineControl/components/FaqCard';
@@ -47,8 +51,18 @@ type EngineControlScreenProps = NativeStackScreenProps<
   'EngineControlMain'
 >;
 
+/**
+ * W4: the vehicle this screen acts on. Engine Control has no vehicle switcher and its
+ * mock exposes no id, so it maps to the shared default vehicle used across the Home /
+ * Details / LiveMap / Reports mocks. Exported so the id stays in ONE place.
+ */
+const CURRENT_VEHICLE_ID = 'LFA-1464';
+
 export function EngineControlScreen({ navigation }: EngineControlScreenProps) {
   const [data, setData] = useState<EngineControlData | null>(null);
+  // W4: this screen's `navigation` is a STACK prop (EngineControlStack), but the
+  // helper needs the ROOT tab prop to switch tabs — same typed handle LiveMap uses.
+  const tabNav = useNavigation<BottomTabNavigationProp<RootTabParamList>>();
   const [toast, setToast] = useState<string>('');
   const [avatarBroken, setAvatarBroken] = useState(false);
   // F13: the shared tab bar is an absolute overlay (BottomNav/styles.ts), so the
@@ -119,7 +133,18 @@ export function EngineControlScreen({ navigation }: EngineControlScreenProps) {
   // Stubs: no Engine Control endpoint exists yet, so every control reports back
   // through the toast instead of silently doing nothing.
   const handleChangeFence = useCallback(() => showToast('Change Fence'), [showToast]);
-  const handleControlRow = useCallback((id: string) => showToast(id), [showToast]);
+  // W4: "Live Location" opens the Live Map for this screen's vehicle; every other
+  // control row (e.g. "Scheduled Remote Starts") keeps its stub toast. Handler-only.
+  const handleControlRow = useCallback(
+    (id: string) => {
+      if (id === 'live-location') {
+        goToLiveMap(tabNav, CURRENT_VEHICLE_ID);
+        return;
+      }
+      showToast(id);
+    },
+    [showToast, tabNav],
+  );
   const handleLock = useCallback(() => showToast('Engine locked'), [showToast]);
   const handleUnlock = useCallback(() => showToast('Engine unlocked'), [showToast]);
   const handlePrivacy = useCallback(() => showToast('Privacy Policy'), [showToast]);

@@ -29,6 +29,7 @@ import {
   View,
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AppHeader } from '@shared/components/layout/AppHeader';
 import {
   SelectField,
@@ -36,7 +37,7 @@ import {
 } from '@shared/components/controls/SelectField';
 import { HourMinPicker } from '@shared/components/controls/HourMinPicker';
 import { useCollapsible } from '@shared/hooks/useCollapsible';
-import { spacing } from '@shared/theme';
+import { spacing, sizes } from '@shared/theme';
 import { reportsService } from '@features/reports/services/reportsService';
 import { ReportCategorySection } from '@features/reports/components/ReportCategorySection';
 import { ReportsCalendar } from '@features/reports/components/ReportsCalendar';
@@ -51,9 +52,18 @@ type ReportsScreenProps = NativeStackScreenProps<ReportStackParamList, 'Reports'
 const HEADER_CONTENT_H = 80;
 const HEADER_CENTER_OFFSET = 17;
 
-export function ReportsScreen({ navigation }: ReportsScreenProps) {
+export function ReportsScreen({ navigation, route }: ReportsScreenProps) {
+  // V5-PART1: the shared BottomNav is an absolute overlay (RootNavigator's tabBar),
+  // so the scroll content clears it explicitly — same pattern Engine Control uses (F13).
+  const insets = useSafeAreaInsets();
+  const scrollPadBottom = sizes.bottomNavH + insets.bottom + 12;
+  // W5: ReportsScreen is reachable directly with a vehicleId (Home's card "Reports"
+  // button). Seeding it here pre-selects that vehicle; an unknown/absent id leaves
+  // the "Select Vehicle" placeholder untouched (selectedLabel resolves via find()).
+  const [selectedVehicle, setSelectedVehicle] = useState<string | undefined>(
+    route?.params?.vehicleId,
+  );
   const [data, setData] = useState<ReportsData | null>(null);
-  const [selectedVehicle, setSelectedVehicle] = useState<string | undefined>(undefined);
   const [vehicleOpen, setVehicleOpen] = useState(false);
   const [cursor, setCursor] = useState<MonthCursor>({ year: 2018, month: 11 });
   const [hour, setHour] = useState<string>('');
@@ -269,7 +279,7 @@ export function ReportsScreen({ navigation }: ReportsScreenProps) {
       <ScrollView
         ref={scrollViewRef}
         style={styles.scroll}
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[styles.scrollContent, { paddingBottom: scrollPadBottom }]}
         showsVerticalScrollIndicator={false}
         testID="reports-scroll">
         {/* S2 select vehicle */}

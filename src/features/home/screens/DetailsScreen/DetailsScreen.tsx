@@ -1,9 +1,8 @@
 // DetailsScreen.tsx — Details screen assembly (390x844 target)
 import React, { useCallback, useRef, useState } from 'react';
 import { Animated, ScrollView, StatusBar, Text, View } from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import AppHeader from '@shared/components/layout/AppHeader';
-import BottomNav from '@shared/components/layout/BottomNav';
 import PlateStatusRow from '@shared/components/vehicle/PlateStatusRow';
 import VehicleInfoCard from '@shared/components/vehicle/VehicleInfoCard';
 import KpiRow from '@features/home/components/KpiRow';
@@ -13,7 +12,8 @@ import QuickReportGrid from '@features/home/components/QuickReportGrid';
 import OverallActivity from '@features/home/components/OverallActivity';
 import { useVehicleDetails } from '@features/home/hooks/useVehicleDetails';
 import { calculateKpiGap } from '@shared/utils/styleFactories';
-import { spacing } from '@shared/theme';
+import { goToLiveMap } from '@shared/utils/navigationHelpers';
+import { spacing, sizes } from '@shared/theme';
 import { styles } from './styles';
 
 interface DetailsScreenProps {
@@ -47,23 +47,12 @@ export function DetailsScreen({ route, navigation }: DetailsScreenProps) {
     [toastAnim],
   );
 
-  const handleTabPress = useCallback(
-    (tab: string) => {
-      showToast(`${tab} tapped`);
-      if (navigation) {
-        if (tab === 'Map') {
-          navigation.navigate('MapTab');
-        } else if (tab === 'Report') {
-          navigation.navigate('ReportTab');
-        } else if (tab === 'Engine Control') {
-          navigation.navigate('EngineControlTab');
-        } else if (tab === 'Profile') {
-          navigation.navigate('ProfileTab');
-        }
-      }
-    },
-    [navigation, showToast],
-  );
+  // V5-PART1: Details lives INSIDE HomeTab, so RootNavigator's CustomTabBar already
+  // draws the (absolute) BottomNav here — this screen's own <BottomNav> was the
+  // second bar. The scroll content now clears the overlay instead, including the
+  // device inset so it holds on gesture-bar AND 3-button devices.
+  const insets = useSafeAreaInsets();
+  const scrollPadBottom = sizes.bottomNavH + insets.bottom + 12;
 
   if (!details) {
     return (
@@ -80,7 +69,7 @@ export function DetailsScreen({ route, navigation }: DetailsScreenProps) {
         <AppHeader variant="standard" onBack={() => showToast('Back pressed')} />
 
         <ScrollView
-          contentContainerStyle={styles.scrollViewContent}
+          contentContainerStyle={[styles.scrollViewContent, { paddingBottom: scrollPadBottom }]}
           showsVerticalScrollIndicator={false}>
           <View style={styles.contentPadding}>
             <PlateStatusRow plate={details.plate as any} status={details.status as any} />
@@ -94,7 +83,13 @@ export function DetailsScreen({ route, navigation }: DetailsScreenProps) {
                 lastLocationLabel={details.lastLocationLabel}
                 location={details.location}
                 liveLocation={details.liveLocation}
-                onLiveLocation={() => showToast('Opening Live Location…')}
+                // W3: open Live Map for THIS vehicle. Handler-only change; the
+                // button's pin glyph/label/style stay frozen.
+                onLiveLocation={() => {
+                  if (navigation) {
+                    goToLiveMap(navigation, vehicleId);
+                  }
+                }}
                 onCyanHeight={setCyH}
               />
             </View>
@@ -140,8 +135,6 @@ export function DetailsScreen({ route, navigation }: DetailsScreenProps) {
             />
           </View>
         </ScrollView>
-
-        <BottomNav active="Home" onTabPress={handleTabPress} />
 
         {toast ? (
           <Animated.View

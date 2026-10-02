@@ -12,7 +12,9 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   listContent: {
-    paddingBottom: 24,
+    // V5-PART1: paddingBottom is applied dynamically in HistoryScreen as
+    // `sizes.bottomNav + insets.bottom + 12` — the shared BottomNav is an absolute
+    // overlay, so a constant here would let the last history row sit under it.
   },
   /** S2–S8 stack above the S9 list. */
   header: {

@@ -38,6 +38,7 @@ const useAnimatedProps = fn => fn();
 const useAnimatedRef = () => React.useRef(null);
 
 const withTiming = toValue => toValue;
+const withSpring = toValue => toValue;
 const withDelay = (_delay, value) => value;
 const withSequence = (...values) => values[values.length - 1];
 const withRepeat = value => value;
@@ -75,6 +76,7 @@ module.exports = {
   useAnimatedProps,
   useAnimatedRef,
   withTiming,
+  withSpring,
   withDelay,
   withSequence,
   withRepeat,

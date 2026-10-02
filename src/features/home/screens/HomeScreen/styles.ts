@@ -48,7 +48,9 @@ export const styles = StyleSheet.create({
   listContent: {
     // PATCH H-B: page margin 13
     paddingHorizontal: 13,
-    paddingBottom: 24,
+    // V5-PART1: paddingBottom is applied dynamically in HomeScreen as
+    // `sizes.bottomNav + insets.bottom + 12` — the shared BottomNav is an absolute
+    // overlay, so a constant here would let the last card sit under it.
   },
   // PATCH H-A: summary row1 straddles the header gradient bottom by 20pt
   // (gradient paints 20pt behind the cards; header gradient bottom = row1Top + 20)

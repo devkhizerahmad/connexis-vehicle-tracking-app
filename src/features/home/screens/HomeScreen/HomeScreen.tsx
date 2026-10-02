@@ -4,10 +4,10 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Animated, FlatList, Image, Pressable, StatusBar, Text, View } from 'react-native';
 import AppHeader from '@shared/components/layout/AppHeader';
-import BottomNav from '@shared/components/layout/BottomNav';
 import { BellIcon, RefreshIcon } from '@shared/components/icons';
-import { goToLiveMap } from '@shared/utils/navigationHelpers';
-import { colors, spacing } from '@shared/theme';
+import { goToLiveMap, goToReports } from '@shared/utils/navigationHelpers';
+import { colors, sizes, spacing } from '@shared/theme';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import SummaryCards from '@features/home/components/SummaryCards';
 import AssetCard from '@features/home/components/AssetCard';
 import PromoBanner from '@features/home/components/PromoBanner';
@@ -44,22 +44,11 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
     [toastAnim],
   );
 
-  const handleTabPress = useCallback(
-    (tab: string) => {
-      if (navigation) {
-        if (tab === 'Map') {
-          navigation.navigate('MapTab');
-        } else if (tab === 'Report') {
-          navigation.navigate('ReportTab');
-        } else if (tab === 'Engine Control') {
-          navigation.navigate('EngineControlTab');
-        } else if (tab === 'Profile') {
-          navigation.navigate('ProfileTab');
-        }
-      }
-    },
-    [navigation],
-  );
+  // V5-PART1: the bottom bar is drawn by RootNavigator's CustomTabBar (it is an
+  // absolute overlay), so this screen no longer renders its own BottomNav — that
+  // duplicate was the double-bar bug. The list instead clears the overlay below.
+  const insets = useSafeAreaInsets();
+  const scrollPadBottom = sizes.bottomNavH + insets.bottom + 12;
 
   // ── behaviour links (S-behaviour, all mandatory) ──
   const onMoreDetails = useCallback(
@@ -76,7 +65,16 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
     },
     [navigation],
   );
-  const onReports = useCallback(() => showToast('Reports pending'), [showToast]);
+  // W2: the card's "Reports" button opens the Reports tab for THAT card's vehicle.
+  // Handler-only change — the button label/icon/style are frozen.
+  const onReports = useCallback(
+    (v: VehicleSummary) => {
+      if (navigation) {
+        goToReports(navigation, v.id);
+      }
+    },
+    [navigation],
+  );
   const onBell = useCallback(() => showToast('notifications pending'), [showToast]);
   const onMoreInfo = useCallback(() => showToast('More info pending'), [showToast]);
   const onRefresh = useCallback(() => showToast('Refreshing list…'), [showToast]);
@@ -165,7 +163,7 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
         renderItem={renderItem}
         ListHeaderComponent={listHeader ?? undefined}
         style={styles.list}
-        contentContainerStyle={styles.listContent}
+        contentContainerStyle={[styles.listContent, { paddingBottom: scrollPadBottom }]}
         removeClippedSubviews
         initialNumToRender={6}
         maxToRenderPerBatch={4}
@@ -178,8 +176,6 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
           <Text style={styles.toastText}>{toast}</Text>
         </Animated.View>
       ) : null}
-
-      <BottomNav tabs={['Home', 'Report', 'Engine Control', 'Map', 'Profile']} active="Home" onTabPress={handleTabPress} />
     </View>
   );
 }

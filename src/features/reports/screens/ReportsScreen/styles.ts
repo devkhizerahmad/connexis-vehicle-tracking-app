@@ -11,14 +11,16 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   /**
-   * FIX 2 (scroll): paddingBottom is a CONSTANT 24 — never tuned per collapse
-   * state. When the S4–S6 body collapses this wrapper shrinks in normal flow,
-   * so the list below reflows upward and the last card settles ~24pt above the
-   * bottom nav with no ghost gap and nothing cut off.
+   * FIX 2 (scroll): paddingBottom was a CONSTANT 24 — never tuned per collapse state,
+   * so collapsing the S4–S6 body reflowed the list upward with no ghost gap.
+   *
+   * V5-PART1: that constant was also what let the last category card sit underneath
+   * the absolute BottomNav overlay at extreme scroll. paddingBottom is now applied
+   * dynamically in ReportsScreen as `sizes.bottomNav + insets.bottom + 12` — still a
+   * constant (collapse-independent), but sized to clear the bar.
    */
   scrollContent: {
     paddingTop: 16,
-    paddingBottom: 24,
   },
   /** S2 / S3 field blocks: stacked with the reference's 8pt rhythm. */
   fieldBlock: {

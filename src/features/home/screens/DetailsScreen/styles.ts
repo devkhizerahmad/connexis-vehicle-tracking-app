@@ -6,9 +6,9 @@ export const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.bg,
   },
-  scrollViewContent: {
-    paddingBottom: sizes.bottomNav + 24,
-  },
+  // V5-PART1: paddingBottom is supplied dynamically in DetailsScreen as
+  // `sizes.bottomNav + insets.bottom + 12`; this constant is the non-nav remainder.
+  scrollViewContent: {},
   contentPadding: {
     paddingHorizontal: spacing.pageMargin,
     paddingTop: spacing.gridGap,

@@ -17,6 +17,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FlatList, Image, Pressable, Text, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MD3DarkTheme, Provider as PaperProvider } from 'react-native-paper';
 // The paper-dates modal resolves its own copy ("Save", "Close", "Select period")
 // from a REGISTRY that ships EMPTY. Without this it console.warns on every
@@ -26,6 +27,7 @@ import { AppHeader } from '@shared/components/layout/AppHeader';
 import { ArrowLeft } from '@shared/components/icons';
 import { DateRangeCalendar, DateRangeField } from '@shared/components/controls/DateRangeCalendar';
 import { historyColors } from '@shared/theme';
+import { sizes } from '@shared/theme';
 import { historyService } from '@features/map/services/historyService';
 import { HistoryListRow } from '@features/map/components/HistoryListRow';
 import { HistoryMiniMap } from '@features/map/components/HistoryMiniMap';
@@ -80,6 +82,10 @@ const paperTheme = {
 
 export function HistoryScreen({ route, navigation }: HistoryScreenProps) {
   const vehicleId = route.params?.vehicleId;
+  // V5-PART1: the shared BottomNav is an absolute overlay (RootNavigator's tabBar),
+  // so the list clears it explicitly — same pattern Engine Control uses (F13).
+  const insets = useSafeAreaInsets();
+  const scrollPadBottom = sizes.bottomNavH + insets.bottom + 12;
 
   const [data, setData] = useState<HistoryData | null>(null);
   /** Range the panels currently reflect; changing it triggers a refetch. */
@@ -178,7 +184,7 @@ export function HistoryScreen({ route, navigation }: HistoryScreenProps) {
             <HistoryListRow stop={item} isLast={index === data.stops.length - 1} />
           )}
           style={styles.list}
-          contentContainerStyle={styles.listContent}
+          contentContainerStyle={[styles.listContent, { paddingBottom: scrollPadBottom }]}
           showsVerticalScrollIndicator={false}
           testID="history-list"
           ListHeaderComponent={

@@ -30,9 +30,11 @@ export function LiveMapScreen({ route, navigation }: LiveMapScreenProps) {
   const insets = useSafeAreaInsets();
 
   // PATCH L1: BottomNav is absolutely positioned over the scene (height =
-  // sizes.bottomNav + insets.bottom), so the map box has to clear the bar before
+  // sizes.bottomNavH + insets.bottom), so the map box has to clear the bar before
   // the 12pt gap is visible: mapBottom === navTop - MAP_NAV_GAP.
-  const mapMarginBottom = MAP_NAV_GAP + sizes.bottomNav + insets.bottom;
+  // V5-PART1: `sizes.bottomNavH` == `sizes.bottomNav` (both 56); the mandated token is
+  // used so every screen spells the same formula.
+  const mapMarginBottom = MAP_NAV_GAP + sizes.bottomNavH + insets.bottom;
 
   // Load dropdown options once; reload the live payload when the selection changes.
   useEffect(() => {
