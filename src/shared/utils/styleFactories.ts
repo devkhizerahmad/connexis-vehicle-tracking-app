@@ -33,7 +33,6 @@ export const calculateDonutAngles = (score: number) => {
  */
 export const makeHeightStyle = (height: number): ViewStyle => ({ height });
 
-// RESERVED: pending LiveMap/History gradient usage (do NOT delete until those screens are built)
 /**
  * Multi-stop gradient container (full width, clipped to the given height).
  */
@@ -43,7 +42,6 @@ export const makeGradientContainerStyle = (height: number): ViewStyle => ({
   overflow: 'hidden',
 });
 
-// RESERVED: pending LiveMap/History gradient usage (do NOT delete until those screens are built)
 /**
  * Single gradient band — colour + height are computed per band at render time.
  */
