@@ -1,6 +1,4 @@
-// RESERVED: pending History/Reports screens (collapsible sections)
-
-// useCollapsible.ts — decoupled collapse state hook with animated height/opacity controller
+// // useCollapsible.ts — decoupled collapse state hook with animated height/opacity controller
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Animated, Easing } from 'react-native';
 import { spacing } from '@shared/theme';
