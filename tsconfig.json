@@ -8,6 +8,6 @@
       "@navigation/*": ["./src/navigation/*"]
     }
   },
-  "exclude": ["node_modules", "snapshot-pre-refactor", "ui-baseline", "ui-after", "cleanup-snapshot-2026-09-19", "cleanup-quarantine", "design-references"],
+  "exclude": ["node_modules", "design-references"],
   "include": ["**/*.ts", "**/*.tsx"]
 }
