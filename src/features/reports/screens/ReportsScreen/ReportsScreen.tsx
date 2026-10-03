@@ -53,11 +53,11 @@ const HEADER_CONTENT_H = 80;
 const HEADER_CENTER_OFFSET = 17;
 
 export function ReportsScreen({ navigation, route }: ReportsScreenProps) {
-  // V5-PART1: the shared BottomNav is an absolute overlay (RootNavigator's tabBar),
-  // so the scroll content clears it explicitly — same pattern Engine Control uses (F13).
+  // The shared BottomNav is an absolute overlay (RootNavigator's tabBar), so the
+  // scroll content clears it explicitly — same pattern Engine Control uses.
   const insets = useSafeAreaInsets();
   const scrollPadBottom = sizes.bottomNavH + insets.bottom + 12;
-  // W5: ReportsScreen is reachable directly with a vehicleId (Home's card "Reports"
+  // ReportsScreen is reachable directly with a vehicleId (Home's card "Reports"
   // button). Seeding it here pre-selects that vehicle; an unknown/absent id leaves
   // the "Select Vehicle" placeholder untouched (selectedLabel resolves via find()).
   const [selectedVehicle, setSelectedVehicle] = useState<string | undefined>(
@@ -75,12 +75,11 @@ export function ReportsScreen({ navigation, route }: ReportsScreenProps) {
   const { isExpanded, toggle, anim, animatedHeight, onMeasureLayout } =
     useCollapsible(true);
 
-  // FIX 2 polish: when the body opens, bring the calendar back into view from
-  // the top. Guarded by a ref so it only fires on the collapsed -> expanded
-  // transition, and deferred past the height animation: firing it on the same
-  // frame as the toggle means the content is still short, so the offset gets
-  // clamped and the user is left parked mid-list instead of at the calendar.
-  // Closing never moves the scroll position.
+  // When the body opens, bring the calendar back into view from the top. Guarded by
+  // a ref so it only fires on the collapsed -> expanded transition, and deferred
+  // past the height animation: firing it on the same frame as the toggle means the
+  // content is still short, so the offset gets clamped and the user is left parked
+  // mid-list instead of at the calendar. Closing never moves the scroll position.
   const scrollViewRef = useRef<ScrollViewInstance>(null);
   const wasExpandedRef = useRef(true);
 

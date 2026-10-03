@@ -42,7 +42,6 @@ export interface HomeFeedData {
   promo: HomePromo;
 }
 
-// RESERVED: pending History/Reports screens (feed payload shape kept for API swap)
 export interface HomeFeedLegacy {
   totalAssets: number;
   activeAssets: number;
