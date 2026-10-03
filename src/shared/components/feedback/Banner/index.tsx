@@ -1,6 +1,4 @@
-// RESERVED: pending LiveMap/Reports screens (alert/success banner)
-
-// Banner component index.tsx
+// // Banner component index.tsx
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { colors, radii, spacing, typography } from '@shared/theme';
