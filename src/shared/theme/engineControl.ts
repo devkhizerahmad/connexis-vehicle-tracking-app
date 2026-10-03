@@ -4,9 +4,9 @@
 // the barrel re-export is additive.
 //
 // PROVENANCE: every value below was sampled from the 390x844 reference artboard
-// (`design-references/engine control enhance version.png`, 724x2172 px) with the
-// GDI+ pixel probe in `ui-after/` (rows / quant ops). The artboard is 1.856x the
-// 390pt grid, so pixel measurements were divided by 1.856 and rounded.
+// (`design-references/engine control enhance version.png`, 724x2172 px) with a
+// GDI+ pixel probe (rows / quant ops). The artboard is 1.856x the 390pt grid, so
+// pixel measurements were divided by 1.856 and rounded.
 
 /** Engine Control palette. */
 export const ecColors = {
@@ -217,20 +217,14 @@ export const ecSizes = {
 
   // S11 FAQ card (1747..2009 px → 141 pt of content in one white card).
   //
-  // PATCH S11-FIT: the card renders content-driven, so matching the artboard
-  // means matching its TYPE. Sampled from the artboard's body lines (16..17 px
-  // pitch at 1.856 px/dp → ≈9 pt leading, Q&A pairs ≈24 px apart → ≈3 pt of
-  // air, long answers spanning ≈183 pt for ≈55 characters → ≈8.5 pt), so the
-  // body drops to the 9/8.5 pt the artboard itself is drawn at (the same-string
-  // width ratio measured 0.57-0.64x the old 13/12.5 pt).
-  //
-  // PATCH S11-FIT-2 (on-device): the device runs the app at a 390 pt viewport —
-  // the artboard's own width, so the answers wrap into the same lines — and with
-  // the type above the card measured 147.5 pt (1175..1469 px at 2.0 px/dp) for a
-  // 141 pt target. The text block was already right; the residual 6.5 pt sat in
-  // the padding and the air between pairs, so padV 6 -> 5 and gap 3 -> 2 (four
-  // items) remove exactly 6 pt and land the card on the artboard — every
-  // measured type size below is untouched.
+  // The card is content-driven, so matching the artboard means matching its TYPE.
+  // Sampled from the artboard's body lines (16..17 px pitch at 1.856 px/dp → ≈9 pt
+  // leading, Q&A pairs ≈24 px apart → ≈3 pt of air, long answers spanning ≈183 pt
+  // for ≈55 characters → ≈8.5 pt). On-device at a 390 pt viewport (the artboard's
+  // own width, so answers wrap identically) the text block then measured 147.5 pt
+  // for a 141 pt target: the text was already correct and the residual 6.5 pt sat
+  // in the padding and the air between pairs, so padV 6 -> 5 and gap 3 -> 2 remove
+  // exactly 6 pt. The type sizes below are unchanged.
   faqPadH: 14,
   faqPadV: 5,
   faqGap: 2,
