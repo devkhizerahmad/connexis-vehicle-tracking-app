@@ -1,6 +1,4 @@
-// RESERVED: pending Home screen (vehicle list status chip)
-
-// VehicleChip index.tsx
+// // VehicleChip index.tsx
 import React from 'react';
 import { View, Text } from 'react-native';
 import { colors } from '@shared/theme';
