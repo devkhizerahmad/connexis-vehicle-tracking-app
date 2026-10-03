@@ -44,9 +44,9 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
     [toastAnim],
   );
 
-  // V5-PART1: the bottom bar is drawn by RootNavigator's CustomTabBar (it is an
-  // absolute overlay), so this screen no longer renders its own BottomNav — that
-  // duplicate was the double-bar bug. The list instead clears the overlay below.
+  // The bottom bar is drawn by RootNavigator's CustomTabBar (an absolute overlay),
+  // so this screen must not render its own BottomNav — that duplicate caused the
+  // double-bar bug. The list instead clears the overlay below.
   const insets = useSafeAreaInsets();
   const scrollPadBottom = sizes.bottomNavH + insets.bottom + 12;
 
@@ -65,7 +65,7 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
     },
     [navigation],
   );
-  // W2: the card's "Reports" button opens the Reports tab for THAT card's vehicle.
+  // The card's "Reports" button opens the Reports tab for THAT card's vehicle.
   // Handler-only change — the button label/icon/style are frozen.
   const onReports = useCallback(
     (v: VehicleSummary) => {
