@@ -6,7 +6,6 @@ export interface NavTabItem {
   active?: boolean;
 }
 
-// RESERVED: pending screens (generic header props)
 export interface HeaderProps {
   onBack?: () => void;
   title?: string;
