@@ -6,10 +6,10 @@
     "status": "Running",
     "addressLines": ["Phase 1: Qua Avenue,", "Lahore, Punjab"]
   },
-  "alert": "Your Vehicle is out of Geofence, Since 3:40pm",
+  "alert": "Your Vehicle is out of Geofence, Since 3:50pm",
   "map": {
     "lastUpdatedLabel": "Last Updated",
-    "lastUpdatedValue": "5:40PM",
+    "lastUpdatedValue": "6:40PM",
     "fenceLabel": "Current Fence",
     "region": {
       "latitude": 31.5132,
@@ -33,7 +33,7 @@
       "index": 1,
       "title": "Gar fish Farm kotli Behram",
       "subtitle": "Gakotli, Punjab",
-      "time": "08:00 AM - 10:40 AM",
+      "time": "09:00 AM - 10:40 AM",
       "state": "Moving",
       "duration": "40m-8s",
       "subBlue": true
