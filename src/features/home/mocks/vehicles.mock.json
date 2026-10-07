@@ -247,6 +247,19 @@
       "signal": "Strong",
       "batteryVoltage": "24V",
       "satelliteSignal": "25"
+    },
+    {
+      "id": "RWP-7788-2",
+      "plate": "RWP-7788",
+      "name": "Toyota Corolla (RWP-7788)",
+      "status": "running",
+      "image": "sedan",
+      "speed": "75 km/Hr",
+      "location": "Saddar, Rawalpindi ->",
+      "update": "5/10/25 (10:05 AM)",
+      "signal": "Medium",
+      "batteryVoltage": "12V",
+      "satelliteSignal": "22"
     }
   ],
   "promo": {
