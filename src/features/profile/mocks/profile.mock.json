@@ -1,7 +1,7 @@
 {
-  "firstName": "Adeel",
-  "lastName": "Hussein",
-  "dob": "",
+  "firstName": "Test",
+  "lastName": "Data",
+  "dob": "1990-01-01",
   "email": "testdata@gamail.com",
-  "phone": "0321-7334553766"
+  "phone": "0320-8515288"
 }
