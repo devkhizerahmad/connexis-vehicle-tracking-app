@@ -182,6 +182,19 @@
       "signal": "Medium",
       "batteryVoltage": "12V",
       "satelliteSignal": "22"
+    },
+    {
+      "id": "LHE-7788",
+      "plate": "LHE-7788",
+      "name": "Suzuki Cultus (LHE-7788)",
+      "status": "idle",
+      "image": "sedan",
+      "speed": "0 km/Hr",
+      "location": "DHA Phase 5, Lahore",
+      "update": "5/10/25 (09:55 AM)",
+      "signal": "Strong",
+      "batteryVoltage": "24V",
+      "satelliteSignal": "27"
     }
   ],
   "promo": {
