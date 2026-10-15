@@ -1,310 +1,170 @@
-// DateRangeCalendar.tsx — S4: dark month calendar with a FROM/UNTIL range.
-// Hand-built grid (6 rows x 7 columns) rather than a Paper calendar: the
-// reference paints a dark surface, a red weekday header, a blue range band and
-// a WHITE start-day circle, none of which react-native-paper-dates themes.
-// The dark Paper modal is used for picking (see DateRangePicker).
+// DateRangeCalendar.tsx — S4: the ONE dark month calendar shared by the History
+// and Reports screens.
+//
+// Replaces the two hand-rolled grids (History's `buildMonthGrid` band and the
+// Reports-only verbatim-highlight demo) with `react-native-ui-datepicker` in
+// `mode="range"`. One component, one look, one behaviour — so a screen cannot
+// drift away from the other again.
+//
+// WHY AUTO_NAVIGATE IS THE STRUCTURAL FIX (the bug this whole component exists
+// to kill):
+// The old hand-rolled grid kept the SELECTED RANGE and the DISPLAYED MONTH as two
+// independent pieces of screen state. History's cross-month path went through
+// `react-native-paper-dates`, whose confirm wrote the range but never touched the
+// month cursor — so FROM/UNTIL updated, the grid stayed on the old month, and the
+// new highlight was invisible until the user paged there by hand. That state
+// split is what allowed the desync, and you cannot fix it by remembering to call
+// `setMonth` in enough places.
+//
+// Here the fix is structural: a day tap is the ONLY way the selection changes,
+// and `handleChange` moves the displayed month/year to the tapped day in the same
+// handler. There is no code path that can write a selection without also moving
+// the view to it, so "saved but invisible" is unrepresentable rather than merely
+// un-tested. The screens cannot reintroduce the bug without rewriting this file.
+//
+// The remaining freedom — prev/next chevrons — moves the view WITHOUT changing the
+// selection, which is a different axis and cannot desync.
 import React, { useCallback, useMemo } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { Chevron } from '@shared/components/icons';
-import { historyColors, historySizes } from '@shared/theme';
-import type { HistoryDateRange, HistoryMonth } from '@features/map/types/history';
-import {
-  buildMonthGrid,
-  formatMonthCaption,
-  formatShortDate,
-  fromIsoDate,
-  shiftMonth,
-} from '@features/map/utils/historyDates';
-
-/** Sunday-first header, matching the reference's red S M T W T F S row. */
-const WEEKDAYS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+import { Text, View } from 'react-native';
+import DateTimePicker, {
+  useDefaultStyles,
+  type CalendarComponents,
+  type DateType,
+} from 'react-native-ui-datepicker';
+import dayjs from 'dayjs';
+import { calendarMetrics, calendarOverrides, styles } from './styles';
 
 export interface DateRangeCalendarProps {
-  /** Currently previewed range (the screen owns the draft + confirm). */
-  range: HistoryDateRange;
-  /** Displayed month cursor (the screen owns it so it survives re-renders). */
-  month: HistoryMonth;
-  onMonthChange: (month: HistoryMonth) => void;
-  /** Called with the tapped day; the screen applies range semantics. */
-  onSelectDay: (date: string) => void;
+  /** Range start. `null`/omitted = nothing selected yet. */
+  startDate: DateType;
+  /** Range end. `null`/omitted while a half-finished range is open. */
+  endDate: DateType;
+  /** Displayed month, 0-11. The screen owns it so it survives re-renders. */
+  displayedMonth: number;
+  /** Displayed year. */
+  displayedYear: number;
+  /** Fired on every day tap with the new range. */
+  onRangeChange: (start: DateType, end: DateType) => void;
+  /** Fired when the displayed month changes (chevrons, or AUTO_NAVIGATE). */
+  onMonthChange: (month: number) => void;
+  /** Fired when the displayed year changes (chevrons, or AUTO_NAVIGATE). */
+  onYearChange: (year: number) => void;
+  /**
+   * Prefix for this instance's testIDs. Both screens mount the same component,
+   * so the prefix keeps their ids (`reports-day-13` vs `date-range-calendar-13`)
+   * addressable independently.
+   */
+  testIDPrefix?: string;
 }
 
 export function DateRangeCalendar({
-  range,
-  month,
+  startDate,
+  endDate,
+  displayedMonth,
+  displayedYear,
+  onRangeChange,
   onMonthChange,
-  onSelectDay,
+  onYearChange,
+  testIDPrefix = 'date-range-calendar',
 }: DateRangeCalendarProps) {
-  const cells = useMemo(() => buildMonthGrid(month.year, month.month), [month]);
-
-  const goPrev = useCallback(
-    () => onMonthChange(shiftMonth(month.year, month.month, -1)),
-    [month, onMonthChange],
-  );
-  const goNext = useCallback(
-    () => onMonthChange(shiftMonth(month.year, month.month, 1)),
-    [month, onMonthChange],
+  // 'dark' is passed explicitly so the resolved theme does not depend on the
+  // device's system appearance — the calendar must look identical on every unit.
+  const libraryDefaults = useDefaultStyles('dark');
+  const pickerStyles = useMemo(
+    () => ({ ...libraryDefaults, ...calendarOverrides }),
+    [libraryDefaults],
   );
 
-  /** Jump the cursor to the month that owns `iso` (used on confirm). */
-  const focusDate = useCallback(
-    (iso: string) => {
-      const [y, m] = iso.split('-').map(Number);
-      onMonthChange({ year: y, month: (m ?? 1) - 1 });
+  /**
+   * The single write path for the selection — and, by construction, the single
+   * place the view follows it. If the user completes a range, the grid opens on
+   * the END day; if they are mid-range, it opens on the START they just picked
+   * (so a range that runs past the end of the month still lands somewhere the
+   * selection is visible).
+   */
+  const handleChange = useCallback(
+    ({ startDate: nextStart, endDate: nextEnd }: { startDate: DateType; endDate: DateType }) => {
+      onRangeChange(nextStart, nextEnd);
+
+      const anchor = nextEnd ?? nextStart;
+      if (!anchor) {
+        return;
+      }
+      const parsed = dayjs(anchor);
+      if (!parsed.isValid()) {
+        return;
+      }
+      onMonthChange(parsed.month());
+      onYearChange(parsed.year());
     },
-    [onMonthChange],
+    [onRangeChange, onMonthChange, onYearChange],
   );
+
+  // Circular navy chevrons with a glyph, replacing the library's PNG arrows so
+  // the discs match the reference's 22pt buttons exactly.
+  const components: CalendarComponents = useMemo(
+    () => ({
+      IconPrev: (
+        <View style={styles.navButton}>
+          <Text style={styles.navIcon}>◀</Text>
+        </View>
+      ),
+      IconNext: (
+        <View style={styles.navButton}>
+          <Text style={styles.navIcon}>▶</Text>
+        </View>
+      ),
+    }),
+    [],
+  );
+
+  const fromLabel = startDate ? dayjs(startDate).format('DD.MM.YY') : '';
+  const untilLabel = endDate ? dayjs(endDate).format('DD.MM.YY') : '';
 
   return (
-    <View style={styles.card} testID="date-range-calendar">
-      {/* PATCH T-HISTORY: tooltip arrow pointing up at the S3 trigger field */}
-      <View style={styles.tooltipArrow} pointerEvents="none" />
-      {/* FROM / UNTIL read-out */}
+    <View style={styles.card} testID={testIDPrefix}>
+      {/* FROM / UNTIL read-out — the reference's selection summary. */}
       <View style={styles.readout}>
         <View style={styles.readoutCol}>
           <Text style={styles.readoutLabel}>FROM</Text>
-          <Text
-            style={styles.readoutValue}
-            onPress={() => focusDate(range.from)}
-            accessibilityRole="button"
-            testID="calendar-from">
-            {formatShortDate(range.from)}
+          <Text style={styles.readoutValue} testID={`${testIDPrefix}-from`}>
+            {fromLabel}
           </Text>
         </View>
         <View style={styles.readoutCol}>
           <Text style={styles.readoutLabel}>UNTIL</Text>
           <Text
             style={[styles.readoutValue, styles.readoutValueUntil]}
-            onPress={() => focusDate(range.until)}
-            accessibilityRole="button"
-            testID="calendar-until">
-            {formatShortDate(range.until)}
+            testID={`${testIDPrefix}-until`}>
+            {untilLabel}
           </Text>
         </View>
       </View>
 
-      {/* month caption + prev/next */}
-      <View style={styles.monthRow}>
-        <Pressable
-          style={styles.navBtn}
-          onPress={goPrev}
-          hitSlop={8}
-          accessibilityLabel="Previous month"
-          testID="calendar-prev">
-          <Chevron dir="left" color={historyColors.monthCaption} size={10} />
-        </Pressable>
-        <Text style={styles.monthCaption} testID="calendar-caption">
-          {formatMonthCaption(month.year, month.month)}
-        </Text>
-        <Pressable
-          style={styles.navBtn}
-          onPress={goNext}
-          hitSlop={8}
-          accessibilityLabel="Next month"
-          testID="calendar-next">
-          <Chevron dir="right" color={historyColors.monthCaption} size={10} />
-        </Pressable>
-      </View>
-
-      {/* weekday header */}
-      <View style={styles.weekRow}>
-        {WEEKDAYS.map((label, i) => (
-          <View key={`${label}-${i}`} style={styles.weekCell}>
-            <Text style={styles.weekText}>{label}</Text>
-          </View>
-        ))}
-      </View>
-
-      {/* day grid */}
-      <View style={styles.grid} testID="calendar-grid">
-        {cells.map(cell => {
-          const isStart = cell.date === range.from;
-          const isUntil = cell.date === range.until;
-          const inRange = cell.date >= range.from && cell.date <= range.until;
-          // PATCH T-HISTORY: the range paints ONE contiguous band. The start day
-          // paints a white rounded square instead of the band (the reference shows
-          // the square inset inside its own column, with the blue band taking over
-          // from the next column on).
-          const showBand = inRange && !isStart;
-          // Rounded only where the band opens/closes — square edges inside a week.
-          const roundLeft = showBand && (isStartOfWeek(cell.date) || isStart);
-          const roundRight = showBand && (isEndOfWeek(cell.date) || isUntil);
-          return (
-            <Pressable
-              key={cell.date}
-              style={[styles.dayCellWrap, cell.outside ? styles.dayOutside : null]}
-              onPress={() => onSelectDay(cell.date)}
-              accessibilityRole="button"
-              accessibilityLabel={cell.date}
-              testID={`calendar-day-${cell.date}`}>
-              {showBand ? (
-                <View
-                  style={[
-                    styles.band,
-                    roundLeft ? styles.bandRoundLeft : null,
-                    roundRight ? styles.bandRoundRight : null,
-                  ]}
-                />
-              ) : null}
-              <View style={[styles.dayInner, isStart ? styles.dayStart : null]}>
-                <Text
-                  style={[
-                    styles.dayText,
-                    cell.outside ? styles.dayTextOutside : null,
-                    isStart ? styles.dayTextStart : null,
-                  ]}>
-                  {cell.day}
-                </Text>
-              </View>
-            </Pressable>
-          );
-        })}
-      </View>
+      <DateTimePicker
+        mode="range"
+        startDate={startDate}
+        endDate={endDate}
+        month={displayedMonth}
+        year={displayedYear}
+        onChange={handleChange}
+        onMonthChange={onMonthChange}
+        onYearChange={onYearChange}
+        initialView="day"
+        // Both reference artboards pad the grid with the neighbouring months'
+        // days, dimmed (25-30 Nov above, 1-5 Jan below in December 2018). The
+        // library defaults this to `false`, which would render blanks instead —
+        // and blanks also remove the only way to reach another month without
+        // paging first, which is exactly the interaction AUTO_NAVIGATE is for.
+        showOutsideDays
+        containerHeight={calendarMetrics.containerHeight}
+        weekdaysHeight={calendarMetrics.weekdaysHeight}
+        navigationPosition="around"
+        styles={pickerStyles}
+        components={components}
+      />
     </View>
   );
 }
-
-/** True when `iso` is the first column (Sunday) of its week row. */
-function isStartOfWeek(iso: string): boolean {
-  return fromIsoDate(iso).getDay() === 0;
-}
-
-/** True when `iso` is the last column (Saturday) of its week row. */
-function isEndOfWeek(iso: string): boolean {
-  return fromIsoDate(iso).getDay() === 6;
-}
-
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: historyColors.panel,
-    paddingHorizontal: 10,
-    paddingTop: 8,
-    paddingBottom: 10,
-  },
-  // PATCH T-HISTORY: small triangle in the gap above the panel, pointing at the field
-  tooltipArrow: {
-    position: 'absolute',
-    top: -6,
-    left: 20,
-    width: 0,
-    height: 0,
-    borderLeftWidth: 7,
-    borderRightWidth: 7,
-    borderBottomWidth: 7,
-    borderLeftColor: 'transparent',
-    borderRightColor: 'transparent',
-    borderBottomColor: historyColors.panel,
-  },
-  readout: {
-    flexDirection: 'row',
-    marginBottom: 6,
-  },
-  readoutCol: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  readoutLabel: {
-    fontSize: 8,
-    color: historyColors.fromLabel,
-    letterSpacing: 0.5,
-  },
-  readoutValue: {
-    marginTop: 2,
-    fontSize: 15,
-    fontWeight: '700',
-    color: historyColors.fromValue,
-    textDecorationLine: 'underline',
-  },
-  readoutValueUntil: {
-    color: historyColors.untilValue,
-  },
-  monthRow: {
-    height: historySizes.monthRowH,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  navBtn: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    backgroundColor: historyColors.monthNavBg,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  monthCaption: {
-    flex: 1,
-    textAlign: 'center',
-    fontSize: 13,
-    color: historyColors.monthCaption,
-  },
-  weekRow: {
-    flexDirection: 'row',
-    height: historySizes.weekdayRowH,
-    paddingHorizontal: historySizes.calGridPadH,
-  },
-  weekCell: {
-    width: `${100 / 7}%`,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  weekText: {
-    fontSize: 12,
-    color: historyColors.weekdayInk,
-  },
-  grid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    paddingHorizontal: historySizes.calGridPadH,
-  },
-  dayCellWrap: {
-    width: `${100 / 7}%`,
-    height: historySizes.dayRowH,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  dayOutside: {
-    opacity: 0.55,
-  },
-  // PATCH T-HISTORY: one contiguous band per range row (was a per-day circle)
-  band: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: (historySizes.dayRowH - historySizes.dayCell) / 2,
-    height: historySizes.dayCell,
-    backgroundColor: historyColors.rangeFill,
-  },
-  bandRoundLeft: {
-    borderTopLeftRadius: 4,
-    borderBottomLeftRadius: 4,
-  },
-  bandRoundRight: {
-    borderTopRightRadius: 4,
-    borderBottomRightRadius: 4,
-  },
-  // PATCH T-HISTORY: rounded square (was a circle) — the reference start/day shape
-  dayInner: {
-    width: historySizes.dayCell,
-    height: historySizes.dayCell,
-    borderRadius: 4,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  dayStart: {
-    backgroundColor: historyColors.startFill,
-  },
-  dayText: {
-    fontSize: 12,
-    color: historyColors.dayInk,
-  },
-  dayTextOutside: {
-    color: historyColors.dayOutsideInk,
-  },
-  dayTextStart: {
-    color: historyColors.startInk,
-    fontWeight: '700',
-  },
-});
 
 export default DateRangeCalendar;

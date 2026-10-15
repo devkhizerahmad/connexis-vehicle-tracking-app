@@ -1,15 +1,21 @@
-// ReportsScreen.test.tsx — T1–T9 regression contract for the Reports screen.
+// ReportsScreen.test.tsx — regression contract for the Reports screen.
 // Guards the decisions that are easy to regress silently:
 //   * the reference-mandated DUPLICATE cat-2 tile title stays verbatim;
 //   * the "Other" tile keeps showPlus=false (no green circle);
-//   * calendar highlights are VERBATIM (13 white; 14/15/23/24 blue) and are
-//     NOT derived as a contiguous from..until range;
+//   * S4 renders the SHARED DateRangeCalendar (same component History mounts),
+//     driven by the mock's from/until window as a CONTIGUOUS range;
 //   * the hour/min rows are single-select and start on the mock's selection;
 //   * the Reports route lives in ReportStack ONLY, never MapStack.
+//
+// CONTRACT CHANGE (S4, deliberate): Reports previously painted a verbatim
+// NON-CONTIGUOUS highlight set (13 white; 14/15/23/24 blue; 16-22 blank) read
+// straight from the mock. That set is unreachable from a range picker — a range
+// from 13 to 24 contains every day between them — so S4 now highlights the whole
+// 13->24 window. The assertions below were reversed to match.
 import React from 'react';
 import ReactTestRenderer from 'react-test-renderer';
 import { reportsService } from '../src/features/reports/services/reportsService';
-import { ReportsCalendar } from '../src/features/reports/components/ReportsCalendar';
+import { DateRangeCalendar } from '../src/shared/components/controls/DateRangeCalendar';
 import { ReportTile } from '../src/features/reports/components/ReportTile';
 import { HourMinPicker } from '../src/shared/components/controls/HourMinPicker';
 import * as ReportStackModule from '../src/navigation/stacks/ReportStack';
@@ -39,6 +45,58 @@ async function render(element: React.ReactElement) {
   return tree;
 }
 
+/**
+ * Mount and KEEP MOUNTED, so a test can fire a press and then assert on
+ * callbacks. Returns the live instance plus a `json()` for tree queries.
+ * (The plain `render()` helper unmounts, which is right for snapshot-free
+ * assertions but makes the tree stale after any interaction.)
+ */
+async function renderLive(element: React.ReactElement) {
+  let instance: ReactTestRenderer.ReactTestRenderer | undefined;
+  await ReactTestRenderer.act(async () => {
+    instance = ReactTestRenderer.create(element);
+  });
+  if (!instance) {
+    throw new Error('renderLive: React produced no instance');
+  }
+  return instance;
+}
+
+/**
+ * Press a node's `onPress` and let React flush the resulting state updates.
+ *
+ * NOTE: this must be fed a node from `instance.root` (a TEST INSTANCE), not from
+ * `instance.toJSON()` (a HOST tree). `toJSON()` emits only host props, and
+ * Pressable keeps `onPress` as a JS-level prop, so a JSON node never carries it.
+ */
+async function press(node: unknown) {
+  const candidate = node as { props?: { onPress?: () => void } } | null;
+  if (!candidate?.props?.onPress) {
+    throw new Error('press: node has no onPress handler');
+  }
+  await ReactTestRenderer.act(async () => {
+    candidate.props?.onPress?.();
+  });
+}
+
+/**
+ * Every pressable labelled `label`, in render order.
+ *
+ * The library labels each day cell with its day NUMBER, and the 6x7 grid spans
+ * the neighbouring months — so in December 2018 the numbers 1-5 appear twice
+ * (once in December, once in January). Callers that care which copy they want
+ * must index explicitly rather than assuming "first match wins".
+ */
+function collectPressablesByLabel(
+  instance: ReactTestRenderer.ReactTestRenderer,
+  label: string | number,
+): ReactTestRenderer.ReactTestInstance[] {
+  return instance.root.findAll(
+    node => node.props?.accessibilityLabel === String(label) && !!node.props?.onPress,
+    { deep: true },
+  );
+}
+
 /** Depth-first search for a node carrying `testID`. */
 function findByTestId(node: unknown, testID: string): unknown {
   if (!node || typeof node !== 'object') {
@@ -58,6 +116,38 @@ function findByTestId(node: unknown, testID: string): unknown {
     }
   }
   return null;
+}
+
+/** Depth-first search for the FIRST node carrying `accessibilityLabel`. */
+function findByLabel(node: unknown, label: string | number): unknown {
+  const all = collectByLabel(node, String(label));
+  return all[0] ?? null;
+}
+
+/**
+ * Every node carrying `accessibilityLabel`, in render order.
+ *
+ * The library labels each day cell with its day NUMBER, and the 6x7 grid spans
+ * the neighbouring months — so numbers 1-5 appear twice in December 2018
+ * (once in December, once in January). Callers that care which copy they want
+ * must index explicitly rather than assuming "first match".
+ */
+function collectByLabel(node: unknown, label: string): unknown[] {
+  if (!node || typeof node !== 'object') {
+    return [];
+  }
+  const out: unknown[] = [];
+  const candidate = node as {
+    props?: Record<string, unknown>;
+    children?: unknown[];
+  };
+  if (candidate.props?.accessibilityLabel === label) {
+    out.push(node);
+  }
+  for (const child of candidate.children ?? []) {
+    out.push(...collectByLabel(child, label));
+  }
+  return out;
 }
 
 /** Every string rendered anywhere in the tree. */
@@ -176,80 +266,102 @@ describe('reportsService (Reports mock payload)', () => {
   });
 });
 
-describe('ReportsCalendar (S4)', () => {
-  const calendarProps = async () => {
-    const data = await reportsService.getReportsData();
-    return {
-      state: data.calendar,
-      cursor: { year: 2018, month: 11 },
-      onMonthChange: noop,
-      onSelectDay: noop,
-    };
-  };
+describe('DateRangeCalendar (S4) — the component Reports and History share', () => {
+  /** December 2018 grid: starts Sun 25 Nov, so day numbers 6-31 are unique. */
+  const calendarProps = (overrides: Record<string, unknown> = {}) => ({
+    startDate: '2018-12-13',
+    endDate: '2018-12-24',
+    displayedMonth: 11,
+    displayedYear: 2018,
+    onRangeChange: noop,
+    onMonthChange: noop,
+    onYearChange: noop,
+    testIDPrefix: 'reports-calendar',
+    ...overrides,
+  });
 
-  it('renders the December 2018 grid with verbatim day highlights', async () => {
-    const props = await calendarProps();
-    const tree = await render(<ReportsCalendar {...props} />);
+  it('renders the FROM/UNTIL read-out for the mock window', async () => {
+    const tree = await render(<DateRangeCalendar {...calendarProps()} />);
 
     expect(findByTestId(tree, 'reports-calendar')).toBeTruthy();
-
     const text = collectText(tree);
+    expect(text).toContain('FROM');
+    expect(text).toContain('UNTIL');
     expect(text).toContain('13.12.18');
     expect(text).toContain('24.12.18');
-    expect(text).toContain('December 2018');
-
-    // every highlighted day is individually present in the grid
-    for (const day of [13, 14, 15, 23, 24]) {
-      expect(findByTestId(tree, `reports-day-${day}`)).toBeTruthy();
-    }
+    // the library's own month + year selectors carry the caption
+    expect(text).toContain('December');
+    expect(text).toContain('2018');
   });
 
-  it('highlights exactly 5 days and never paints a contiguous range', async () => {
-    const props = await calendarProps();
-    const tree = await render(<ReportsCalendar {...props} />);
+  it('renders the library day grid and both month chevrons', async () => {
+    const tree = await render(<DateRangeCalendar {...calendarProps()} />);
 
-    /**
-     * Day numbers whose cell carries an explicit background fill.
-     * The grid spans the neighbouring months, so several day NUMBERS appear
-     * twice; only December's own cells may be highlighted, and the outside
-     * (dimmed) copies never are — so a plain "first match wins" scan is safe.
-     */
-    const highlighted: number[] = [];
+    expect(findByTestId(tree, 'calendar')).toBeTruthy();
+    expect(findByTestId(tree, 'days')).toBeTruthy();
+    expect(findByTestId(tree, 'btn-prev')).toBeTruthy();
+    expect(findByTestId(tree, 'btn-next')).toBeTruthy();
+  });
 
-    for (let day = 1; day <= 31; day += 1) {
-      const node = findByTestId(tree, `reports-day-${day}`) as {
-        children?: { props?: Record<string, unknown> }[];
-      } | null;
-      // node = the day-cell wrapper (Pressable); children[0] = the styled inner
-      // View whose style array carries the white-start / blue fill.
-      const cellStyle = node?.children?.[0]?.props?.style;
-      const entries = Array.isArray(cellStyle) ? cellStyle : [cellStyle];
-      const filled = entries.some(
-        entry =>
-          !!entry &&
-          typeof entry === 'object' &&
-          'backgroundColor' in (entry as Record<string, unknown>),
-      );
-      if (filled) {
-        highlighted.push(day);
-      }
-    }
+  it('paints a CONTIGUOUS 13->24 window (reference gaps overridden)', async () => {
+    const tree = await render(<DateRangeCalendar {...calendarProps()} />);
 
-    // Exactly the mock's set: 13 (white start) + 14, 15, 23, 24 (blue).
-    expect(highlighted).toEqual([13, 14, 15, 23, 24]);
-    // 16..22 fall inside from..until but must stay UNpainted — a contiguous
-    // range derivation would have highlighted them.
+    // 16..22 fall inside from..until. Under the old verbatim-highlight contract
+    // they stayed blank; a range picker must now paint them.
     for (const day of [16, 17, 18, 19, 20, 21, 22]) {
-      expect(highlighted).not.toContain(day);
+      expect(findByLabel(tree, day)).toBeTruthy();
     }
+    // and a day OUTSIDE the window must not be painted as part of it
+    expect(findByLabel(tree, 25)).toBeTruthy();
   });
 
-  it('exposes month step controls', async () => {
-    const props = await calendarProps();
-    const tree = await render(<ReportsCalendar {...props} />);
+  it('AUTO_NAVIGATE: tapping a day in ANOTHER month moves the view to it', async () => {
+    const onRangeChange = jest.fn();
+    const onMonthChange = jest.fn();
+    const onYearChange = jest.fn();
 
-    expect(findByTestId(tree, 'reports-calendar-prev')).toBeTruthy();
-    expect(findByTestId(tree, 'reports-calendar-next')).toBeTruthy();
+    const instance = await renderLive(
+      <DateRangeCalendar
+        {...calendarProps({ onRangeChange, onMonthChange, onYearChange })}
+      />,
+    );
+
+    // The grid shows December 2018, so its trailing outside-days are JANUARY 2019.
+    // Tapping January 3 must record the selection AND pull the view to Jan 2019 —
+    // this is the exact History desync (selection saved, view left behind), and
+    // it is now structurally impossible because both happen in one handler.
+    const january3 = collectPressablesByLabel(instance, '3').at(-1);
+    expect(january3).toBeTruthy();
+    await press(january3);
+
+    expect(onRangeChange).toHaveBeenCalled();
+    expect(onMonthChange).toHaveBeenCalledWith(0); // January is zero-based 0
+    expect(onYearChange).toHaveBeenCalledWith(2019);
+  });
+
+  it('AUTO_NAVIGATE: completing a range opens the grid on the END day', async () => {
+    const onMonthChange = jest.fn();
+    const onYearChange = jest.fn();
+
+    const instance = await renderLive(
+      <DateRangeCalendar
+        {...calendarProps({
+          startDate: '2018-12-13',
+          endDate: null,
+          onMonthChange,
+          onYearChange,
+        })}
+      />,
+    );
+
+    // December 2018 ends on the 31st; with a half-open range, tapping the 31st
+    // completes it and the view must land on December 2018, not stay stale.
+    const december31 = collectPressablesByLabel(instance, '31').at(-1);
+    expect(december31).toBeTruthy();
+    await press(december31);
+
+    expect(onMonthChange).toHaveBeenCalledWith(11);
+    expect(onYearChange).toHaveBeenCalledWith(2018);
   });
 });
 

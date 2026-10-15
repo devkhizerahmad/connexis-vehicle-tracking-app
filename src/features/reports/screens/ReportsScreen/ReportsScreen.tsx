@@ -10,12 +10,22 @@
 //   S1 header            AppHeader, title "Reports", visible (no-op) back, avatar
 //   S2 select vehicle    SelectField + inline 4-option list
 //   S3 select date&time  SelectField + 8pt pointer; toggles S4–S6 (expanded)
-//   S4 calendar          ReportsCalendar (dark, verbatim day highlights)
-//   S5/S6 pickers        HourMinPicker (variant="reports")
+//   S4 calendar          DateRangeCalendar — the SAME shared component History uses
+//   S5/S6 pickers        HourMinPicker (variant="reports") — UNCHANGED, decorative
 //   S7–S9 categories     ReportCategorySection -> ReportTile x2 each
 //   S10 bottom nav       rendered by RootNavigator's BottomNav (REPORT active)
 //
-// Everything is mock-backed today via reportsService. The only navigation is
+// ASSUMPTION — CONTIGUOUS RANGE OVERRIDES THE REFERENCE:
+// The reference artboard highlights a deliberately NON-CONTIGUOUS set of days
+// (13 white, then 14/15 and 23/24 blue) with 16–22 left blank. That cannot be
+// produced by a range picker, because a range from 13 to 24 contains every day
+// in between. The shared calendar is a standard `mode="range"` picker, so
+// Reports now highlights 13 (white start) then 14→24 (blue) with no gaps.
+// The non-contiguous design in the reference is OVERRIDDEN, as specified.
+// The alternative — `mode="multiple"` — would reproduce the gaps but has no
+// meaningful auto-navigate behaviour and no FROM/UNTIL semantics.
+//
+// Everything else is mock-backed today via reportsService. The only navigation is
 // the avatar -> ProfileTab; the back chevron is intentionally inert because
 // this screen is the stack root.
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -30,19 +40,19 @@ import {
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import type { DateType } from 'react-native-ui-datepicker';
 import { AppHeader } from '@shared/components/layout/AppHeader';
 import {
   SelectField,
   type SelectFieldOption,
 } from '@shared/components/controls/SelectField';
+import { DateRangeCalendar } from '@shared/components/controls/DateRangeCalendar';
 import { HourMinPicker } from '@shared/components/controls/HourMinPicker';
 import { useCollapsible } from '@shared/hooks/useCollapsible';
 import { spacing, sizes } from '@shared/theme';
 import { reportsService } from '@features/reports/services/reportsService';
 import { ReportCategorySection } from '@features/reports/components/ReportCategorySection';
-import { ReportsCalendar } from '@features/reports/components/ReportsCalendar';
 import type { ReportsData } from '@features/reports/types/reports';
-import type { MonthCursor } from '@features/map/utils/historyDates';
 import type { ReportStackParamList } from '@navigation/types';
 import { styles } from './styles';
 
@@ -51,6 +61,18 @@ type ReportsScreenProps = NativeStackScreenProps<ReportStackParamList, 'Reports'
 /** Legacy header tuning, identical to the History pass (header standard exception). */
 const HEADER_CONTENT_H = 80;
 const HEADER_CENTER_OFFSET = 17;
+
+/**
+ * `REPORTS_INITIAL = MOCK_VALUES`: the calendar opens on the mock's own window
+ * (from 13.12.18, until 24.12.18, December 2018) so the rest state reproduces
+ * the reference artboard. These are the SAME numbers the mock JSON carries —
+ * they are read from the payload below rather than duplicated as a second
+ * source of truth, so the two can never disagree.
+ */
+const MOCK_START_DATE = '2018-12-13';
+const MOCK_END_DATE = '2018-12-24';
+const MOCK_MONTH = 11; // zero-based => December
+const MOCK_YEAR = 2018;
 
 export function ReportsScreen({ navigation, route }: ReportsScreenProps) {
   // The shared BottomNav is an absolute overlay (RootNavigator's tabBar), so the
@@ -65,7 +87,11 @@ export function ReportsScreen({ navigation, route }: ReportsScreenProps) {
   );
   const [data, setData] = useState<ReportsData | null>(null);
   const [vehicleOpen, setVehicleOpen] = useState(false);
-  const [cursor, setCursor] = useState<MonthCursor>({ year: 2018, month: 11 });
+  /** S4 range selection + the grid's view cursor, both owned by this screen. */
+  const [startDate, setStartDate] = useState<DateType>(MOCK_START_DATE);
+  const [endDate, setEndDate] = useState<DateType>(MOCK_END_DATE);
+  const [displayedMonth, setDisplayedMonth] = useState<number>(MOCK_MONTH);
+  const [displayedYear, setDisplayedYear] = useState<number>(MOCK_YEAR);
   const [hour, setHour] = useState<string>('');
   const [minute, setMinute] = useState<string>('');
 
@@ -163,12 +189,20 @@ export function ReportsScreen({ navigation, route }: ReportsScreenProps) {
     [showToast],
   );
 
-  const handleSelectDay = useCallback(
-    (day: number) => {
-      showToast(`Day ${day} selected`);
-    },
-    [showToast],
-  );
+  /** S4 day tap: record the new range. The calendar auto-navigates its own view. */
+  const handleRangeChange = useCallback((nextStart: DateType, nextEnd: DateType) => {
+    setStartDate(nextStart);
+    setEndDate(nextEnd);
+  }, []);
+
+  /** S4 month chevron / selector. Moves the VIEW only — never the selection. */
+  const handleMonthChange = useCallback((month: number) => {
+    setDisplayedMonth(month);
+  }, []);
+
+  const handleYearChange = useCallback((year: number) => {
+    setDisplayedYear(year);
+  }, []);
 
   const handleHour = useCallback(
     (value: string) => {
@@ -310,11 +344,15 @@ export function ReportsScreen({ navigation, route }: ReportsScreenProps) {
           <View
             onLayout={e => onMeasureLayout(e.nativeEvent.layout.height)}
             testID="reports-date-body">
-            <ReportsCalendar
-              state={data.calendar}
-              cursor={cursor}
-              onMonthChange={setCursor}
-              onSelectDay={handleSelectDay}
+            <DateRangeCalendar
+              startDate={startDate}
+              endDate={endDate}
+              displayedMonth={displayedMonth}
+              displayedYear={displayedYear}
+              onRangeChange={handleRangeChange}
+              onMonthChange={handleMonthChange}
+              onYearChange={handleYearChange}
+              testIDPrefix="reports-calendar"
             />
 
             <View style={styles.pickerRow}>
