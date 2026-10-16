@@ -1,15 +1,23 @@
 // styles.ts — HistoryScreen layout (S2 chip row, list gutters, S9 section bar).
 import { StyleSheet } from 'react-native';
 import { colors } from '@shared/theme';
-import { historyColors, historySizes } from '@shared/theme';
+import { historyColors, historySizes, radii } from '@shared/theme';
 
 export const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: colors.bg,
   },
+  /**
+   * PATCH UI-POLISH (PART 8): the history list is the tail of the rounded S9
+   * block, so it closes the bottom corners that `sectionBar` opened at the top.
+   * `overflow: hidden` clips the virtualised rows to the radius.
+   */
   list: {
     flex: 1,
+    borderBottomLeftRadius: radii.md,
+    borderBottomRightRadius: radii.md,
+    overflow: 'hidden',
   },
   listContent: {
     // V5-PART1: paddingBottom is applied dynamically in HistoryScreen as
@@ -68,12 +76,19 @@ export const styles = StyleSheet.create({
   collapseWrap: {
     overflow: 'hidden',
   },
-  /** S9 dark section header above the virtualised list. */
+  /**
+   * PATCH UI-POLISH (PART 8): S9 dark section header now carries `radii.md` on
+   * its top corners, matching the Playback title strip above it. `overflow:
+   * hidden` clips the bar to them.
+   */
   sectionBar: {
     paddingHorizontal: 12,
     height: historySizes.panelTitleH,
     justifyContent: 'center',
     backgroundColor: historyColors.sectionBarBg,
+    borderTopLeftRadius: radii.md,
+    borderTopRightRadius: radii.md,
+    overflow: 'hidden',
   },
   sectionBarText: {
     color: historyColors.sectionBarInk,

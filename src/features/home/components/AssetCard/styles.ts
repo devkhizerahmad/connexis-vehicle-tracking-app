@@ -1,11 +1,31 @@
 import { StyleSheet } from 'react-native';
-import { colors } from '@shared/theme';
+import { colors, radii, shadows } from '@shared/theme';
 
 export const styles = StyleSheet.create({
+  /**
+   * PATCH UI-POLISH (PART 2): visible 1pt near-black outline + subtle shadow.
+   *
+   * The shadow is why the clipping moved out to `cardClip`. On Android,
+   * `elevation` is drawn by the parent compositor and an `overflow: 'hidden'` on
+   * the SAME view suppresses it — so this shell carries border + radius +
+   * elevation and no clipping, while `cardClip` keeps the rounded-corner clip
+   * that the coloured header/status bar needs.
+   *
+   * `borderWidth` sits INSIDE the element box in Yoga, so the outline costs the
+   * inner content 2pt and leaves the card's outer footprint identical — no
+   * layout shift in the list.
+   */
   card: {
     borderRadius: 8,
-    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: colors.line.strong,
     marginBottom: 10,
+    ...shadows.card,
+  },
+  /** Rounded-corner clip for the coloured header/status bar + premium bar. */
+  cardClip: {
+    borderRadius: 8,
+    overflow: 'hidden',
   },
   // PATCH H-D: header h40, name 13pt/400 padL 12, status 13pt bold centred
   header: {
@@ -40,6 +60,14 @@ export const styles = StyleSheet.create({
     paddingLeft: 14,
     paddingRight: 12,
     paddingBottom: 12,
+    // PATCH UI-POLISH (PART 3): column, because the Last-Update + buttons row
+    // needs the FULL card width. Kept as a 35/65 row it was ~210pt wide and two
+    // 40pt buttons plus the "Last Update:" label simply did not fit at 390pt —
+    // "View on Map" was clipped off the card edge. The photo/details column and
+    // the two info rows keep their original 35/65 split inside `bodyTop`.
+    flexDirection: 'column',
+  },
+  bodyTop: {
     flexDirection: 'row',
   },
   leftCol: {
@@ -105,24 +133,62 @@ export const styles = StyleSheet.create({
     fontSize: 11,
     flexShrink: 1,
   },
-  // PATCH H-D: buttons h24, text 9pt, r4, gap 8, right-aligned marginTop 10
+  // PATCH UI-POLISH (PART 3): "Last Update" + the two action buttons now share
+  // one row. `infoValue` keeps flexShrink so the date is the ONLY thing that
+  // gives way; the buttons are pinned by `flexShrink: 0` so they can never be
+  // squeezed, wrapped or clipped at 390pt.
+  /**
+   * PATCH UI-POLISH (footer restore): the footer is ONE row beneath the
+   * photo/info split — "More Details →" on the left, the two compact action
+   * buttons on the right, both vertically centred. Its side padding mirrors
+   * `body` (14 / 12) so the footer's edges line up with the columns above it.
+   */
+  footerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingLeft: 14,
+    paddingRight: 12,
+    paddingTop: 8,
+    paddingBottom: 2,
+  },
   buttonsRow: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
-    gap: 8,
-    marginTop: 10,
+    alignItems: 'center',
+    gap: 6,
+    // intrinsic width — the buttons must size to their label, never stretch
+    flexShrink: 0,
   },
+  /**
+   * Compact, intrinsic-width action button.
+   *
+   * Geometry is SAMPLED from `design-references/home total assts records.jpeg`
+   * (Suzuki Mehran footer, row scan at y=495; image is 336px wide for a 390pt
+   * screen, so scale = 0.8615):
+   *   grey button  x 166..226 -> 70.8pt wide
+   *   navy button  x 231..303 -> 84.7pt wide
+   *   height      y 492..508 -> 19.7pt
+   *   gap         4-5px      -> ~5pt
+   * `fontSize: 10` + `icon 12` + `paddingHorizontal: 10` reproduces both sampled
+   * widths almost exactly. Height is 24 rather than the measured ~20: 4pt of
+   * that is JPEG softening on the corner, and 24 keeps a sane tap target while
+   * staying far closer to the reference than the 40pt this used to be.
+   *
+   * NO `flex`, NO `width`, NO `alignSelf` — intrinsic width only.
+   */
   actionBtn: {
     height: 24,
-    borderRadius: 4,
-    paddingHorizontal: 8,
+    borderRadius: radii.sm,
+    paddingHorizontal: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    flexShrink: 0,
   },
   actionBtnText: {
     color: colors.white,
-    fontSize: 9,
+    fontSize: 10,
+    fontWeight: '600',
   },
   // PATCH H-D: premium bar h26 maroon, star 12 + 11pt/400 #C9CED4 padL 10
   premiumBar: {

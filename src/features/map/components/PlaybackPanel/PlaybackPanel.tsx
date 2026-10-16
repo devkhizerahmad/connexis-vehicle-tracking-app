@@ -17,7 +17,7 @@ import {
   TransportGlyph,
 } from '@shared/components/icons';
 import { HourMinPicker } from '@shared/components/controls/HourMinPicker';
-import { historyColors, historySizes } from '@shared/theme';
+import { historyColors, historySizes, radii } from '@shared/theme';
 import type { HistoryFilters, HistoryPlayback } from '@features/map/types/history';
 import { PlaybackScrubber, type PlaybackScrubberHandle } from './PlaybackScrubber';
 
@@ -164,12 +164,23 @@ const styles = StyleSheet.create({
   wrap: {
     gap: 8,
   },
+  /**
+   * PATCH UI-POLISH (PART 8): `titleStrip` + `body` now read as ONE rounded
+   * playback box. The strip carries the top corners and the body the bottom
+   * ones, both at `radii.md`, so the two stacked surfaces meet at a square
+   * seam internally while the outer silhouette is rounded like every other
+   * card in the app. `overflow: hidden` on the body clips its children to
+   * those corners.
+   */
   // PATCH T-HISTORY: "Playback" title strip (dark navy, same surface as the calendar)
   titleStrip: {
     height: historySizes.panelTitleH,
     justifyContent: 'center',
     paddingHorizontal: 12,
     backgroundColor: historyColors.panel,
+    borderTopLeftRadius: radii.md,
+    borderTopRightRadius: radii.md,
+    overflow: 'hidden',
   },
   // PATCH T-HISTORY: info rows sit on the lighter charcoal body
   body: {
@@ -177,6 +188,9 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     gap: 10,
     backgroundColor: historyColors.panelSoft,
+    borderBottomLeftRadius: radii.md,
+    borderBottomRightRadius: radii.md,
+    overflow: 'hidden',
   },
   head: {
     flexDirection: 'row',

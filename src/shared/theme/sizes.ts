@@ -6,6 +6,11 @@ export const sizes = {
   reportTileH: 62,
   tabRowH: 30,
   bottomNavH: 56,
+  /**
+   * PATCH UI-POLISH: the ONE horizontal page gutter every top-level section
+   * aligns to, so section edges land on two shared vertical guides (Reports).
+   */
+  marginH: 16,
   carImgW: 115,
   carImgH: 68,
   donutD: 84,

@@ -3,7 +3,7 @@
 // section does not re-render the tile grid (G2).
 import React, { memo, useMemo } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { reportColors, reportSizes } from '@shared/theme';
+import { reportColors, reportSizes, sizes } from '@shared/theme';
 import type { ReportCategory } from '@features/reports/types/reports';
 import { ReportTile } from '../ReportTile';
 
@@ -50,8 +50,15 @@ export const ReportCategorySection = memo(ReportCategorySectionBase);
 export default ReportCategorySection;
 
 const styles = StyleSheet.create({
+  /**
+   * PATCH UI-POLISH (PART 6): page gutter comes from the single shared token
+   * `sizes.marginH` so this card lines up with the calendar / picker rows
+   * above it (same 16 value as before — token consistency, no pixel change).
+   * `body` keeps `padding: cardBodyPad`, so the tiles always sit INSIDE this
+   * 1pt border and never touch the border line.
+   */
   card: {
-    marginHorizontal: reportSizes.gutter,
+    marginHorizontal: sizes.marginH,
     marginTop: 16,
     borderRadius: 8,
     borderWidth: 1,

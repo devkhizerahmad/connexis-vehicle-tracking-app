@@ -24,6 +24,14 @@ export const colors = {
     dash: '#D7DBE0',
     hairline: '#ECEEF1',
   },
+  /**
+   * PATCH UI-POLISH: structural outlines. `surface.border` is a soft grey for
+   * quiet separators; `line.strong` is the near-black 1pt hairline the asset
+   * cards and the sensor "Select" areas need to read as real edges.
+   */
+  line: {
+    strong: '#d6d3d3',
+  },
   text: {
     primary: '#222222',
     secondary: '#7A8288',

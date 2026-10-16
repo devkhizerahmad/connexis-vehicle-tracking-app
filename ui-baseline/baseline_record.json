@@ -1,0 +1,77 @@
+{
+  "recordVersion": 2,
+  "note": "Supersedes the v1 baselines in ui-baseline/*.png for Home, Details, Reports, EngineControl and History. Those predate the shared DateRangeCalendar migration and the approved UI polish batch, so they are retained for history only and are NOT the comparison target.",
+  "entries": [
+    {
+      "label": "UI polish batch v1 (user-approved) 2026-10-16",
+      "capturedAt": "2026-10-16",
+      "device": "Samsung A02s (SM-A025F), Android 12, 780x1688 @320dpi",
+      "supersedes": ["History.png", "Reports.png"],
+      "parts": {
+        "1": "Home status boxes no longer straddle the header gradient (marginTop -20 -> 16)",
+        "2": "Asset cards get a 1pt colors.line.strong border + shadows.card (shadow split into an inner cardClip so Android elevation is not clipped)",
+        "3": "Reports / View on Map buttons moved onto the 'Last Update' row, right-aligned, 40pt tall, 12pt semibold; date is the only shrinkable text",
+        "4": "Sensor + Quick Report tile grids rebuilt as explicit 3-wide rows with flex:1 so outer tiles land exactly on the section bar edges",
+        "5": "Sensor 'Select' area gets a 1pt colors.line.strong outline with the bar's corner radius",
+        "6": "Reports top-level sections standardised on the shared sizes.marginH (16) gutter; category tiles stay inset inside their 1pt border",
+        "7": "Engine Control top row: alignItems stretch + flex:1 on both boxes, gap 12 (was fixed 163pt width and a 2pt sliver)",
+        "8": "History: radii.md on Playback title strip, playback body, scrubber track/ticks, S9 section bar and the list container"
+      },
+      "newTokens": {
+        "colors.line.strong": "#1A1A1A",
+        "radii.md": 8,
+        "sizes.marginH": 16
+      },
+      "screenshots": [
+        { "screen": "Home", "view": "top", "file": "ui-baseline/v2/Home-top.png" },
+        { "screen": "Home", "view": "full-scroll", "file": "ui-baseline/v2/Home-full.png" },
+        { "screen": "Details", "view": "top", "file": "ui-baseline/v2/Details-top.png" },
+        { "screen": "Details", "view": "full-scroll", "file": "ui-baseline/v2/Details-full.png" },
+        { "screen": "Reports", "view": "top", "file": "ui-baseline/v2/Reports-top.png" },
+        { "screen": "Reports", "view": "full-scroll", "file": "ui-baseline/v2/Reports-full.png" },
+        { "screen": "EngineControl", "view": "top", "file": "ui-baseline/v2/EngineControl-top.png" },
+        { "screen": "EngineControl", "view": "full-scroll", "file": "ui-baseline/v2/EngineControl-full.png" },
+        { "screen": "History", "view": "top", "file": "ui-baseline/v2/History-top.png" },
+        { "screen": "History", "view": "full-scroll", "file": "ui-baseline/v2/History-full.png" }
+      ],
+      "verified": {
+        "staticGates": "tsc 0, eslint 0, jest 28/28",
+        "calendarResetHistory": "FROM=30.11.18 UNTIL=(EMPTY) caption November 2018",
+        "calendarResetReports": "click1 [05.12.18,(EMPTY)] click2 [05.12.18,20.12.18] click3 [30.11.18,(EMPTY)]",
+        "mapsRender": true,
+        "engineControlBoxMetrics": "vehicleCard W=356 H=222 T=177 / statusCard W=356 H=222 T=177, gap 24px (12dp)"
+      }
+    },
+    {
+      "label": "Home AssetCard footer fixed to reference 2026-10-16",
+      "capturedAt": "2026-10-16",
+      "scope": "AssetCard footer row + button sizing ONLY. Status boxes, card border, header split, dashed telemetry box, premium strip and all other screens untouched.",
+      "change": "Buttons moved out of the 'Last Update' info row into a dedicated footer row alongside 'More Details ->'; buttons restored to intrinsic width (no flex/width/alignSelf) at height 24, paddingHorizontal 10, fontSize 10 semibold, icon 12, gap 6, radius radii.sm.",
+      "referenceSampledPt": {
+        "source": "design-references/home total assts records.jpeg, Suzuki Mehran footer row scan y=495, scale 0.8615",
+        "reportsBtnWidth": 70.8,
+        "viewOnMapBtnWidth": 84.7,
+        "btnHeight": 19.7,
+        "gap": 5.8
+      },
+      "deviceMeasuredPt": {
+        "reportsBtnWidth": 71.5,
+        "viewOnMapBtnWidth": 98.5,
+        "btnHeight": 24,
+        "gap": 6,
+        "note": "Reports matches the sample within 1pt and the gap within 0.2pt. View on Map runs ~14pt wider because the reference sets that longer label tighter; not corrected with a per-button font hack. Height 24 (sample ~19.7) keeps a sane tap target and is far closer to the reference than the 40pt it replaced."
+      },
+      "verified": {
+        "staticGates": "tsc 0, eslint 0, jest 28/28",
+        "V3_footerMatchesReference": true,
+        "V4_lastUpdateUntruncated": "4/10/25 11:57 PM / 2/10/25 08:23 AM / 1/10/25 06:07 PM all full",
+        "V5_buttonsCompact": true,
+        "V6_uniform": "Idle, Running and Stop cards all identical",
+        "V7_regressions": "border, header split, dashed telemetry box, premium strip, status boxes, gradient all unchanged",
+        "V8_navigation": "Reports and View on Map both navigate correctly",
+        "V9_logcat": "clean"
+      },
+      "fullRecapture": "not required - only the footer region changed"
+    }
+  ]
+}

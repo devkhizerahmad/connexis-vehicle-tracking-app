@@ -2,8 +2,6 @@ import { StyleSheet } from 'react-native';
 import { colors, radii, sizes, spacing, typography } from '@shared/theme';
 
 const gridGap = spacing.gridGap;
-const gridCols = 3;
-const tileW = `${(100 - gridGap * (gridCols - 1)) / gridCols}%`;
 
 export const styles = StyleSheet.create({
   header: {
@@ -23,11 +21,20 @@ export const styles = StyleSheet.create({
     paddingLeft: 14,
     gap: 10,
   },
+  /**
+   * PATCH UI-POLISH (PART 5): the white "Select ▾" area gets the same 1pt
+   * near-black outline as the asset cards, so it reads as a distinct control
+   * rather than the bare end of the navy bar. The right-hand corners carry the
+   * bar's own radius to match `header`'s top radii, and the left edge picks up
+   * the hairline that used to be `borderLeftWidth: 1` in `navyLine`.
+   */
   headerRight: {
     flex: 0.3,
     backgroundColor: colors.white,
-    borderLeftWidth: 1,
-    borderLeftColor: colors.navyLine,
+    borderWidth: 1,
+    borderColor: colors.line.strong,
+    borderTopRightRadius: radii.card,
+    borderBottomRightRadius: radii.card,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -42,14 +49,29 @@ export const styles = StyleSheet.create({
     fontSize: typography.sectionTitle.fontSize, // 14
     fontWeight: '700',
   },
+  /**
+   * PATCH UI-POLISH (PART 4): the grid is laid out as EXPLICIT rows of 3 with
+   * `flex: 1` tiles instead of `width: 28%` + `gap`.
+   *
+   * The old formula `(100 - gap*2)/3 = 28%` is only correct when the container
+   * happens to be 100 units wide — the percentage is taken against the real
+   * container while the gaps are absolute dp, so on a 366dp container three 28%
+   * tiles plus two 8dp gaps came to ~323dp and left ~42dp of dead space on the
+   * right. That is exactly the "inner cards narrower than their section bar"
+   * defect. `flex: 1` divides the width that is actually left AFTER the gaps, so
+   * the first tile starts on the bar's left edge and the last ends on its right
+   * edge at ANY screen width.
+   */
   grid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: gridGap,
     marginTop: gridGap,
   },
+  gridRow: {
+    flexDirection: 'row',
+    marginBottom: gridGap,
+  },
   tile: {
-    width: tileW as any,
+    flex: 1,
+    marginRight: gridGap,
     borderRadius: radii.tile,
     padding: spacing.tilePad,
     minHeight: sizes.sensorTileMin,
@@ -59,6 +81,10 @@ export const styles = StyleSheet.create({
     shadowRadius: 4,
     shadowOffset: { width: 0, height: 1 },
     elevation: 1,
+  },
+  /** Last tile of a full row drops its trailing margin so it lands on the edge. */
+  tileRowEnd: {
+    marginRight: 0,
   },
   tileHeader: {
     flexDirection: 'row',

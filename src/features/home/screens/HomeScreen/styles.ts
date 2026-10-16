@@ -52,10 +52,16 @@ export const styles = StyleSheet.create({
     // `sizes.bottomNav + insets.bottom + 12` — the shared BottomNav is an absolute
     // overlay, so a constant here would let the last card sit under it.
   },
-  // PATCH H-A: summary row1 straddles the header gradient bottom by 20pt
-  // (gradient paints 20pt behind the cards; header gradient bottom = row1Top + 20)
+  /**
+   * PATCH UI-POLISH (PART 1): the summary cards no longer straddle the header
+   * gradient. This used to be `marginTop: -20` (PATCH H-A), which pulled the
+   * list up so row1 sat 20pt over the gradient's bottom edge — the cards were
+   * half on the dark header and half on the page, which read as an accidental
+   * overlap. It is now a positive 16pt gap so all five status boxes start fully
+   * on the light page background, clear of the gradient end.
+   */
   list: {
-    marginTop: -20,
+    marginTop: 16,
   },
   // S4 title row (PATCH H-C: title 17pt bold #1A1A1A, refresh glyph 20pt, gap 8)
   titleRow: {

@@ -36,8 +36,15 @@ export const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   /** S5 / S6 chip rows: full-bleed gutters, 10pt above each row. */
+  /**
+   * PATCH UI-POLISH (PART 6): every top-level section on this screen now shares
+   * the ONE page gutter token (`sizes.marginH`, 16) so all section edges land on
+   * the same two vertical guides. `reportSizes.gutter` was already 16, so this
+   * is a token-consistency change with NO pixel delta — the point is that the
+   * gutter is now declared once, app-wide, instead of per-feature.
+   */
   pickerRow: {
-    marginHorizontal: reportSizes.gutter,
+    marginHorizontal: sizes.marginH,
     marginTop: 10,
   },
   /**
@@ -47,7 +54,7 @@ export const styles = StyleSheet.create({
    * is supplied HERE instead — the rendered position is unchanged.
    */
   calendarBlock: {
-    marginHorizontal: reportSizes.gutter,
+    marginHorizontal: sizes.marginH,
   },
   /** S1 right slot avatar (32pt circle, same metric as the shared header's). */
   avatar: {

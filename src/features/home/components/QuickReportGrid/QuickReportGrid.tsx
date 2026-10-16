@@ -12,6 +12,18 @@ export interface ReportTile {
   color: string;
 }
 
+/** Columns per row — the tile grid is a fixed 3-wide layout. */
+const COLS = 3;
+
+/** Split a flat list into fixed-width rows (see styles.gridRow for why). */
+function chunk<T>(items: T[], size: number): T[][] {
+  const rows: T[][] = [];
+  for (let i = 0; i < items.length; i += size) {
+    rows.push(items.slice(i, i + size));
+  }
+  return rows;
+}
+
 export function QuickReportGrid({
   reports,
   onTileTap,
@@ -54,20 +66,27 @@ export function QuickReportGrid({
       </Pressable>
 
       <Collapsible open={expanded}>
+        {/* PATCH UI-POLISH (PART 4): explicit rows of 3 so the outer tiles line
+            up with the Quick Report bar's edges. */}
         <View style={styles.grid}>
-          {reports.map(r => (
-            <Pressable
-              key={r.label + r.color}
-              onPress={() => onTileTap?.(r.label)}
-              style={[
-                styles.tile,
-                { backgroundColor: reportColor(r.color) },
-              ]}>
-              <ReportIcon name={r.icon} color={colors.white} size={sizes.reportIcon} />
-              <Text style={styles.tileLabel} numberOfLines={1}>
-                {r.label}
-              </Text>
-            </Pressable>
+          {chunk(reports, COLS).map((row, rowIndex) => (
+            <View style={styles.gridRow} key={`row-${rowIndex}`}>
+              {row.map((r, colIndex) => (
+                <Pressable
+                  key={r.label + r.color}
+                  onPress={() => onTileTap?.(r.label)}
+                  style={[
+                    styles.tile,
+                    colIndex === row.length - 1 ? styles.tileRowEnd : null,
+                    { backgroundColor: reportColor(r.color) },
+                  ]}>
+                  <ReportIcon name={r.icon} color={colors.white} size={sizes.reportIcon} />
+                  <Text style={styles.tileLabel} numberOfLines={1}>
+                    {r.label}
+                  </Text>
+                </Pressable>
+              ))}
+            </View>
           ))}
         </View>
       </Collapsible>

@@ -3,12 +3,25 @@ import { StyleSheet } from 'react-native';
 import { ecColors, ecSizes } from '@shared/theme';
 
 export const styles = StyleSheet.create({
-  row: {
+  /**
+ * PATCH UI-POLISH (PART 7): the two boxes now share one height and one width
+ * split. This row used to be `alignItems: 'flex-start'` with a FIXED-width
+ * right card (163pt), so the left box measured ~103pt tall against the right's
+ * ~92pt and they visibly disagreed at both the top and bottom edges.
+ *
+ * `stretch` + `flex: 1` on both makes them resolve to the taller of the two, and
+ * the gap is a real 12pt instead of the old 2pt sliver.
+ */
+row: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'stretch',
+    gap: 12,
     paddingHorizontal: ecSizes.vehicleGutter,
   },
-  /** Left card: car photo + "Car | <model>" caption (160..352 px → 103 pt). */
+  /**
+   * Left card: car photo + "Car | <model>" caption. Content is centred so the
+   * photo and caption sit balanced inside whatever height the row resolves to.
+   */
   vehicleCard: {
     flex: 1,
     backgroundColor: ecColors.card,
@@ -19,6 +32,7 @@ export const styles = StyleSheet.create({
     paddingBottom: ecSizes.vehicleCardTopPad,
     paddingHorizontal: 6,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   car: {
     width: ecSizes.carW,
@@ -42,10 +56,14 @@ export const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '700',
   },
-  /** Right card: fence pill + hero status + 2-line address (163 x 107 pt). */
+  /**
+   * Right card: fence pill + hero status + address. PATCH UI-POLISH (PART 7):
+   * fixed `width: statusCardW` (163) replaced with `flex: 1` so it matches the
+   * left card's width AND height; the row's `gap: 12` supplies the separation,
+   * so the old `marginLeft: vehicleCardGap` (2pt) is gone.
+   */
   statusCard: {
-    width: ecSizes.statusCardW,
-    marginLeft: ecSizes.vehicleCardGap,
+    flex: 1,
     backgroundColor: ecColors.card,
     borderRadius: ecSizes.cardRadius,
     borderWidth: 1,

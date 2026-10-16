@@ -2,8 +2,6 @@ import { StyleSheet } from 'react-native';
 import { colors, radii, sizes, spacing, typography } from '@shared/theme';
 
 const gridGap = spacing.gridGap;
-const gridCols = 3;
-const tileW = `${(100 - gridGap * (gridCols - 1)) / gridCols}%`;
 
 export const styles = StyleSheet.create({
   header: {
@@ -23,18 +21,27 @@ export const styles = StyleSheet.create({
   spacer: {
     flex: 1,
   },
+  /** PATCH UI-POLISH (PART 4): explicit 3-wide rows — see SensorBlock/styles.ts
+   * `gridRow` for the full rationale (the old `width: 28%` + absolute gap
+   * under-filled the row and left the tiles narrower than the section bar). */
   grid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: gridGap,
     marginTop: gridGap,
   },
+  gridRow: {
+    flexDirection: 'row',
+    marginBottom: gridGap,
+  },
   tile: {
-    width: tileW as any,
+    flex: 1,
+    marginRight: gridGap,
     height: sizes.reportTile,
     borderRadius: radii.banner,
     padding: spacing.tilePad,
     justifyContent: 'space-between',
+  },
+  /** Last tile of a full row drops its trailing margin so it lands on the edge. */
+  tileRowEnd: {
+    marginRight: 0,
   },
   tileLabel: {
     color: colors.white,

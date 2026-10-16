@@ -24,6 +24,18 @@ interface Props {
   onSelectPress?: () => void;
 }
 
+/** Columns per row — the tile grid is a fixed 3-wide layout. */
+const COLS = 3;
+
+/** Split a flat list into fixed-width rows (see styles.gridRow for why). */
+function chunk<T>(items: T[], size: number): T[][] {
+  const rows: T[][] = [];
+  for (let i = 0; i < items.length; i += size) {
+    rows.push(items.slice(i, i + size));
+  }
+  return rows;
+}
+
 export function SensorBlock(p: Props) {
   const accent = p.accent === 'amber' ? colors.amber : colors.blue;
   const bannerAlert = p.banner.kind === 'alert';
@@ -45,26 +57,34 @@ export function SensorBlock(p: Props) {
         </Pressable>
       </View>
 
+      {/* PATCH UI-POLISH (PART 4): explicit rows of 3 so the outer tiles line up
+          with the section bar's edges (see styles.gridRow / tileRowEnd). */}
       <View style={styles.grid}>
-        {p.tiles.map(t => (
-          <View key={t.label} style={styles.tile}>
-            <View style={styles.tileHeader}>
-              <TileIcon name={t.icon} color={accent} size={sizes.tileIcon} />
-              <Text style={styles.tileLabel} numberOfLines={1}>
-                {t.label}
-              </Text>
-            </View>
-            <Text style={styles.tileValue}>{t.value}</Text>
-            {t.trend ? (
-              <Text style={[styles.trendText, { color: statusColor(t.trendColor ?? 'red') }]}>
-                {t.trend}
-              </Text>
-            ) : null}
-            {t.status ? (
-              <Text style={[styles.statusText, { color: statusColor(t.statusColor ?? 'red') }]}>
-                {t.status}
-              </Text>
-            ) : null}
+        {chunk(p.tiles, COLS).map((row, rowIndex) => (
+          <View style={styles.gridRow} key={`row-${rowIndex}`}>
+            {row.map((t, colIndex) => (
+              <View
+                key={t.label}
+                style={[styles.tile, colIndex === row.length - 1 ? styles.tileRowEnd : null]}>
+                <View style={styles.tileHeader}>
+                  <TileIcon name={t.icon} color={accent} size={sizes.tileIcon} />
+                  <Text style={styles.tileLabel} numberOfLines={1}>
+                    {t.label}
+                  </Text>
+                </View>
+                <Text style={styles.tileValue}>{t.value}</Text>
+                {t.trend ? (
+                  <Text style={[styles.trendText, { color: statusColor(t.trendColor ?? 'red') }]}>
+                    {t.trend}
+                  </Text>
+                ) : null}
+                {t.status ? (
+                  <Text style={[styles.statusText, { color: statusColor(t.statusColor ?? 'red') }]}>
+                    {t.status}
+                  </Text>
+                ) : null}
+              </View>
+            ))}
           </View>
         ))}
       </View>

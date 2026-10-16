@@ -56,6 +56,9 @@ export function AssetCard({ vehicle, onMoreDetails, onViewOnMap, onReports }: As
 
   return (
     <View style={styles.card}>
+      {/* PATCH UI-POLISH (PART 2): the outline + shadow live on `card`; this
+          inner view keeps the rounded clip without suppressing the elevation. */}
+      <View style={styles.cardClip}>
       {/* header: 55% black name / 45% status colour (NOT the frozen PlateStatusRow) */}
       <View style={styles.header}>
         <View style={styles.headerName}>
@@ -66,8 +69,10 @@ export function AssetCard({ vehicle, onMoreDetails, onViewOnMap, onReports }: As
         </View>
       </View>
 
-      {/* body: left 35% photo + battery mini-list / right 65% info rows + buttons */}
+      {/* body: left 35% photo + dashed telemetry box / right 65% info rows,
+          then a full-width FOOTER row carrying "More Details ->" + buttons. */}
       <View style={styles.body}>
+        <View style={styles.bodyTop}>
         <View style={styles.leftCol}>
           <Image source={require('../../../../assets/img_car_sedan.png')} style={styles.photo} resizeMode="contain" />
           {/* PATCH H-D: dashed box around the battery / satellite / signal rows */}
@@ -85,11 +90,9 @@ export function AssetCard({ vehicle, onMoreDetails, onViewOnMap, onReports }: As
               <Text style={styles.batteryText}>Signal Strength: {vehicle.signal}</Text>
             </View>
           </View>
-          {/* PATCH H-D: 10pt #8A9199 link + ArrowRight glyph (no literal "->") */}
-          <Pressable style={styles.moreDetailsLink} onPress={() => onMoreDetails(vehicle)}>
-            <Text style={styles.moreDetails}>More Details</Text>
-            <ArrowRight color={colors.home.moreDetails} size={10} />
-          </Pressable>
+          {/* PATCH UI-POLISH: "More Details ->" now lives in the FOOTER row
+              below (matching the reference), not stranded under the telemetry
+              box in the left column. */}
         </View>
 
         <View style={styles.rightCol}>
@@ -103,18 +106,36 @@ export function AssetCard({ vehicle, onMoreDetails, onViewOnMap, onReports }: As
             <Text style={styles.infoLabel}>Last Location: </Text>
             <Text style={styles.infoValue}>{vehicle.location}</Text>
           </View>
+        {/* PATCH UI-POLISH (footer restore): "Last Update" is an ordinary info
+              row again — inside the 65% column it gets the full width and never
+              truncates, because no buttons share the row any more. */}
           <View style={styles.infoRow}>
             <Clock color={colors.icon.brickRed} size={12} />
             <Text style={styles.infoLabel}>Last Update: </Text>
             <Text style={styles.infoValue}>{vehicle.update}</Text>
           </View>
+        </View>
+        </View>
+
+        {/* PATCH UI-POLISH (footer restore): ONE row beneath the 35/65 split —
+            "More Details →" left, the two compact buttons right, both centred.
+            Matches the sampled reference footer. */}
+        <View style={styles.footerRow}>
+          <Pressable style={styles.moreDetailsLink} onPress={() => onMoreDetails(vehicle)}>
+            <Text style={styles.moreDetails}>More Details</Text>
+            <ArrowRight color={colors.home.moreDetails} size={10} />
+          </Pressable>
           <View style={styles.buttonsRow}>
-            <Pressable style={[styles.actionBtn, { backgroundColor: colors.home.reportsBtn }]} onPress={() => onReports(vehicle)}>
-              <ListIcon color={colors.white} size={9} />
+            <Pressable
+              style={[styles.actionBtn, { backgroundColor: colors.home.reportsBtn }]}
+              onPress={() => onReports(vehicle)}>
+              <ListIcon color={colors.white} size={12} />
               <Text style={styles.actionBtnText}> Reports</Text>
             </Pressable>
-            <Pressable style={[styles.actionBtn, { backgroundColor: colors.surface.navy }]} onPress={() => onViewOnMap(vehicle)}>
-              <Pin color={colors.white} size={9} />
+            <Pressable
+              style={[styles.actionBtn, { backgroundColor: colors.surface.navy }]}
+              onPress={() => onViewOnMap(vehicle)}>
+              <Pin color={colors.white} size={12} />
               <Text style={styles.actionBtnText}> View on Map</Text>
             </Pressable>
           </View>
@@ -164,6 +185,7 @@ export function AssetCard({ vehicle, onMoreDetails, onViewOnMap, onReports }: As
           </View>
         </Animated.View>
       ) : null}
+      </View>
     </View>
   );
 }

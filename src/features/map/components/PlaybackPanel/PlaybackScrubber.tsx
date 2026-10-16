@@ -22,7 +22,7 @@ import {
   View,
 } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
-import { colors, historyColors, historySizes } from '@shared/theme';
+import { colors, historyColors, historySizes, radii } from '@shared/theme';
 import type { HistoryPlayback } from '@features/map/types/history';
 
 /** Width of the car asset, used to keep it inside the track's right edge. */
@@ -146,10 +146,16 @@ const styles = StyleSheet.create({
     height: historySizes.scrubBandH + historySizes.scrubTickH,
     justifyContent: 'flex-start',
   },
-  // PATCH T-HISTORY: full-bleed with square ends (the reference band has no radius)
+  // PATCH UI-POLISH (PART 8): the timeline/ruler container picks up `radii.md`
+  // so it stops being the one square-edged block inside the rounded playback
+  // box. `overflow: hidden'` (below) clips the driven/remaining fill and the
+  // white tick comb to those corners instead of letting them run square.
+  // PATCH T-HISTORY: full-bleed band (the fill is clipped by the radius now)
   track: {
     height: historySizes.scrubBandH,
     flexDirection: 'row',
+    borderTopLeftRadius: radii.md,
+    borderTopRightRadius: radii.md,
     overflow: 'hidden',
   },
   driven: {
@@ -166,6 +172,10 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'space-between',
     backgroundColor: colors.white,
+    // PATCH UI-POLISH (PART 8): closes the rounded timeline container.
+    borderBottomLeftRadius: radii.md,
+    borderBottomRightRadius: radii.md,
+    overflow: 'hidden',
   },
   tick: {
     width: 1,
