@@ -344,16 +344,18 @@ export function ReportsScreen({ navigation, route }: ReportsScreenProps) {
           <View
             onLayout={e => onMeasureLayout(e.nativeEvent.layout.height)}
             testID="reports-date-body">
-            <DateRangeCalendar
-              startDate={startDate}
-              endDate={endDate}
-              displayedMonth={displayedMonth}
-              displayedYear={displayedYear}
-              onRangeChange={handleRangeChange}
-              onMonthChange={handleMonthChange}
-              onYearChange={handleYearChange}
-              testIDPrefix="reports-calendar"
-            />
+            <View style={styles.calendarBlock}>
+              <DateRangeCalendar
+                startDate={startDate}
+                endDate={endDate}
+                displayedMonth={displayedMonth}
+                displayedYear={displayedYear}
+                onRangeChange={handleRangeChange}
+                onMonthChange={handleMonthChange}
+                onYearChange={handleYearChange}
+                testIDPrefix="reports-calendar"
+              />
+            </View>
 
             <View style={styles.pickerRow}>
               <HourMinPicker

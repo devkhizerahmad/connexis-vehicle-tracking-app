@@ -21,12 +21,29 @@ import { reportColors, reportSizes } from '@shared/theme';
 
 /** S4 card + read-out chrome owned by this component (not the library). */
 export const styles = StyleSheet.create({
+  /**
+   * DEFECT 4 (alignment): this card deliberately carries NO `marginHorizontal`.
+   *
+   * A shared control must not impose a page gutter — its host owns the page
+   * rhythm. Reports hosts it inside `scrollContent` (no horizontal padding), so
+   * it wrapped the calendar in a `marginHorizontal: gutter` block; the pixels
+   * there are unchanged. History hosts it inside `styles.header`, which ALREADY
+   * pads by `historySizes.gutter` for S2–S9, so the card's own margin stacked on
+   * top and inset the calendar to 32dp while the "Select Date & Time" field
+   * above it stayed at 16dp. Measured on device before the fix (390dp wide):
+   * field left/right 16dp, calendar left/right 32dp. Owning the margin per host
+   * is what makes both align again.
+   *
+   * `overflow: hidden` (DEFECTS 2+3) clips the library's day grid, whose
+   * container is intrinsically taller than the box it is given — see the
+   * `days` override below.
+   */
   card: {
-    marginHorizontal: reportSizes.gutter,
     marginTop: 8,
     padding: 12,
     borderRadius: 4,
     backgroundColor: reportColors.calBg,
+    overflow: 'hidden',
   },
   readout: {
     height: reportSizes.calHeaderH,
@@ -64,6 +81,15 @@ export const styles = StyleSheet.create({
     lineHeight: 12,
     color: reportColors.calMonthInk,
   },
+  /**
+   * DEFECT 1: the library hands the whole weekday cell to `components.Weekday`,
+   * so it never applies `weekday_label` — the replacement Text has to carry the
+   * type itself. Matches the reference's 8pt pink letters.
+   */
+  weekdayLabel: {
+    fontSize: 8,
+    color: reportColors.weekdayPink,
+  },
 });
 
 /**
@@ -80,7 +106,24 @@ export const styles = StyleSheet.create({
  * and nothing bleeds past the card's rounded corners.
  */
 export const calendarOverrides = StyleSheet.create({
+  /**
+   * DEFECTS 2 + 3 (black bar / stray bottom edge).
+   *
+   * The library nests three boxes: `Calendar` gives the body a fixed
+   * `height: containerHeight`; `Days` fills that box; inside `Days` sit the
+   * weekday row (height `weekdaysHeight`) AND the day grid, whose container is
+   * `height: '100%'` — i.e. the FULL body height again. So the children total
+   * `containerHeight + weekdaysHeight` and always overhang the parent by exactly
+   * `weekdaysHeight`, which is what painted the dark bar under the last week.
+   *
+   * This height therefore cannot be fixed by changing `containerHeight` (the
+   * overhang is constant regardless of its value). The grid has to be pinned to
+   * the space actually left after the weekday row:
+   *     containerHeight - weekdaysHeight = calDayRowH * 6
+   * which is also exactly 6 rows at the reference's day pitch.
+   */
   days: {
+    height: reportSizes.calDayRowH * 6,
     backgroundColor: reportColors.calBg,
   },
   day_cell: {

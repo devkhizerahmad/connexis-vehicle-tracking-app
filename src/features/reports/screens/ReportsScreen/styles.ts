@@ -40,6 +40,15 @@ export const styles = StyleSheet.create({
     marginHorizontal: reportSizes.gutter,
     marginTop: 10,
   },
+  /**
+   * DEFECT 4: the shared calendar no longer owns a page gutter (that stacked on
+   * top of History's `header` padding and pushed it out of alignment with the
+   * field above it). Reports hosts it in a full-bleed scroll view, so the gutter
+   * is supplied HERE instead — the rendered position is unchanged.
+   */
+  calendarBlock: {
+    marginHorizontal: reportSizes.gutter,
+  },
   /** S1 right slot avatar (32pt circle, same metric as the shared header's). */
   avatar: {
     width: sizes.avatar,

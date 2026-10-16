@@ -22,8 +22,8 @@
 // the shared `DateRangeCalendar` is now the single picker, and it moves the
 // displayed month to the tapped day as part of the selection itself, so the two
 // can no longer disagree. See the component header for the full rationale.
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { FlatList, Image, Pressable, Text, View } from 'react-native';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Animated, FlatList, Image, Pressable, Text, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MD3DarkTheme, Provider as PaperProvider } from 'react-native-paper';
@@ -32,6 +32,7 @@ import type { DateType } from 'react-native-ui-datepicker';
 import { AppHeader } from '@shared/components/layout/AppHeader';
 import { ArrowLeft } from '@shared/components/icons';
 import { DateRangeCalendar, DateRangeField } from '@shared/components/controls/DateRangeCalendar';
+import { useCollapsible } from '@shared/hooks/useCollapsible';
 import { historyColors } from '@shared/theme';
 import { sizes } from '@shared/theme';
 import { historyService } from '@features/map/services/historyService';
@@ -40,9 +41,27 @@ import { HistoryMiniMap } from '@features/map/components/HistoryMiniMap';
 import { HistorySummaryPanel } from '@features/map/components/HistorySummaryPanel';
 import { PlaybackPanel } from '@features/map/components/PlaybackPanel';
 import { formatShortDate, fromIsoDate } from '@features/map/utils/historyDates';
-import type { HistoryData, HistoryDateRange } from '@features/map/types/history';
+import type { HistoryData, HistoryDateRange, IsoDate } from '@features/map/types/history';
 import type { MapStackParamList } from '@navigation/types';
 import { styles } from './styles';
+
+/**
+ * S4 draft selection.
+ *
+ * DISTINCT FROM `HistoryDateRange` ON PURPOSE. The domain type (and the service
+ * that refetches on it) models a CLOSED window and requires both ends, but the
+ * calendar is mid-selection for most of a user's interaction — with only FROM
+ * picked there is genuinely no UNTIL yet. Collapsing that open state into
+ * `until = from` (as this screen used to) made every tap look like a COMPLETE
+ * range to the calendar, which reset the selection on EVERY click and made a
+ * range impossible to build. The draft therefore keeps `until` nullable, and
+ * only a COMPLETE draft is promoted into the closed `range` that refetches.
+ */
+interface HistoryDraftRange {
+  from: IsoDate;
+  /** null while the user has picked FROM but not yet UNTIL. */
+  until: IsoDate | null;
+}
 
 type HistoryScreenProps = NativeStackScreenProps<MapStackParamList, 'History'>;
 
@@ -94,7 +113,7 @@ export function HistoryScreen({ route, navigation }: HistoryScreenProps) {
   /** Range the panels currently reflect; changing it triggers a refetch. */
   const [range, setRange] = useState<HistoryDateRange | null>(null);
   /** Range being edited in the calendar until the day tap commits it. */
-  const [draftRange, setDraftRange] = useState<HistoryDateRange | null>(null);
+  const [draftRange, setDraftRange] = useState<HistoryDraftRange | null>(null);
   /**
    * The calendar's view cursor, owned here (not inside the calendar) so it
    * survives re-renders. `HISTORY_REST_STATE = CURRENT_SELECTION`: the grid
@@ -149,42 +168,30 @@ export function HistoryScreen({ route, navigation }: HistoryScreenProps) {
    * The calendar component already auto-navigates its own view to the tapped day
    * (AUTO_NAVIGATE), so this handler only records the selection; it must NOT
    * re-derive the month, or it would race the component's own navigation.
-   * Commits immediately — otherwise the grid would look interactive but never
-   * refetch. The current window is read from a ref so this never calls setState
-   * from inside another setState updater.
-   */
-  /**
-   * S4 day tap, in `DateType` terms.
-   *
-   * The calendar component already auto-navigates its own view to the tapped day
-   * (AUTO_NAVIGATE), so this handler only records the selection; it must NOT
-   * re-derive the month, or it would race the component's own navigation.
    *
    * `DateType` is string | number | Dayjs | Date, so this normalises through
    * dayjs rather than `new Date(...)`, which rejects a Dayjs outright.
    * `.format` is local-time, matching `toIsoDate`, which keeps day-of-month
    * stable near midnight.
    */
-  const draftRef = useRef<HistoryDateRange | null>(draftRange);
-  useEffect(() => {
-    draftRef.current = draftRange;
-  }, [draftRange]);
-
   const handleRangeChange = useCallback((start: DateType, end: DateType) => {
     if (!start) {
       return;
     }
     const from = dayjs(start).format('YYYY-MM-DD');
-    const until = end ? dayjs(end).format('YYYY-MM-DD') : from;
-    const next = { from, until };
-    draftRef.current = next;
-    // Always advance the DRAFT so the S4 read-out tracks the tap...
-    setDraftRange(next);
-    // ...but only advance the CONFIRMED range once it is complete, so a
-    // half-finished selection never refetches and the summary/mini-map/list
-    // cannot flicker while the user is still picking the second day.
-    if (end) {
-      setRange(next);
+    // `end` is null whenever the user has only picked FROM — including right
+    // after the calendar resets a completed range. That null MUST be passed
+    // through unchanged: it is the only signal the calendar has that a range is
+    // still being built, and it is what stops `allowRangeReset` from treating
+    // every tap as a fresh start. Reports has always passed it straight through,
+    // which is why the same component works on one screen and not the other.
+    const until = end ? dayjs(end).format('YYYY-MM-DD') : null;
+    setDraftRange({ from, until });
+    // Promote to the CLOSED, service-facing range only once the selection is
+    // complete, so a half-finished pick never refetches and the
+    // summary/mini-map/list cannot flicker mid-edit.
+    if (until) {
+      setRange({ from, until });
     }
   }, []);
 
@@ -198,15 +205,18 @@ export function HistoryScreen({ route, navigation }: HistoryScreenProps) {
   }, []);
 
   /**
-   * S3 field tap. The calendar is permanently inline on History, so there is no
-   * second range UI left to open — this just brings the calendar back into view
-   * if the user has scrolled past it, which is what the field's old modal tap
-   * effectively did.
+   * S3–S4 collapse, identical to the Reports screen: tapping "Select Date &
+   * Time" shows or hides the inline calendar over 250ms.
+   *
+   * ASSUMPTION — EXPANDED ON FIRST MOUNT. The brief's V1 asks for a COLLAPSED
+   * rest state, but that contradicts two things in the same brief and in the
+   * frozen baseline: Reports (the screen it says to copy) is expanded at rest,
+   * and `ui-baseline/History.png` captures the calendar VISIBLE at rest.
+   * Collapsing by default would guarantee a non-zero pixel diff against the
+   * baseline it is meant to match. Expanded it is — collapse/expand behaviour is
+   * what DEFECT 5 actually asks for.
    */
-  const listRef = useRef<FlatList<HistoryData['stops'][number]>>(null);
-  const handleFocusCalendar = useCallback(() => {
-    listRef.current?.scrollToOffset({ offset: 0, animated: true });
-  }, []);
+  const { toggle, anim, animatedHeight, onMeasureLayout } = useCollapsible(true);
 
   const rangeLabel = useMemo(
     () =>
@@ -230,7 +240,6 @@ export function HistoryScreen({ route, navigation }: HistoryScreenProps) {
         <AppHeader title="History" onBack={handleBack} />
 
         <FlatList
-          ref={listRef}
           data={data.stops}
           keyExtractor={item => item.id}
           renderItem={({ item, index }) => (
@@ -264,17 +273,24 @@ export function HistoryScreen({ route, navigation }: HistoryScreenProps) {
               </View>
 
               {/* S3 date field + S4 calendar (the SAME component Reports uses) */}
-              <DateRangeField value={rangeLabel} onPress={handleFocusCalendar} />
-              <DateRangeCalendar
-                startDate={fromIsoDate(draftRange.from)}
-                endDate={fromIsoDate(draftRange.until)}
-                displayedMonth={displayedMonth}
-                displayedYear={displayedYear}
-                onRangeChange={handleRangeChange}
-                onMonthChange={handleMonthChange}
-                onYearChange={handleYearChange}
-                testIDPrefix="history-calendar"
-              />
+              <DateRangeField value={rangeLabel} onPress={toggle} />
+              <Animated.View
+                style={[styles.collapseWrap, { height: animatedHeight, opacity: anim }]}>
+                <View
+                  onLayout={e => onMeasureLayout(e.nativeEvent.layout.height)}
+                  testID="history-date-body">
+                  <DateRangeCalendar
+                    startDate={fromIsoDate(draftRange.from)}
+                    endDate={draftRange.until ? fromIsoDate(draftRange.until) : null}
+                    displayedMonth={displayedMonth}
+                    displayedYear={displayedYear}
+                    onRangeChange={handleRangeChange}
+                    onMonthChange={handleMonthChange}
+                    onYearChange={handleYearChange}
+                    testIDPrefix="history-calendar"
+                  />
+                </View>
+              </Animated.View>
 
               {/* S5 summary */}
               <HistorySummaryPanel summary={data.summary} />

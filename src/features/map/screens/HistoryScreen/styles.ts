@@ -59,6 +59,15 @@ export const styles = StyleSheet.create({
     color: historyColors.viewLiveInk,
     fontSize: 13,
   },
+  /**
+   * S3–S4 collapse (DEFECT 5): the calendar stays mounted and only this
+   * in-flow wrapper changes size, mirroring Reports' `collapseWrap`. `overflow:
+   * hidden` clips the still-mounted calendar at height 0 so collapsing never
+   * unmounts and re-opening always has content to reveal.
+   */
+  collapseWrap: {
+    overflow: 'hidden',
+  },
   /** S9 dark section header above the virtualised list. */
   sectionBar: {
     paddingHorizontal: 12,

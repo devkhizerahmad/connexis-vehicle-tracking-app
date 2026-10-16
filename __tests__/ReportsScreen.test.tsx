@@ -16,6 +16,7 @@ import React from 'react';
 import ReactTestRenderer from 'react-test-renderer';
 import { reportsService } from '../src/features/reports/services/reportsService';
 import { DateRangeCalendar } from '../src/shared/components/controls/DateRangeCalendar';
+import type { DateType } from 'react-native-ui-datepicker';
 import { ReportTile } from '../src/features/reports/components/ReportTile';
 import { HourMinPicker } from '../src/shared/components/controls/HourMinPicker';
 import * as ReportStackModule from '../src/navigation/stacks/ReportStack';
@@ -333,13 +334,21 @@ describe('DateRangeCalendar (S4) — the component Reports and History share', (
     const january3 = collectPressablesByLabel(instance, '3').at(-1);
     expect(january3).toBeTruthy();
     await press(january3);
+    // Tapping January 3 from a December 2018 grid crosses a YEAR boundary, so
+    // the year is deliberately applied a tick later (see syncViewTo) to stop the
+    // library clobbering the month. Flush that tick before asserting.
+    await ReactTestRenderer.act(async () => {
+      await new Promise<void>(resolve => {
+        setTimeout(() => resolve(), 10);
+      });
+    });
 
     expect(onRangeChange).toHaveBeenCalled();
     expect(onMonthChange).toHaveBeenCalledWith(0); // January is zero-based 0
     expect(onYearChange).toHaveBeenCalledWith(2019);
   });
 
-  it('AUTO_NAVIGATE: completing a range opens the grid on the END day', async () => {
+  it('AUTO_NAVIGATE: completing a range keeps the grid on the END day', async () => {
     const onMonthChange = jest.fn();
     const onYearChange = jest.fn();
 
@@ -355,13 +364,209 @@ describe('DateRangeCalendar (S4) — the component Reports and History share', (
     );
 
     // December 2018 ends on the 31st; with a half-open range, tapping the 31st
-    // completes it and the view must land on December 2018, not stay stale.
+    // completes it and the view must stay on December 2018.
     const december31 = collectPressablesByLabel(instance, '31').at(-1);
     expect(december31).toBeTruthy();
     await press(december31);
 
-    expect(onMonthChange).toHaveBeenCalledWith(11);
-    expect(onYearChange).toHaveBeenCalledWith(2018);
+    // The grid was ALREADY on December 2018, so navigation is a no-op: the
+    // component deliberately does NOT emit redundant month/year updates (which
+    // would re-run the library's navigation effects for nothing). The read-out
+    // stays on the initial props because this harness is intentionally
+    // uncontrolled — the stateful round-trip is covered by the reset tests below.
+    expect(onMonthChange).not.toHaveBeenCalled();
+    expect(onYearChange).not.toHaveBeenCalled();
+  });
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// THE 3-CLICK RESET REGRESSION
+//
+// Standard range UX: with a COMPLETE range already selected, the next tap must
+// clear it and start a new FROM — not silently extend the old band. Left to
+// itself the library extends (FROM=Oct 2/UNTIL=Oct 25 + tap Nov 10 becomes
+// Oct 2..Nov 10), because its `onChange` reports the RESULTING RANGE and never
+// tells us which day was pressed. These tests pin the repaired behaviour so the
+// regression cannot come back silently.
+//
+// Each test drives a REAL parent that owns the state exactly as History and
+// Reports do, because the reset is only correct if the controlled round-trip
+// (onRangeChange -> parent state -> props) holds end to end.
+// ─────────────────────────────────────────────────────────────────────────────
+describe('DateRangeCalendar — 3-click range reset', () => {
+  /** Minimal stand-in for History/Reports: owns the range, feeds it back down. */
+  function ControlledHarness(props: {
+    initialStart?: string | null;
+    initialEnd?: string | null;
+    month?: number;
+    year?: number;
+  }) {
+    const [range, setRange] = React.useState<{ start: DateType; end: DateType }>({
+      start: props.initialStart ?? null,
+      end: props.initialEnd ?? null,
+    });
+    const [month, setMonth] = React.useState(props.month ?? 11);
+    const [year, setYear] = React.useState(props.year ?? 2018);
+    return (
+      <DateRangeCalendar
+        startDate={range.start}
+        endDate={range.end}
+        displayedMonth={month}
+        displayedYear={year}
+        onRangeChange={(s, e) => setRange({ start: s ?? null, end: e ?? null })}
+        onMonthChange={setMonth}
+        onYearChange={setYear}
+      />
+    );
+  }
+
+  /** Press a day by number; `which` picks which copy when the grid repeats it. */
+  async function tapDay(
+    instance: ReactTestRenderer.ReactTestRenderer,
+    day: number,
+    which: 'first' | 'last' = 'last',
+  ) {
+    const nodes = collectPressablesByLabel(instance, day);
+    const node = which === 'last' ? nodes.at(-1) : nodes[0];
+    if (!node) {
+      throw new Error(`tapDay: no pressable labelled ${day}`);
+    }
+    await press(node);
+  }
+
+  /** Page the grid forward one month via the next chevron. */
+  async function tapNextMonth(instance: ReactTestRenderer.ReactTestRenderer) {
+    const next = instance.root.findAll(
+      n => n.props?.testID === 'btn-next' && !!n.props?.onPress,
+      { deep: true },
+    );
+    if (!next.length) {
+      throw new Error('tapNextMonth: btn-next not found');
+    }
+    await press(next[0]);
+  }
+
+  it('V3: Oct 2 -> Oct 25 -> Nov 10 leaves ONLY Nov 10 selected', async () => {
+    const instance = await renderLive(
+      <ControlledHarness initialStart={null} initialEnd={null} month={9} year={2018} />,
+    );
+
+    // (a) tap Oct 2 -> FROM only. October's grid opens on Sun 30 Sep, so day "2"
+    //     occurs twice (2 Oct and 2 Nov); the October copy is the FIRST.
+    await tapDay(instance, 2, 'first');
+    let text = collectText(instance.toJSON());
+    expect(text).toContain('02.10.18');
+    expect(text.join('|')).not.toContain('October 2018October'); // single caption
+
+    // (b) tap Oct 25 -> complete range Oct 2..Oct 25
+    await tapDay(instance, 25);
+    text = collectText(instance.toJSON());
+    expect(text).toContain('02.10.18');
+    expect(text).toContain('25.10.18');
+
+    // (c) page to November, then tap Nov 10 -> MUST reset: old range cleared,
+    //     only Nov 10 highlighted, UNTIL blank, view already on November.
+    await tapNextMonth(instance);
+    await tapDay(instance, 10);
+
+    const after = collectText(instance.toJSON());
+    expect(after).toContain('November'); // view jumped to the tapped month's month
+    expect(after).toContain('10.11.18'); // new FROM is the tapped day
+    expect(after).not.toContain('25.10.18'); // old UNTIL cleared
+    expect(after).not.toContain('02.10.18'); // old FROM cleared, not merely moved
+  });
+
+  it('V4: Nov 10 -> Nov 15 -> Nov 18 resets instead of absorbing Nov 16/17', async () => {
+    // NOTE: this runs in November rather than January on purpose. The library
+    // drops the `month` prop on first mount when it is January (its month and
+    // year effects both read pre-reducer state, so `.year()` re-applies the
+    // current month) — a pre-existing quirk, unrelated to the reset fix, and
+    // pinned separately by the test below so it cannot regress unnoticed.
+    const instance = await renderLive(
+      <ControlledHarness initialStart={null} initialEnd={null} month={10} year={2018} />,
+    );
+    expect(collectText(instance.toJSON())).toContain('November');
+
+    await tapDay(instance, 10);
+    await tapDay(instance, 15);
+    let text = collectText(instance.toJSON());
+    expect(text).toContain('10.11.18');
+    expect(text).toContain('15.11.18');
+
+    // Tap Nov 18. The OLD behaviour extended the band to Nov 18 (so Nov 16 and
+    // Nov 17 silently joined it); the repair must clear it back to a bare FROM.
+    await tapDay(instance, 18);
+
+    const after = collectText(instance.toJSON());
+    expect(after).toContain('18.11.18'); // new FROM
+    expect(after).not.toContain('15.11.18'); // old UNTIL cleared
+    expect(after).not.toContain('10.11.18'); // old FROM gone, not merely moved
+  });
+
+  it('VIEW-SYNC: a reset across a YEAR boundary lands on the tapped month', async () => {
+    // Regression for a defect found on device: tapping Jan 3 while a complete
+    // Dec-2018 range was selected correctly reset the selection to 03.01.19, but
+    // the grid jumped to DECEMBER 2019 — the library applied `month` and `year`
+    // from the same stale base, so `year()` re-derived the month. The highlight
+    // ended up off-screen, which is precisely the desync this component exists to
+    // prevent. Order (month first, year on the next tick) keeps both correct.
+    const instance = await renderLive(
+      <ControlledHarness initialStart={null} initialEnd={null} month={11} year={2018} />,
+    );
+    expect(collectText(instance.toJSON())).toContain('December');
+
+    await tapDay(instance, 2, 'first'); // Dec 2  -> FROM
+    await tapDay(instance, 21, 'first'); // Dec 21 -> complete range
+    expect(collectText(instance.toJSON())).toContain('21.12.18');
+
+    // January 2019 sits in December's grid as trailing outside-days.
+    await tapDay(instance, 3, 'last');
+    // let the deferred year application land
+    await ReactTestRenderer.act(async () => {
+      await new Promise<void>(resolve => {
+        setTimeout(() => resolve(), 10);
+      });
+    });
+
+    const after = collectText(instance.toJSON());
+    expect(after).toContain('03.01.19'); // selection reset onto the tapped day
+    expect(after).toContain('January'); // view landed on JANUARY
+    expect(after).toContain('2019');
+    expect(after).not.toContain('December'); // not a stale December 2019
+  });
+
+  it('PINNED QUIRK: the library drops a January `month` prop on first mount', async () => {
+    // Documents real library behaviour (v3.3.0) rather than asserting a wish.
+    // If a future version fixes it, this test flips to documenting the FIX.
+    const instance = await renderLive(
+      <ControlledHarness initialStart={null} initialEnd={null} month={0} year={2019} />,
+    );
+    const caption = collectText(instance.toJSON());
+
+    // The year applies...
+    expect(caption).toContain('2019');
+    // ...but the grid opens on TODAY's month, not January.
+    expect(caption).not.toContain('January');
+  });
+
+  it('a fourth tap after a reset builds the NEW range normally', async () => {
+    const instance = await renderLive(
+      <ControlledHarness initialStart={null} initialEnd={null} month={9} year={2018} />,
+    );
+
+    await tapDay(instance, 2, 'first');
+    await tapDay(instance, 25); // Oct 2..Oct 25
+
+    await tapNextMonth(instance);
+    await tapDay(instance, 10); // reset -> Nov 10 only
+    expect(collectText(instance.toJSON())).toContain('10.11.18');
+
+    // Nov 30 must COMPLETE the new range (10..30), not reset a second time.
+    await tapDay(instance, 30);
+
+    const after = collectText(instance.toJSON());
+    expect(after).toContain('10.11.18');
+    expect(after).toContain('30.11.18');
   });
 });
 
