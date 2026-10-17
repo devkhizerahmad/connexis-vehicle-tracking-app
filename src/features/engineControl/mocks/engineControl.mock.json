@@ -1,6 +1,7 @@
 {
   "vehicle": {
-    "captionPrefix": "Car | ",
+    "lastUpdatedLabel": "Last Updated",
+    "lastUpdatedValue": "6:40PM",
     "name": "Honda Civic (LFA-1464)",
     "fenceState": "Out of Fence",
     "status": "Running",

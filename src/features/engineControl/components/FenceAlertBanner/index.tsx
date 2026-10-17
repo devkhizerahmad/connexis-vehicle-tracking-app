@@ -15,7 +15,7 @@ function FenceAlertBannerImpl({ message }: FenceAlertBannerProps) {
   return (
     <View style={styles.banner} testID="ec-alert-banner">
       <View style={styles.icon}>
-        <AlertRing color={ecColors.alertInk} size={18} />
+        <AlertRing color={ecColors.alertInk} size={14} />
       </View>
       <Text style={styles.text}>{message}</Text>
     </View>

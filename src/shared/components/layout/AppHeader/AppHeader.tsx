@@ -11,12 +11,20 @@
 // LEGACY-EXCEPTION: contentHeight / contentCenterOffset exist ONLY for the frozen Profile
 //   reference design — DO NOT use them in new screens (use variant props instead).
 import React from 'react';
-import { Image, Pressable, StatusBar, StyleSheet, Text, View } from 'react-native';
+import {
+  Image,
+  Pressable,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+  type TextStyle,
+} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Chevron } from '@shared/components/icons';
 import { colors, sizes } from '@shared/theme';
-import { makeHeightStyle } from '@shared/utils/styleFactories';
+import { makeHeightStyle, makeTitleTextStyle } from '@shared/utils/styleFactories';
 import { styles } from './styles';
 
 export type HeaderVariant = 'standard' | 'extended' | 'immersive';
@@ -44,6 +52,26 @@ export interface AppHeaderProps {
    * @deprecated use variant="standard" | "extended" instead (frozen Profile only).
    */
   contentCenterOffset?: number;
+
+  // ---------------------------------------------------------------------
+  // PHASE-1 ENGINE CONTROL (P8) — per-screen header overrides.
+  //
+  // Every prop below is OPTIONAL and defaults to the current behaviour, so all
+  // other screens keep byte-identical output. They exist because Engine Control
+  // needs a smaller title, a lighter back chevron and a red that is slightly
+  // less deep, while `colors.gradientHeader` / `typography.title` are shared and
+  // frozen for every other screen.
+  // ---------------------------------------------------------------------
+  /** Title size in pt. Default = typography.title.fontSize (18). */
+  titleSize?: number;
+  /** Title weight. Default = typography.title.fontWeight. */
+  titleWeight?: TextStyle['fontWeight'];
+  /** Back-chevron glyph size. Default = 16. */
+  backSize?: number;
+  /** Back-chevron glyph weight. Default = '700'. */
+  backWeight?: TextStyle['fontWeight'];
+  /** Vertical gradient stops. Default = colors.gradientHeader. */
+  gradientColors?: readonly string[];
 }
 
 function AppHeaderImpl({
@@ -56,6 +84,11 @@ function AppHeaderImpl({
   bandContent,
   contentHeight,
   contentCenterOffset,
+  titleSize,
+  titleWeight,
+  backSize = 16,
+  backWeight = '700',
+  gradientColors,
 }: AppHeaderProps) {
   const insets = useSafeAreaInsets();
   // LEGACY-EXCEPTION (frozen Profile): replicates the pre-K2 layout exactly —
@@ -64,6 +97,9 @@ function AppHeaderImpl({
 
   // Zone 1: status icons stay LIGHT while any gradient/immersive-dark header is mounted.
   const statusBar = <StatusBar barStyle="light-content" />;
+
+  // P8: null unless the screen overrides the shared typography.title.
+  const titleOverride = makeTitleTextStyle(titleSize, titleWeight);
 
   if (variant === 'immersive') {
     return (
@@ -103,9 +139,11 @@ function AppHeaderImpl({
 
   return (
     <View style={[styles.container, makeHeightStyle(total)]}>
-      {/* Figma-exact vertical gradient — top #B2250C to bottom #160F12 (covers row + band) */}
+      {/* Figma-exact vertical gradient — top #B2250C to bottom #160F12 (covers row + band).
+          P8: `gradientColors` lets Engine Control override the stops for itself
+          only; every other screen still gets colors.gradientHeader. */}
       <LinearGradient
-        colors={[...colors.gradientHeader]}
+        colors={gradientColors ? [...gradientColors] : [...colors.gradientHeader]}
         start={{ x: 0, y: 0 }}
         end={{ x: 0, y: 1 }}
         style={styles.gradientFill}
@@ -116,13 +154,15 @@ function AppHeaderImpl({
         <View style={makeHeightStyle(rowTopOffset)} />
         <View style={styles.navRow} pointerEvents="box-none">
           <View style={styles.leftContainer} pointerEvents="box-none">
-            {/* 16dp chevron + 16dp hitSlop on all sides = 48x48dp touch target */}
+            {/* 16dp chevron + 16dp hitSlop on all sides = 48x48dp touch target.
+                P8: `backSize`/`backWeight` only resize/re-weight the glyph — the
+                hitSlop is untouched, so the touch target is still >= 48dp. */}
             <Pressable onPress={onBack} hitSlop={16}>
-              <Chevron dir="left" color={colors.white} size={16} />
+              <Chevron dir="left" color={colors.white} size={backSize} weight={backWeight} />
             </Pressable>
           </View>
           <View style={styles.titleContainer} pointerEvents="none">
-            <Text style={styles.titleText}>{title}</Text>
+            <Text style={[styles.titleText, titleOverride]}>{title}</Text>
           </View>
           {showAvatar ? (
             <View style={styles.avatarContainer}>

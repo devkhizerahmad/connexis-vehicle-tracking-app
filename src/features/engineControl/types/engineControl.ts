@@ -18,12 +18,24 @@ export interface ControlRoute {
   state: RouteState;
   /** "40m-8s" — right-aligned on the title line. */
   duration: string;
-  /** F8: only route 1's subtitle is tinted blue in the reference. */
+  /**
+   * PHASE-1 (P6): retained by the payload but NO LONGER CONSUMED. The old
+   * "F8" note said route 1's subtitle was the only blue sub-line; the reference
+   * actually paints every subtitle the same grey, so the override and its
+   * `routeSubBlue` token are gone. The mock key is left untouched.
+   */
   subBlue?: boolean;
 }
 
 /** Icon key for an S7 control row. */
 export type ControlIconKey = 'pin' | 'clock';
+
+/**
+ * PATCH EC-SWIPE: which of Lock / Unlock is currently ARMED for the swipe
+ * confirmation. Exactly one can be pending at a time, and `null` means the user
+ * has not chosen — in which case a completed swipe must NOT perform any action.
+ */
+export type LockUnlockAction = 'lock' | 'unlock';
 
 /** One S7 "Control Vehicle" row. */
 export interface ControlRow {
@@ -34,8 +46,15 @@ export interface ControlRow {
 
 /** One S2 vehicle card pair (car + live status). */
 export interface EngineVehicle {
-  /** Caption is split so "Car |" stays regular and the name stays bold. */
-  captionPrefix: string;
+  /**
+   * PHASE-1 (P1): the photo caption. The reference captions the car with a
+   * "Last Updated <time>" line — a grey label and a bold time — rather than with
+   * the model's name. Split in two so the label stays regular grey and the time
+   * stays bold; both values are the mock's own, unmodified.
+   */
+  lastUpdatedLabel: string;
+  lastUpdatedValue: string;
+  /** Vehicle model name. Retained by the payload; no longer painted (P1). */
   name: string;
   /** Right-card pill copy. */
   fenceState: string;

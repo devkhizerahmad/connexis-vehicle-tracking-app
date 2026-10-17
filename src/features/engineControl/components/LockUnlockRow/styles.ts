@@ -24,6 +24,18 @@ export const styles = StyleSheet.create({
   unlockFill: {
     backgroundColor: ecColors.unlockBg,
   },
+  /**
+   * PATCH EC-SWIPE: the ARMED selector thickens its outline from the resting
+   * 1.5 pt to 2.5 pt. Both cards use this same weight change so the selection
+   * reads identically whichever side is armed.
+   */
+  cardSelected: {
+    borderWidth: ecSizes.actionCardSelectedBorder,
+  },
+  /** PATCH EC-SWIPE: the armed Lock card gains the pale red tint mirroring Unlock. */
+  lockSelectedFill: {
+    backgroundColor: ecColors.lockBg,
+  },
   lockBorder: {
     borderColor: ecColors.lockBorder,
   },

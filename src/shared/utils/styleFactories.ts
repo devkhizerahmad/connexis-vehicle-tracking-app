@@ -1,5 +1,5 @@
 // styleFactories.ts — dynamic style factories & calculation helpers with full comments
-import { ViewStyle } from 'react-native';
+import { ViewStyle, type TextStyle } from 'react-native';
 import { profileTokens, sizes, spacing } from '@shared/theme';
 
 /**
@@ -41,6 +41,29 @@ export const makeGradientContainerStyle = (height: number): ViewStyle => ({
   width: '100%',
   overflow: 'hidden',
 });
+
+/**
+ * PHASE-1 ENGINE CONTROL (P8): per-screen header title overrides.
+ *
+ * AppHeader keeps `typography.title` frozen for every other screen, so a screen
+ * that needs a smaller/lighter title (Engine Control) passes its own size and
+ * weight and this builds the override at render time — the established
+ * `make*Style` pattern here, never a static style literal.
+ * Returns null when nothing is overridden, so the caller's array collapses to
+ * the base style.
+ */
+export const makeTitleTextStyle = (
+  size?: number,
+  weight?: TextStyle['fontWeight'],
+): TextStyle | null => {
+  if (size === undefined && weight === undefined) {
+    return null;
+  }
+  return {
+    ...(size === undefined ? null : { fontSize: size }),
+    ...(weight === undefined ? null : { fontWeight: weight }),
+  };
+};
 
 /**
  * Single gradient band — colour + height are computed per band at render time.

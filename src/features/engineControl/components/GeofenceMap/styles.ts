@@ -1,12 +1,23 @@
-// styles.ts — S4: geofence map (424..786 px → 195 pt, x=24..699 px, radius 10).
+// styles.ts — S4: geofence map (edge-to-edge, sharp) + its two corner badges.
+//
+// PHASE-1 DESIGN LANGUAGE (P5a): the custom `ecLightMapStyle` is DELETED. It
+// desaturated every road to white/grey and flattened the land to #F2F2F2, which
+// is why the map rendered washed-out next to the reference's full-colour Google
+// map. With no `customMapStyle` the provider falls back to the DEFAULT colourful
+// Google style.
+//
+// PHASE-1 (P5d) is deliberately NOT implemented here: the Google logo is
+// mandatory attribution and react-native-maps exposes no size/opacity prop for
+// it — `padding` only RELOCATES it, which would push it onto the POI labels
+// instead of making it less prominent.
 import { StyleSheet } from 'react-native';
 import { ecColors, ecSizes } from '@shared/theme';
 
 export const styles = StyleSheet.create({
   wrap: {
     height: ecSizes.mapH,
-    marginHorizontal: ecSizes.gutter,
-    borderRadius: ecSizes.cardRadius,
+    marginHorizontal: ecSizes.flat,
+    borderRadius: ecSizes.flat,
     overflow: 'hidden',
     backgroundColor: ecColors.rowBg,
   },
@@ -14,74 +25,51 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   /**
-   * F5: top-left navy read-out. Width is CONTENT-driven (was a fixed 58 pt box,
-   * which squeezed "Last Updated" onto four lines). 12 pt inset so the pill sits
-   * inside the map rather than hanging off its rounded corner.
+   * P4: top-left read-out, FLUSH to the map's sharp corner (was inset 12 pt
+   * inside a rounded map) and ~30% smaller — padding 5/10 -> 3/7, label 8 -> 7,
+   * value 13 -> 10.5. `borderRadius: flat` matches P7's sharp language.
    */
   updatedBox: {
     position: 'absolute',
     top: ecSizes.mapInset,
     left: ecSizes.mapInset,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    borderRadius: ecSizes.radiusChip,
+    paddingVertical: 3,
+    paddingHorizontal: 7,
+    borderRadius: ecSizes.flat,
     backgroundColor: ecColors.mapBoxBg,
   },
   updatedLabel: {
     color: ecColors.mapBoxLabel,
-    fontSize: 8,
-    lineHeight: 11,
+    fontSize: 7,
+    lineHeight: 9,
   },
   updatedValue: {
     color: ecColors.mapBoxInk,
-    fontSize: 13,
+    fontSize: 10.5,
     fontWeight: '700',
-    lineHeight: 16,
+    lineHeight: 12.5,
   },
   /**
-   * F6: top-right lime chip, fully INSIDE the map (was flush at right:0 with a
-   * fixed 111 pt width, which clipped the trailing edge of the label).
+   * P4: top-right chip, flush to the sharp corner, with the shield glyph removed
+   * (the reference carries the label alone) and the ink repointed to dark green
+   * on the brighter #67DC52 fill — white-on-lime was a hard contrast failure.
    */
   fenceChip: {
     position: 'absolute',
     top: ecSizes.mapInset,
     right: ecSizes.mapInset,
-    paddingVertical: 6,
-    paddingHorizontal: 10,
-    flexDirection: 'row',
+    paddingVertical: 4,
+    paddingHorizontal: 8,
     alignItems: 'center',
-    borderRadius: ecSizes.radiusChip,
+    justifyContent: 'center',
+    borderRadius: ecSizes.flat,
     backgroundColor: ecColors.mapChipBg,
-  },
-  fenceChipIcon: {
-    marginRight: 6,
   },
   fenceChipText: {
     color: ecColors.mapChipInk,
-    fontSize: 11,
+    fontSize: 10,
     fontWeight: '700',
   },
 });
-
-/**
- * F2 — Engine Control S4 uses an explicitly LIGHT Google style.
- *
- * LiveMapView's darkMapStyle is deliberately NOT imported here: the reference
- * artboard for Engine Control shows a light street map (tan/white streets + blue
- * river) with POI labels still visible ("Lahore", "Gulberg III", "Liberty
- * Market"), so POI/transit layers are intentionally left ON. Shipping a named
- * style also pins the look regardless of the device's dark-mode setting — that is
- * what "force light" means for the Google Maps SDK.
- */
-export const ecLightMapStyle = [
-  { elementType: 'geometry', stylers: [{ color: '#F2F2F2' }] },
-  { elementType: 'labels.text.fill', stylers: [{ color: '#555555' }] },
-  { elementType: 'labels.text.stroke', stylers: [{ color: '#FFFFFF' }] },
-  { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#FFFFFF' }] },
-  { featureType: 'road', elementType: 'geometry.stroke', stylers: [{ color: '#E0E0E0' }] },
-  { featureType: 'road.highway', elementType: 'geometry', stylers: [{ color: '#FFFFFF' }] },
-  { featureType: 'road.highway', elementType: 'geometry.stroke', stylers: [{ color: '#E0E0E0' }] },
-  { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#AADAFF' }] },
-];
 
 export default styles;

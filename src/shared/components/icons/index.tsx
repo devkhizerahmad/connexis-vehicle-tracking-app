@@ -1,6 +1,6 @@
 // index.tsx — dependency-free icons barrel
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, type TextStyle } from 'react-native';
 import { colors } from '@shared/theme';
 
 export interface IconProps {
@@ -12,10 +12,17 @@ export const Chevron = ({
   dir = 'left',
   color = colors.white,
   size = 14,
+  weight = '700',
 }: {
   dir?: 'left' | 'right' | 'down';
   color?: string;
   size?: number;
+  /**
+   * PHASE-1 ENGINE CONTROL (P8): the glyph's weight. Defaults to the original
+   * '700', so every existing call site renders byte-identically; Engine Control
+   * passes '400' for the thinner/lighter back chevron its reference shows.
+   */
+  weight?: TextStyle['fontWeight'];
 }) => {
   const glyph = dir === 'left' ? '❮' : dir === 'right' ? '❯' : '▾';
   return (
@@ -23,7 +30,7 @@ export const Chevron = ({
       style={{
         color,
         fontSize: dir === 'down' ? size + 2 : size + 4,
-        fontWeight: '700',
+        fontWeight: weight,
         lineHeight: size + 6,
         textAlign: 'center',
         marginTop: dir === 'down' ? -size * 0.35 : 0,

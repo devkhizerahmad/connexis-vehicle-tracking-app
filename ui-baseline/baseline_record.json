@@ -6,7 +6,10 @@
       "label": "UI polish batch v1 (user-approved) 2026-10-16",
       "capturedAt": "2026-10-16",
       "device": "Samsung A02s (SM-A025F), Android 12, 780x1688 @320dpi",
-      "supersedes": ["History.png", "Reports.png"],
+      "supersedes": [
+        "History.png",
+        "Reports.png"
+      ],
       "parts": {
         "1": "Home status boxes no longer straddle the header gradient (marginTop -20 -> 16)",
         "2": "Asset cards get a 1pt colors.line.strong border + shadows.card (shadow split into an inner cardClip so Android elevation is not clipped)",
@@ -23,16 +26,56 @@
         "sizes.marginH": 16
       },
       "screenshots": [
-        { "screen": "Home", "view": "top", "file": "ui-baseline/v2/Home-top.png" },
-        { "screen": "Home", "view": "full-scroll", "file": "ui-baseline/v2/Home-full.png" },
-        { "screen": "Details", "view": "top", "file": "ui-baseline/v2/Details-top.png" },
-        { "screen": "Details", "view": "full-scroll", "file": "ui-baseline/v2/Details-full.png" },
-        { "screen": "Reports", "view": "top", "file": "ui-baseline/v2/Reports-top.png" },
-        { "screen": "Reports", "view": "full-scroll", "file": "ui-baseline/v2/Reports-full.png" },
-        { "screen": "EngineControl", "view": "top", "file": "ui-baseline/v2/EngineControl-top.png" },
-        { "screen": "EngineControl", "view": "full-scroll", "file": "ui-baseline/v2/EngineControl-full.png" },
-        { "screen": "History", "view": "top", "file": "ui-baseline/v2/History-top.png" },
-        { "screen": "History", "view": "full-scroll", "file": "ui-baseline/v2/History-full.png" }
+        {
+          "screen": "Home",
+          "view": "top",
+          "file": "ui-baseline/v2/Home-top.png"
+        },
+        {
+          "screen": "Home",
+          "view": "full-scroll",
+          "file": "ui-baseline/v2/Home-full.png"
+        },
+        {
+          "screen": "Details",
+          "view": "top",
+          "file": "ui-baseline/v2/Details-top.png"
+        },
+        {
+          "screen": "Details",
+          "view": "full-scroll",
+          "file": "ui-baseline/v2/Details-full.png"
+        },
+        {
+          "screen": "Reports",
+          "view": "top",
+          "file": "ui-baseline/v2/Reports-top.png"
+        },
+        {
+          "screen": "Reports",
+          "view": "full-scroll",
+          "file": "ui-baseline/v2/Reports-full.png"
+        },
+        {
+          "screen": "EngineControl",
+          "view": "top",
+          "file": "ui-baseline/v2/EngineControl-top.png"
+        },
+        {
+          "screen": "EngineControl",
+          "view": "full-scroll",
+          "file": "ui-baseline/v2/EngineControl-full.png"
+        },
+        {
+          "screen": "History",
+          "view": "top",
+          "file": "ui-baseline/v2/History-top.png"
+        },
+        {
+          "screen": "History",
+          "view": "full-scroll",
+          "file": "ui-baseline/v2/History-full.png"
+        }
       ],
       "verified": {
         "staticGates": "tsc 0, eslint 0, jest 28/28",
@@ -72,6 +115,168 @@
         "V9_logcat": "clean"
       },
       "fullRecapture": "not required - only the footer region changed"
+    },
+    {
+      "label": "Engine Control swipe + parity v1 2026-10-17",
+      "capturedAt": "2026-10-17",
+      "device": "Samsung A02s (SM-A025F), Android 12, 780x1688 @320dpi (390dp)",
+      "artifacts": [
+        "ui-baseline/EngineControl/top-half.png",
+        "ui-baseline/EngineControl/bottom-half.png",
+        "ui-baseline/EngineControl/mid-swipe.png"
+      ],
+      "change": "Lock/Unlock converted from action buttons to SELECTORS (pending-action model) and the static SlideToProceed replaced with rn-swipe-button's SwipeButton. New ControlSwipeCard isolates all swipe/selection state. Dead SlideToProceed component removed.",
+      "newDependency": "rn-swipe-button@3.0.1 - pure JS (no android/ios/cpp/podspec/gradle), so NO native rebuild was required; only new runtime dep (17 -> 18).",
+      "bugFoundAndFixed": "Engine Control toast was position:absolute with a flat bottom:32, placing it at y~1620-1656 underneath the shared BottomNav overlay (~1548-1660). It rendered but was painted over, making EVERY control on the screen look dead. Now offset dynamically by sizes.bottomNav + insets.bottom + ecSizes.toastNavGap, plus zIndex/elevation.",
+      "measuredOnDevice": {
+        "railBox": "x=52..727 y=1415..1488 (675x74px = 337x37dp; token slideH=35dp)",
+        "lockCard": "x=52..378 y=1265..1344 (326x79px = 163x39.5dp)",
+        "unlockCard": "x=401..727 y=1265..1344 (326x79px) - exactly EQUAL to Lock",
+        "cardSeam": "23px = 11.5dp (token actionCardGap=11)",
+        "lockBorderUnselected": "3px (1.5dp)",
+        "lockBorderSelected": "5px (2.5dp)",
+        "lockFillUnselected": "255,255,255 (white card)",
+        "lockFillSelected": "253,236,238 = lockBg #FDECEE exactly",
+        "greenFenceChipRightInset": "25px = 12.5dp from map edge (token mapInset=12) - NOT clipped"
+      },
+      "swipeMatrix": {
+        "V4_lock": "PASS - tap Lock arms it, full swipe fills the rail, toast 'Vehicle locked', rail resets, selection clears",
+        "V5_unlock": "PASS - toast 'Vehicle unlocked'",
+        "V6_noSelection": "PASS - toast 'Select Lock or Unlock first', NO action performed, rail resets",
+        "V7_partialSwipe": "PASS - 40% drag snaps back to x=50 (rest), no toast, no action",
+        "V8_doubleFire": "PASS - a second swipe AND a mid-flight Unlock tap during the 800ms processing window were both ignored; exactly one toast ('Vehicle locked')"
+      },
+      "staticGates": "tsc 0, eslint 0, jest 28/28, deps 17->18 (rn-swipe-button only), 0 AIza in src/, 0 static style={{ in engineControl, 0 console.log",
+      "rawHexException": "8 hex values remain in GeofenceMap/styles.ts lines 77-84 - that is the ecLightMapStyle customMapStyle payload, which the Google Maps SDK requires as literal hex strings and cannot consume theme tokens. Pre-existing, not introduced here.",
+      "regression": "Tab sweep Home/Report/Map/Profile/Engine Control - no ReactNativeJS, FATAL, Reanimated or rn-swipe-button warnings; process alive (pid 20676).",
+      "outOfScopeFindings": "The stray glyph near the map's right edge is a Google Maps TILE label clipped by the map viewport (the reference shows the same class of Arabic POI label), not an overlay defect - measured inset is correct, so no change was made."
+    },
+    {
+      "label": "Engine Control UI Phase-1 top-half fidelity pass 2026-10-17",
+      "capturedAt": "2026-10-17",
+      "scope": "Phase-1 top-half ONLY (top-row / pink alert / map / change-fence / driving-routes / control-vehicle header). Phase-2 elements untouched.",
+      "reference": "design-references/engine control.jpeg (301x1280) - STRUCTURE/ORDER/RELATIVE-PROPORTION only; no mock-px derivation",
+      "wentBeyond": "proportion / scale / rhythm / hue / wrap / map-framing (prior D1-D10 PASS was geometry-only)",
+      "deltasFixed": [
+        {
+          "id": "D5-connector",
+          "what": "vertical dashed connector chaining route badges 1-2-3 was entirely absent",
+          "files": "RouteList/styles.ts (styles.connector) + RouteList/index.tsx (showConnector prop)",
+          "note": "RN has no per-side border style, so borderStyle:dashed is used with only borderLeftWidth set -> exactly one dashed edge. Colour reuses ecColors.divider. Verified on device."
+        },
+        {
+          "id": "top-row car scale",
+          "what": "car photo filled ~76% of the 178pt card; reference reads ~60%",
+          "files": "shared/theme/engineControl.ts carW 135->108, carH 68->54",
+          "note": "original 135:68 = 1.985 aspect preserved exactly so artwork scales uniformly. Verified on device: visible art 88.5x49pt = 49.7% of box width (was 76%)."
+        }
+      ],
+      "deltaNotFixed_needsUserCall": {
+        "id": "top-row caption",
+        "reference": "Last Updated: 5:40PM",
+        "device": "Car | Honda Civic (LFA-1464)",
+        "reason": "content/mock-payload change, NOT a style token fix; may be an unreplaced placeholder in the design file and could delete intentional identity copy. Left for user decision."
+      },
+      "matchedNoDelta": [
+        "top-row boxes 356x222 equal",
+        "address 2-line wrap matches reference intent",
+        "pink alert full-width 720x60 icon+text",
+        "map circle centred + pins + blue hexagon + badge insets correct",
+        "Change Fence green-outline pill centred",
+        "Driving Routes header gradient dark->red correct direction",
+        "route subtitle hue / status pills Moving-green Idle-amber Stop-red / durations right-aligned"
+      ],
+      "staticGates": "tsc 0, eslint 0, jest 28/28, deps 18, AIza 0, static style={{ 0, console.log 0, guards + both TODOs present",
+      "untouched": "Phase-2 elements, swipe V4-V8, map leak (parked), playback, calendar, Arabic tile-label"
+    },
+    {
+      "label": "Engine Control UI Phase-1 design-language rebuild 2026-10-17",
+      "capturedAt": "2026-10-17",
+      "supersedesBaseline": "ui-baseline/EngineControl/top-half.png (and top-half-p1.png) - the design language changed, so the previous top-half frame is NO LONGER a valid comparison target.",
+      "scope": "Phase 1 ONLY: header -> Driving Routes (end of the 3 rows). Phase-2 (Control Vehicle bar and everything below) NOT touched.",
+      "reference": "design-references/engine control.jpeg (301x1280) - STRUCTURE/ORDER/PROPORTION/SCALE/HUE/GRADIENT-DIRECTION only; no mock-px derivation.",
+      "priorGeometryPassUnlocked": "The earlier D1-D10 PASS measured GEOMETRY ONLY (heights, margins, badge-px, token-exact). A fresh reference-vs-current comparison showed the DESIGN LANGUAGE itself was wrong, so that PASS was correctly UNLOCKED and re-derived here. Geometry-exact != design-correct.",
+      "designLanguage": {
+        "flat": "vehicle+status merged into ONE full-width square plane attached under the header; no radius, no border, no shadow anywhere in Phase 1",
+        "edgeToEdge": "vehicle card, geofence alert banner and map all render x=0..780 (full width); only the Driving Routes card and the Change Fence button stay inset, both on the SAME symmetric pageGutter=14",
+        "sharp": "Phase-1 corner radius is 0 everywhere EXCEPT Change Fence (fenceBtnRadius=8)",
+        "smallFonts": "header title 18->15.5, Running 19->16.5, route title 12->11, subtitle/time 10->9, state 11.5->10.5, alert text 11->10, bar title 14->12.5, Change Fence 13->11.5, badge numeral 14->12",
+        "tightSpacing": "banner 30->21, route rows 73->60, Change Fence 32->27, section gaps 6/5/10/10 -> 4/3/6/6",
+        "noShadow": "no shadow/elevation was ever set on a Phase-1 surface; none added"
+      },
+      "deltasFixed": [
+        {
+          "id": "P1",
+          "what": "two inset rounded cards -> ONE flat full-width card; image caption 'Car | <model>' -> grey 'Last Updated' label + bold time",
+          "files": "VehicleStatusCards/{index.tsx,styles.ts}, types/engineControl.ts, mocks/engineControl.mock.json, ecSizes.scrollTopPad 10->0",
+          "note": "caption value is the mock's own '6:40PM', unchanged. Car image asset untouched."
+        },
+        {
+          "id": "P2",
+          "what": "'Running' descender clipped by a fixed 24dp row wrapping 19pt text",
+          "files": "VehicleStatusCards/styles.ts (statusRow overflow visible + no fixed height, statusText lineHeight 22)",
+          "note": "TextView measured 138x49px (24.5dp) for a 16.5pt glyph box - taller than the type, so the 'g' descender clears."
+        },
+        {
+          "id": "P3",
+          "what": "camera/Instagram-like CameraLockGlyph removed from the 'Out of Fence' badge",
+          "files": "VehicleStatusCards/index.tsx (import + render), styles.ts (fencePill justifyContent flex-end, square)",
+          "note": "Pressable / role / accessibilityLabel / onPress all unchanged. Label + external-link arrow only, flush top-right."
+        },
+        {
+          "id": "P4",
+          "what": "'Current Fence' white-on-lime contrast failure + shield glyph; 'Last Updated' map badge oversized and floating",
+          "files": "GeofenceMap/styles.ts, ecColors.mapChipBg #8AF96A->#67DC52 + mapChipInk #FFFFFF->#0E3B18, ecSizes.mapInset 12->0",
+          "note": "map badge 107x61px -> 94x48px (~30% smaller), flush top-left; Current Fence flush top-right with dark-green ink."
+        },
+        {
+          "id": "P5",
+          "what": "(a) washed-out custom light map style (b) static region cropping the fence (c) blue hexagons + oversized red arrow-teardrops (d) Google logo",
+          "files": "GeofenceMap/styles.ts (ecLightMapStyle DELETED, 8 raw hex removed), GeofenceMap/fitRegion.ts (NEW), GeofenceMap/index.tsx",
+          "note": "(a) no customMapStyle + userInterfaceStyle='light' (native MapColorScheme.LIGHT) so the DEFAULT colourful Google style renders instead of following the device night mode. (b) fitFenceRegion derives the camera from the mock's own fence radius + pin coords and the real viewport -> circle sits inside with air on all 4 sides. (c) all markers are one small red pin, size 20/18 -> 12. (d) NOT DONE - react-native-maps 1.29.8 exposes no size/opacity prop for the mandatory Google logo; padding only relocates it."
+        },
+        {
+          "id": "P6",
+          "what": "status chips removed, blue subtitle greyed, clock glyphs removed, row dividers removed, connector made visible, badge 2 yellow->orange, badges+fonts+padding shrunk",
+          "files": "RouteList/{index.tsx,styles.ts}, ecColors (routeSubBlue / chip Bg tokens DELETED, badgeAmber->badgeOrange #F0941F, idleInk #E5A200->#E07B00, divider->connectorInk #C2C8CE, durationInk #7C93AE->neutral #9AA0A6), ecSizes.routeRowH 73->60, badge 24->20",
+          "note": "connector now drawn on ALL THREE rows (the reference's dashes run the full list and continue below badge 3). Mock key subBlue left in the payload but no longer consumed."
+        },
+        {
+          "id": "P7",
+          "what": "banner rounded+inset -> rectangular full-width + thin pink border; map -> full-width sharp; routes bar -> sharp + smaller semi-bold title + toned-down red swoosh; Change Fence -> 1px border, radius 8, shorter, smaller medium text, shuffle glyph -> fence glyph",
+          "files": "FenceAlertBanner/styles.ts, GeofenceMap/styles.ts, SectionBar/{index.tsx,styles.ts}, ChangeFenceButton/{index.tsx,styles.ts}",
+          "note": "SectionBar's 'edge' prop is OPT-IN: RouteList passes it, ControlRows (Phase 2) does not and keeps its rounded bar byte-identically. Red swoosh measured off the reference at ~56% of the bar, reduced from 54%->38% per 'tone down'."
+        },
+        {
+          "id": "P8",
+          "what": "header: smaller semi-bold title, thinner/lighter chevron, avatar 32->28 with the asset's baked-in white hoop cropped away, brick red less deep; global Phase-1 font/radius/gap tightening",
+          "files": "AppHeader/AppHeader.tsx (OPTIONAL titleSize/titleWeight/backSize/backWeight/gradientColors), icons/index.tsx (Chevron OPTIONAL weight), styleFactories.ts (makeTitleTextStyle NEW), EngineControlScreen/styles.ts + .tsx, ecColors.headerGradient",
+          "note": "Every shared change is additive with the previous value as the DEFAULT, so all other screens are byte-identical. The avatar hoop is removed by over-scaling the photo inside the circular clip (avatarCropScale 1.16) - no asset swap."
+        }
+      ],
+      "newTokens": {
+        "ecColors.headerGradient": "#A13E16 -> #251E1D (this screen's brick red, sampled for hue from the reference)",
+        "ecColors.alertBorder": "#F0AFB4",
+        "ecColors.badgeOrange": "#F0941F (replaces badgeAmber)",
+        "ecColors.connectorInk": "#C2C8CE (replaces divider)",
+        "ecSizes.flat": 0,
+        "ecSizes.fenceBtnRadius": 8,
+        "ecSizes.pageGutter": "14 - Phase-1 inset margin, declared separately from the Phase-2 `gutter`",
+        "ecSizes.avatar": 28,
+        "ecSizes.avatarCropScale": 1.16,
+        "ecSizes.headerTitleSize": 15.5,
+        "ecSizes.headerBackSize": 13,
+        "ecSizes.headerBackWeight": "400",
+        "ecSizes.barTitleSize": 12.5,
+        "ecSizes.mapFenceStroke": 2,
+        "ecSizes.mapPinSize": 12,
+        "ecSizes.mapFitPadFactor": 1.55,
+        "removedTokens": "routeSubBlue, movingBg, idleBg, stopBg, mapDiamond, pillRadius, chipH, chipPadH, vehicleGutter, bannerGutter, fenceGutter, mapBoxW, mapChipW",
+        "sharedAdditive": "AppHeader {titleSize,titleWeight,backSize,backWeight,gradientColors}, Chevron {weight}, makeTitleTextStyle(size,weight), SectionBar {edge} - all optional, all default to the pre-existing behaviour"
+      },
+      "staticGates": "tsc 0, eslint 0, jest 28/28 (3 suites), deps 18 (rn-swipe-button only vs baseline), AIza 0 in src, static style={{ 0 in engineControl, console.log 0, raw hex 0 in engineControl CODE (ecLightMapStyle's 8 literal hex deleted; the 5 remaining hits are prose in comments), processingRef + forceResetRef + clearTimeout-on-unmount still present, TODO(V9-a11y) + TODO(KNOWN-ISSUE map leak) still present",
+      "dataIsMockAndWasIgnored": "no duration recalculated, no trip reordered, no time range fixed, no car-image asset swapped. The only payload edit is the P1 caption label/value pair, copied verbatim from the mock's existing lastUpdated value.",
+      "untouched": "Phase-2 (Control Vehicle bar, Live Location, Scheduled Remote Starts, Lock/Unlock, Privacy Policy, Slide to Proceed, FAQ, Support, bottom nav); swipe V4-V8; map-leak (parked); playback; calendar; V9; Arabic tile-label"
     }
   ]
 }

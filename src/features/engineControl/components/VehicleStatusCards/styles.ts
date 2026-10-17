@@ -1,124 +1,133 @@
-// styles.ts — S2: vehicle identity card (left) + live status card (right).
+// styles.ts — S2: ONE flat, edge-to-edge vehicle + status card.
+//
+// PHASE-1 DESIGN LANGUAGE (P1): this used to be TWO inset rounded boxes (a left
+// "car card" and a right "status card"), each with its own 10 pt radius, 1 pt
+// border and a 12 pt gutter between them, inside a row that itself carried an
+// 11 pt horizontal margin. The reference has ONE white plane that runs the full
+// page width, is attached directly under the header, and is SQUARE — no radius,
+// no border, no shadow. The red "Out of Fence" badge is not a pill inside a
+// card: it is flush against that plane's top-RIGHT corner.
+//
+// PHASE-1 (P2): the "Running" row was a fixed 24 pt box wrapping 19 pt text, so
+// the descender of "g" was clipped. The row now owns its lineHeight and does not
+// clip (`overflow: visible` on both the row and the Text).
 import { StyleSheet } from 'react-native';
 import { ecColors, ecSizes } from '@shared/theme';
 
 export const styles = StyleSheet.create({
   /**
- * PATCH UI-POLISH (PART 7): the two boxes now share one height and one width
- * split. This row used to be `alignItems: 'flex-start'` with a FIXED-width
- * right card (163pt), so the left box measured ~103pt tall against the right's
- * ~92pt and they visibly disagreed at both the top and bottom edges.
- *
- * `stretch` + `flex: 1` on both makes them resolve to the taller of the two, and
- * the gap is a real 12pt instead of the old 2pt sliver.
- */
-row: {
+   * The single flat plane. No radius, no border, no shadow, no horizontal
+   * margin — P1/P7 edge-to-edge. Its only padding is INSIDE, so the badge can
+   * sit flush in the corner while the identity/status columns stay indented.
+   */
+  card: {
     flexDirection: 'row',
-    alignItems: 'stretch',
-    gap: 12,
-    paddingHorizontal: ecSizes.vehicleGutter,
+    backgroundColor: ecColors.card,
+    paddingHorizontal: ecSizes.vehicleCardPadH,
+    paddingBottom: ecSizes.vehicleCardPadV,
   },
   /**
-   * Left card: car photo + "Car | <model>" caption. Content is centred so the
-   * photo and caption sit balanced inside whatever height the row resolves to.
+   * P1: the identity column (car photo + "Last Updated" caption). Its top band is
+   * left empty because the red badge owns that band — matching the reference,
+   * where the photo starts BELOW the badge's bottom edge.
    */
-  vehicleCard: {
+  identity: {
     flex: 1,
-    backgroundColor: ecColors.card,
-    borderRadius: ecSizes.cardRadius,
-    borderWidth: 1,
-    borderColor: ecColors.cardBorder,
-    paddingTop: ecSizes.vehicleCardTopPad,
-    paddingBottom: ecSizes.vehicleCardTopPad,
-    paddingHorizontal: 6,
-    alignItems: 'center',
-    justifyContent: 'center',
+    paddingTop: ecSizes.pillH + ecSizes.statusTopGap,
+    alignItems: 'flex-start',
   },
   car: {
     width: ecSizes.carW,
     height: ecSizes.carH,
   },
+  /**
+   * P1: the caption is now the reference's "Last Updated <time>" — a GREY small
+   * label followed by the BOLD time, laid out inline and left-aligned under the
+   * photo. The value is still the mock's; only the text/weight split changed.
+   */
   caption: {
     flexDirection: 'row',
-    alignItems: 'center',
-    height: ecSizes.captionH,
+    alignItems: 'baseline',
     marginTop: 4,
-    alignSelf: 'flex-start',
-    paddingLeft: 4,
   },
-  captionPrefix: {
+  captionLabel: {
     color: ecColors.captionInk,
-    fontSize: 10,
-    fontWeight: '400',
+    fontSize: 8.5,
   },
-  captionName: {
+  captionValue: {
     color: ecColors.nameInk,
-    fontSize: 11,
+    fontSize: 10,
     fontWeight: '700',
+    marginLeft: 4,
   },
   /**
-   * Right card: fence pill + hero status + address. PATCH UI-POLISH (PART 7):
-   * fixed `width: statusCardW` (163) replaced with `flex: 1` so it matches the
-   * left card's width AND height; the row's `gap: 12` supplies the separation,
-   * so the old `marginLeft: vehicleCardGap` (2pt) is gone.
+   * The live-status column, right half. Same reserved top band as the identity
+   * column so "Running" clears the absolutely-placed badge.
    */
-  statusCard: {
+  statusCol: {
     flex: 1,
-    backgroundColor: ecColors.card,
-    borderRadius: ecSizes.cardRadius,
-    borderWidth: 1,
-    borderColor: ecColors.cardBorder,
-    // The pill is flush with the card's top border and only 1 pt away from its
-    // right border (reference: 12 pt left inset, 2 pt right inset).
-    paddingLeft: 11,
-    paddingRight: 1,
-    paddingTop: 0,
-    paddingBottom: 10,
+    paddingTop: ecSizes.pillH + ecSizes.statusTopGap,
+    paddingLeft: ecSizes.flagSize + ecSizes.flagGap,
   },
   /**
-   * F3: the pill stretches to the card's content width (matching the reference
-   * where it nearly fills the card) and distributes its three children with
-   * `space-between`: camera-lock | label | external-link. The label itself is
-   * NOT flex-sized, so it can never be ellipsised mid-word.
+   * P3: "Out of Fence" — flush top-right of the card, SQUARE, and carrying only
+   * the label + the external-link arrow. The camera-lock glyph that used to sit
+   * on the left of this badge is gone (P3): it read as a camera/Instagram mark
+   * and is not in the reference.
    */
   fencePill: {
+    position: 'absolute',
+    top: ecSizes.flat,
+    right: ecSizes.flat,
     height: ecSizes.pillH,
-    borderRadius: ecSizes.pillRadius,
+    borderRadius: ecSizes.flat,
     backgroundColor: ecColors.fencePillBg,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     paddingHorizontal: 10,
   },
   fencePillText: {
     color: ecColors.fencePillInk,
-    fontSize: 13.5,
+    fontSize: 12,
     fontWeight: '700',
   },
+  fencePillIcon: {
+    marginLeft: 5,
+  },
+  /**
+   * P2 + P8: no fixed height and no clipping — the row simply grows to its
+   * content, so the "g" descender in "Running" is never cut.
+   */
   statusRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: ecSizes.statusRowH,
-    marginTop: 7,
+    overflow: 'visible',
   },
-  /** F4: right-pointing play triangle wrapper (fixed frame, centred). */
   flag: {
-    width: 16,
-    height: 16,
-    marginRight: 6,
+    width: ecSizes.flagSize,
+    height: ecSizes.flagSize,
+    marginRight: ecSizes.flagGap,
     alignItems: 'center',
     justifyContent: 'center',
   },
+  /**
+   * P2: an explicit lineHeight taller than the glyph box, plus
+   * `overflow: visible`. P8: 19 -> 16.5 pt (≈13% down).
+   */
   statusText: {
     color: ecColors.statusInk,
-    fontSize: 19,
+    fontSize: 16.5,
+    lineHeight: 22,
     fontWeight: '700',
+    overflow: 'visible',
   },
   address: {
     color: ecColors.addressInk,
-    fontSize: 12.5,
+    fontSize: 11.5,
     lineHeight: ecSizes.addressLineH,
     marginLeft: ecSizes.addressIndent,
+    marginTop: 2,
   },
   pressed: {
     opacity: 0.85,

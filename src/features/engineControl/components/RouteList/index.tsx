@@ -1,22 +1,33 @@
-// RouteList (S6) — "Driving Routes" card: diagonal section bar over 3 route rows.
+// RouteList (S6) — "Driving Routes" card: section bar + 3 route rows.
 // Row content order is verbatim from the reference: badge, title + duration,
-// subtitle, clock + window, state chip.
+// subtitle, time, state.
+//
+// PHASE-1 DESIGN LANGUAGE (P6): the state is PLAIN COLOURED TEXT (the tinted
+// chip is gone), every sub-line is grey (route 1's blue subtitle is gone), the
+// time line has no clock glyph, rows are separated by nothing, and a clearly
+// visible dotted connector chains the number badges. See styles.ts.
 import React, { memo } from 'react';
 import { Text, View } from 'react-native';
-import { Clock } from '@shared/components/icons';
-import { ecColors } from '@shared/theme';
 import type { ControlRoute } from '@features/engineControl/types/engineControl';
 import SectionBar from '../SectionBar';
-import { badgeFill, chipFill, chipInk, styles } from './styles';
+import { badgeFill, stateInk, styles } from './styles';
 
 export interface RouteListProps {
   title: string;
   routes: ControlRoute[];
 }
 
-const RouteRow = memo(function RouteRowBase({ route }: { route: ControlRoute }) {
+const RouteRow = memo(function RouteRowBase({
+  route,
+  showConnector,
+}: {
+  route: ControlRoute;
+  /** P6: the dashed badge-column connector, painted on every row. */
+  showConnector: boolean;
+}) {
   return (
     <View style={styles.row} testID={`ec-route-${route.id}`}>
+      {showConnector ? <View style={styles.connector} testID={`ec-route-connector-${route.id}`} /> : null}
       <View style={[styles.badge, badgeFill(route.state)]}>
         <Text style={styles.badgeText}>{route.index}</Text>
       </View>
@@ -27,19 +38,9 @@ const RouteRow = memo(function RouteRowBase({ route }: { route: ControlRoute }) 
           </Text>
           <Text style={styles.duration}>{route.duration}</Text>
         </View>
-        {/* F8: route 1's subtitle is the only blue sub-line in the reference. */}
-        <Text style={[styles.subtitle, route.subBlue ? styles.subtitleBlue : null]}>
-          {route.subtitle}
-        </Text>
-        <View style={styles.timeRow}>
-          <View style={styles.timeIcon}>
-            <Clock color={ecColors.timeInk} size={12} />
-          </View>
-          <Text style={styles.time}>{route.time}</Text>
-        </View>
-        <View style={[styles.chip, chipFill(route.state)]}>
-          <Text style={[styles.chipText, chipInk(route.state)]}>{route.state}</Text>
-        </View>
+        <Text style={styles.subtitle}>{route.subtitle}</Text>
+        <Text style={styles.time}>{route.time}</Text>
+        <Text style={[styles.state, stateInk(route.state)]}>{route.state}</Text>
       </View>
     </View>
   );
@@ -48,12 +49,11 @@ const RouteRow = memo(function RouteRowBase({ route }: { route: ControlRoute }) 
 function RouteListImpl({ title, routes }: RouteListProps) {
   return (
     <View style={styles.card} testID="ec-routes-card">
-      <SectionBar title={title} testID="ec-routes-bar" />
-      {routes.map((route, index) => (
-        <React.Fragment key={route.id}>
-          {index > 0 ? <View style={styles.separator} /> : null}
-          <RouteRow route={route} />
-        </React.Fragment>
+      {/* P7: `edge` drops the bar's top rounding and tones down the red swoosh.
+          ControlRows (Phase 2) omits it and keeps its rounded bar untouched. */}
+      <SectionBar title={title} edge testID="ec-routes-bar" />
+      {routes.map(route => (
+        <RouteRow key={route.id} route={route} showConnector />
       ))}
     </View>
   );

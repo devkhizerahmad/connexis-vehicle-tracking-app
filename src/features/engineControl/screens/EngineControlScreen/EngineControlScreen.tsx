@@ -9,9 +9,11 @@
 //   S5  change fence       ChangeFenceButton
 //   S6  driving routes     RouteList (3 rows: Moving / Idle / Stop)
 //   S7  control vehicle    ControlRows (Live Location, Scheduled Remote Starts)
-//   S8  lock / unlock      LockUnlockRow
-//   S9  privacy policy     PrivacyPolicyRow
-//   S10 slide to proceed   SlideToProceed
+//   S8  lock / unlock      ControlSwipeCard > LockUnlockRow (SELECTORS — arming
+//                          one never locks anything on its own)
+//   S9  privacy policy     ControlSwipeCard's middle child > PrivacyPolicyRow
+//   S10 slide to proceed   ControlSwipeCard > rn-swipe-button (the only thing
+//                          that can actually perform a lock/unlock)
 //   S11 FAQ                FaqCard
 //   S12 support            SupportButton
 //   bottom nav             rendered by RootNavigator's BottomNav (ENGINE CONTROL active)
@@ -27,18 +29,17 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { AppHeader } from '@shared/components/layout/AppHeader';
-import { ecSizes, sizes, spacing } from '@shared/theme';
+import { ecColors, ecSizes, sizes, spacing } from '@shared/theme';
 import { goToLiveMap } from '@shared/utils/navigationHelpers';
 import type { RootTabParamList } from '@navigation/types';
 import { ChangeFenceButton } from '@features/engineControl/components/ChangeFenceButton';
 import { ControlRows } from '@features/engineControl/components/ControlRows';
+import { ControlSwipeCard } from '@features/engineControl/components/ControlSwipeCard';
 import { FaqCard } from '@features/engineControl/components/FaqCard';
 import { FenceAlertBanner } from '@features/engineControl/components/FenceAlertBanner';
 import { GeofenceMap } from '@features/engineControl/components/GeofenceMap';
-import { LockUnlockRow } from '@features/engineControl/components/LockUnlockRow';
 import { PrivacyPolicyRow } from '@features/engineControl/components/PrivacyPolicyRow';
 import { RouteList } from '@features/engineControl/components/RouteList';
-import { SlideToProceed } from '@features/engineControl/components/SlideToProceed';
 import { SupportButton } from '@features/engineControl/components/SupportButton';
 import { VehicleStatusCards } from '@features/engineControl/components/VehicleStatusCards';
 import { engineControlService } from '@features/engineControl/services/engineControlService';
@@ -69,6 +70,9 @@ export function EngineControlScreen({ navigation }: EngineControlScreenProps) {
   // scroll content needs explicit clearance for it plus the device gesture inset.
   const insets = useSafeAreaInsets();
   const scrollPadBottom = sizes.bottomNav + insets.bottom + ecSizes.scrollNavBuffer;
+  // PATCH EC-SWIPE: the toast is screen-absolute, so it also has to clear the
+  // BottomNav overlay — a flat `bottom` sat underneath it and was invisible.
+  const toastBottom = sizes.bottomNav + insets.bottom + ecSizes.toastNavGap;
   const toastAnim = useRef(new Animated.Value(0)).current;
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -125,6 +129,21 @@ export function EngineControlScreen({ navigation }: EngineControlScreenProps) {
   // (reference parity + the ReportsScreen precedent).
   const handleBack = useCallback(() => {}, []);
 
+  /**
+   * PHASE-1 DESIGN LANGUAGE (P8) — this screen's header overrides. All four are
+   * opt-in AppHeader props that default to the shared values, so every other
+   * screen's header is untouched: a smaller semi-bold title, a thinner/lighter
+   * back chevron, and a brick red that is slightly less deep than the shared
+   * `colors.gradientHeader` pair.
+   */
+  const headerOverrides = {
+    titleSize: ecSizes.headerTitleSize,
+    titleWeight: '600' as const,
+    backSize: ecSizes.headerBackSize,
+    backWeight: ecSizes.headerBackWeight,
+    gradientColors: ecColors.headerGradient,
+  };
+
   // S1 avatar -> ProfileTab (cross-tab, same cast ReportsScreen uses).
   const handleAvatar = useCallback(() => {
     navigation.getParent<{ navigate: (name: string) => void }>()?.navigate('ProfileTab');
@@ -145,26 +164,26 @@ export function EngineControlScreen({ navigation }: EngineControlScreenProps) {
     },
     [showToast, tabNav],
   );
-  const handleLock = useCallback(() => showToast('Engine locked'), [showToast]);
-  const handleUnlock = useCallback(() => showToast('Engine unlocked'), [showToast]);
   const handlePrivacy = useCallback(() => showToast('Privacy Policy'), [showToast]);
-  const handleProceed = useCallback(() => showToast('Slide to Proceed'), [showToast]);
   const handleSupport = useCallback(() => showToast('Support'), [showToast]);
 
   const headerAvatar = (
     <Pressable
       onPress={handleAvatar}
       hitSlop={8}
+      style={styles.avatar}
       accessibilityRole="button"
       accessibilityLabel="Open profile"
       testID="ec-avatar">
       {/* F1: real photo, never a blank circle. `profile_avatar.png` is the young-man
           portrait (profile.jpeg is the full Profile SCREEN shot and renders as a
           blank corner when cropped to a 32 pt circle). onError swaps in a tinted
-          fallback so a missing/broken asset can still not render as white. */}
+          fallback so a missing/broken asset can still not render as white.
+          P8: the photo is rendered OVER-SIZED inside the circular `avatar` clip so
+          the asset's baked-in white hoop is cropped away — no asset swap. */}
       <Image
         source={require('../../../../assets/profile_avatar.png')}
-        style={styles.avatar}
+        style={styles.avatarImage}
         onError={() => setAvatarBroken(true)}
       />
       {avatarBroken ? <View style={styles.avatarFallback} testID="ec-avatar-fallback" /> : null}
@@ -180,6 +199,7 @@ export function EngineControlScreen({ navigation }: EngineControlScreenProps) {
           onBack={handleBack}
           showAvatar={false}
           actions={headerAvatar}
+          {...headerOverrides}
         />
       </View>
     );
@@ -192,6 +212,7 @@ export function EngineControlScreen({ navigation }: EngineControlScreenProps) {
         onBack={handleBack}
         showAvatar={false}
         actions={headerAvatar}
+        {...headerOverrides}
       />
 
       <ScrollView
@@ -230,14 +251,20 @@ export function EngineControlScreen({ navigation }: EngineControlScreenProps) {
             title={data.controlSectionTitle}
             rows={data.controls}
             onRowPress={handleControlRow}>
-            <LockUnlockRow
+            {/* PATCH EC-SWIPE: the Lock/Unlock pair and the swipe rail now live
+                together inside ControlSwipeCard so arming a selector or dragging
+                the rail re-renders only that subtree — not this screen, and so
+                never the MapView, routes list or FAQ above it. `showToast` is
+                referentially stable, so crossing the boundary costs no render.
+                Privacy Policy renders as the card's middle child, keeping the
+                reference's Lock/Unlock → Policy → Rail order. */}
+            <ControlSwipeCard
               lockLabel={data.lockLabel}
               unlockLabel={data.unlockLabel}
-              onLock={handleLock}
-              onUnlock={handleUnlock}
-            />
-            <PrivacyPolicyRow label={data.privacyLabel} onPress={handlePrivacy} />
-            <SlideToProceed label={data.slideLabel} onProceed={handleProceed} />
+              slideLabel={data.slideLabel}
+              onNotice={showToast}>
+              <PrivacyPolicyRow label={data.privacyLabel} onPress={handlePrivacy} />
+            </ControlSwipeCard>
           </ControlRows>
         </View>
 
@@ -255,7 +282,7 @@ export function EngineControlScreen({ navigation }: EngineControlScreenProps) {
       {toast ? (
         <Animated.View
           pointerEvents="none"
-          style={[styles.toast, { opacity: toastAnim }]}
+          style={[styles.toast, { bottom: toastBottom, opacity: toastAnim }]}
           testID="ec-toast">
           <Text style={styles.toastText}>{toast}</Text>
         </Animated.View>
