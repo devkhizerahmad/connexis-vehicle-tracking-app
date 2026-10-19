@@ -1,33 +1,33 @@
-// styles.ts — S3: "out of geofence" alert banner.
+// styles.ts — S3: "out of geofence" alert card.
 //
-// PHASE-1 DESIGN LANGUAGE (P7): the banner was a floating tinted pill — 8 pt
-// radius, inset by a 15 pt gutter on each side. The reference draws a
-// RECTANGULAR, FULL-WIDTH strip, so the radius and both side margins are gone
-// and a thin pink-red hairline now defines its edge. Height 30 -> 21 pt (≈30%
-// less vertical padding) with the glyph and type shrunk to match (P8).
+// ENGINE CONTROL VEHICLE DASHBOARD (NEW reference): the old PHASE-1 target was
+// a full-width, SQUARE, hairline-bordered STRIP. The new artboard draws an
+// INSET ROUNDED PINK CARD WITH A SOFT SHADOW, so the flat rectangle, its
+// radius-0 corners and its border are all gone.
 import { StyleSheet } from 'react-native';
-import { ecColors, ecSizes } from '@shared/theme';
+import { ecCardRadius, ecColors, ecShadow, ecSizes } from '@shared/theme';
 
 export const styles = StyleSheet.create({
   banner: {
-    height: ecSizes.bannerH,
-    marginHorizontal: ecSizes.flat,
-    borderRadius: ecSizes.flat,
-    borderWidth: 1,
-    borderColor: ecColors.alertBorder,
+    marginHorizontal: ecSizes.pageGutter,
+    borderRadius: ecCardRadius,
     backgroundColor: ecColors.alertBg,
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 10,
+    paddingVertical: 10,
+    // NEW design language: shadows are back on every card.
+    ...ecShadow,
   },
   icon: {
-    marginRight: 6,
+    marginRight: 8,
   },
   text: {
     flex: 1,
     color: ecColors.alertInk,
-    fontSize: 10,
+    fontSize: 11,
     fontWeight: '500',
+    lineHeight: 15,
   },
 });
 

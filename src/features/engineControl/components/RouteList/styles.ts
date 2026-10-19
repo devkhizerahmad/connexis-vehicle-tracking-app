@@ -1,33 +1,37 @@
-// styles.ts — S6: "Driving Routes" card (header bar + 3 route rows).
+// styles.ts — S6: "Driving Routes" card (gradient header + 3 route rows).
 //
-// PHASE-1 DESIGN LANGUAGE (P6). Reference intent, all read off
-// `design-references/engine control.jpeg`:
-//   - the card is a FLAT, sharp, square-cornered white plane (not a 10 pt pill);
-//   - the row state ("Moving" / "Idle" / "Stop") is PLAIN COLOURED TEXT — there
-//     is NO chip, pill or tinted background behind it, so `chipFill`/`chipInk`
-//     and every chip metric token are gone;
-//   - EVERY sub-line is grey. Route 1's subtitle used to be tinted blue
-//     (`routeSubBlue`), which no longer exists as a token;
-//   - the time line has NO clock glyph;
-//   - there are NO hairline separators between rows;
-//   - a clearly VISIBLE dotted line chains the number badges top to bottom
-//     (it was `divider` #EDF1F5 on white, i.e. invisible);
-//   - route 2's badge is ORANGE, and the badges/rows/fonts are all smaller.
+// ENGINE CONTROL VEHICLE DASHBOARD (NEW reference) — the whole section was
+// re-derived; the old PHASE-1 flat/edge-to-edge target is VOID:
+//   - the card is INSET, ROUNDED and SHADOWED (it was a flat, sharp plane);
+//   - the header bar has ROUNDED TOP CORNERS (it was passed `edge` = square);
+//   - each row's state is a tinted ROUNDED STATUS PILL (Moving green /
+//     Pending amber / Stop red) — it was bare coloured text;
+//   - every row ends in a RIGHT CHEVRON;
+//   - rows are separated by HAIRLINE DIVIDERS;
+//   - the dotted badge-column CONNECTOR is gone (that was the old reference);
+//   - the time line is not painted (the new rows carry none).
 import { StyleSheet, type TextStyle, type ViewStyle } from 'react-native';
-import { ecColors, ecSizes } from '@shared/theme';
+import { ecCardRadius, ecColors, ecShadow, ecSizes } from '@shared/theme';
 import type { RouteState } from '@features/engineControl/types/engineControl';
 
-/** Badge fill per route state. */
+/** Number-badge fill per route state (1 green / 2 amber / 3 red). */
 const BADGE_FILL: Record<RouteState, string> = {
   Moving: ecColors.badgeGreen,
-  Idle: ecColors.badgeOrange,
+  Pending: ecColors.badgeOrange,
   Stop: ecColors.badgeRed,
 };
 
-/** P6: plain coloured text — ink only, no background. */
+/** Status-PILL tint behind each state label. */
+const PILL_FILL: Record<RouteState, string> = {
+  Moving: ecColors.pillMovingBg,
+  Pending: ecColors.pillPendingBg,
+  Stop: ecColors.pillStopBg,
+};
+
+/** Status-PILL text ink — same hue family as the badge it sits beside. */
 const STATE_INK: Record<RouteState, string> = {
   Moving: ecColors.movingInk,
-  Idle: ecColors.idleInk,
+  Pending: ecColors.idleInk,
   Stop: ecColors.stopInk,
 };
 
@@ -35,98 +39,101 @@ export const badgeFill = (state: RouteState): ViewStyle => ({
   backgroundColor: BADGE_FILL[state],
 });
 
+export const pillFill = (state: RouteState): ViewStyle => ({
+  backgroundColor: PILL_FILL[state],
+});
+
 export const stateInk = (state: RouteState): TextStyle => ({
   color: STATE_INK[state],
 });
 
 export const styles = StyleSheet.create({
-  card: {
+  /**
+   * Outer shell carries the SHADOW; the inner card clips the gradient bar to
+   * its rounded top corners. Split so the blur is never cut by the clip.
+   */
+  cardOuter: {
     marginHorizontal: ecSizes.pageGutter,
     backgroundColor: ecColors.card,
-    borderRadius: ecSizes.flat,
+    borderRadius: ecCardRadius,
+    ...ecShadow,
   },
-  /** P6: tighter padding and a shorter min-height (73 -> 60). */
+  card: {
+    overflow: 'hidden',
+    borderRadius: ecCardRadius,
+    backgroundColor: ecColors.card,
+  },
+  /** Rows are centred on their title line. */
   row: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     minHeight: ecSizes.routeRowH,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: ecColors.cardBorder,
   },
-  /** P6: smaller number badge (24 -> 20). */
   badge: {
-    width: ecSizes.badge,
-    height: ecSizes.badge,
-    borderRadius: ecSizes.badgeRadius,
+    width: 24,
+    height: 24,
+    borderRadius: 6,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  /**
-   * P6: the dashed vertical connector down the badge column. Drawn on EVERY row
-   * — the reference's dashes run the full height of the list and continue a
-   * little below the last badge — so consecutive segments meet and the badges
-   * read as one chain. `left` is the badge's centre line (row padH + badge/2);
-   * `top` clears that row's badge.
-   */
-  connector: {
-    position: 'absolute',
-    left: 10 + ecSizes.badge / 2,
-    top: 5 + ecSizes.badge,
-    bottom: 0,
-    width: 0,
-    borderLeftWidth: 1,
-    // RN has no per-side border style (`borderLeftStyle` is not in ViewStyle),
-    // but `borderStyle` applies to whichever edges have a width. Only
-    // `borderLeftWidth` is set here, so exactly one dashed edge is painted.
-    borderStyle: 'dashed',
-    borderLeftColor: ecColors.connectorInk,
-  },
   badgeText: {
     color: ecColors.badgeInk,
-    fontSize: 12,
+    fontSize: 12.5,
     fontWeight: '700',
   },
   body: {
     flex: 1,
-    marginLeft: 8,
+    marginLeft: 10,
   },
-  titleLine: {
+  title: {
+    color: ecColors.routeTitleInk,
+    fontSize: 12.5,
+    fontWeight: '700',
+    lineHeight: 16,
+  },
+  /** Subtitle line: pin glyph + grey location, exactly as the reference. */
+  subtitleRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginTop: 2,
   },
-  /** P6: 12 -> 11 pt, and the title must not out-weigh the section bar title. */
-  title: {
-    flex: 1,
-    color: ecColors.routeTitleInk,
-    fontSize: 11,
-    fontWeight: '600',
-    lineHeight: 14,
+  subtitleIcon: {
+    marginRight: 3,
+  },
+  subtitle: {
+    color: ecColors.routeSubInk,
+    fontSize: 10.5,
+    lineHeight: 13,
+  },
+  /** Right column: duration above the status pill, both right-aligned. */
+  rightCol: {
+    alignItems: 'flex-end',
+    marginLeft: 8,
   },
   duration: {
     color: ecColors.durationInk,
-    fontSize: 9,
+    fontSize: 11.5,
     fontWeight: '400',
-    marginLeft: 8,
   },
-  /** P6: EVERY subtitle is grey — the blue override is gone. 10 -> 9 pt. */
-  subtitle: {
-    color: ecColors.routeSubInk,
-    fontSize: 9,
-    lineHeight: 12,
+  /** Status pill: tinted capsule (NEW reference — no longer bare text). */
+  statePill: {
+    marginTop: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 10,
   },
-  /** P6: the clock glyph is gone; the time is a bare grey line. */
-  time: {
-    color: ecColors.timeInk,
-    fontSize: 9,
-    lineHeight: 12,
-    marginTop: 1,
-  },
-  /** P6: the state is plain text, so this is a block, not a chip. */
   state: {
     fontSize: 10.5,
     fontWeight: '600',
-    lineHeight: 14,
-    marginTop: 1,
+    lineHeight: 13,
+  },
+  /** Drops the divider from the final row (reference divides BETWEEN rows). */
+  rowLast: {
+    borderBottomWidth: 0,
   },
 });
 

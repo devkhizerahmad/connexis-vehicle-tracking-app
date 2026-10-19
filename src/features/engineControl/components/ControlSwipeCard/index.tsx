@@ -186,14 +186,11 @@ function ControlSwipeCardImpl({
     [onNotice],
   );
 
-  /** The rail's thumb face: the reference's bare "››" double chevron. */
+  /** The rail's thumb face: a SINGLE right chevron (NEW reference). */
   const renderThumb = useCallback(
     () => (
       <View style={styles.thumbIcon}>
-        <Chevron dir="right" color={ecColors.slideThumbInk} size={9} />
-        <View style={styles.thumbChevronGap}>
-          <Chevron dir="right" color={ecColors.slideThumbInk} size={9} />
-        </View>
+        <Chevron dir="right" color={ecColors.slideThumbInk} size={12} />
       </View>
     ),
     [],

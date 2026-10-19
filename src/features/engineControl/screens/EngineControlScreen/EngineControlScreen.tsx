@@ -142,6 +142,12 @@ export function EngineControlScreen({ navigation }: EngineControlScreenProps) {
     backSize: ecSizes.headerBackSize,
     backWeight: ecSizes.headerBackWeight,
     gradientColors: ecColors.headerGradient,
+    // S1 (NEW "Engine Control Vehicle Dashboard" reference): the header runs
+    // DIAGONALLY — dark at the bottom-left, red at the top-right — instead of
+    // the shared vertical run. Both props are opt-in and default to the shared
+    // axis, so every other screen's header is byte-identical.
+    gradientStart: { x: 1, y: 0 },
+    gradientEnd: { x: 0, y: 1 },
   };
 
   // S1 avatar -> ProfileTab (cross-tab, same cast ReportsScreen uses).

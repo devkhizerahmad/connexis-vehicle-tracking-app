@@ -1,3 +1,6 @@
+import { Platform, type ViewStyle } from 'react-native';
+
+
 // engineControl.ts — Engine Control screen design tokens (S1–S12).
 // Kept in its own module (like reports.ts / history.ts) so the frozen
 // Home/Details/Profile/LiveMap/History/Reports token blocks stay byte-identical;
@@ -13,16 +16,14 @@ export const ecColors = {
   // S1 header ink (gradient header comes from colors.gradientHeader)
   headerInk: '#FFFFFF',
   /**
-   * PHASE-1 DESIGN LANGUAGE (P8) — Engine Control's own header gradient.
-   *
-   * The shared `colors.gradientHeader` (#B2250C -> #160F12) is frozen for every
-   * other screen, so this screen cannot repoint it. These stops are HUE samples
-   * off `design-references/engine control.jpeg`: a brick #A13E16 at the status
-   * bar easing to a near-black #251E1D under the nav row — i.e. the same
-   * top-to-bottom direction but a RED THAT IS SLIGHTLY LESS DEEP than the shared
-   * pair. Direction preserved, depth reduced.
+   * ENGINE CONTROL VEHICLE DASHBOARD (NEW reference) — the screen header is a
+   * DARK MAROON -> RED gradient. The previous stop pair (#A13E16 -> #251E1D)
+   * was sampled from the OLD flat "engine control.jpeg" and is VOID for this
+   * screen. These two stops are read off
+   * `design-references/Engine Control Vehicle Dashboard.png`: a near-black
+   * maroon base easing into the brand red.
    */
-  headerGradient: ['#A13E16', '#251E1D'] as const,
+  headerGradient: ['#2A0508', '#C0110F'] as const,
 
   // S2 vehicle cards
   card: '#FFFFFF',
@@ -58,15 +59,28 @@ export const ecColors = {
    * #8AF96A fill + WHITE text, which failed contrast outright. The reference
    * samples the fill at #67DC52 and paints DARK GREEN type on it.
    */
+  /**
+   * S4 "Current Fence" chip. The NEW reference paints WHITE type + a WHITE
+   * shield-check glyph on the green fill; the Phase-1 dark-green-on-lime
+   * treatment was sampled from the old flat artboard and is void.
+   * FLAG: white on #67DC52 is a low-contrast pairing (~1.9:1) inherited
+   * directly from the reference — matched deliberately, not overlooked.
+   */
   mapChipBg: '#67DC52',
-  mapChipInk: '#0E3B18',
-  /** Dark-green fence glyph inside the lime chip (sampled #036D37). */
-  mapChipIconInk: '#036D37',
+  mapChipInk: '#FFFFFF',
+  /** Shield-check glyph inside the chip (NEW reference: white). */
+  mapChipIconInk: '#FFFFFF',
   mapDot: '#2196F3',
   mapPin: '#EA061D',
-  mapFence: '#0F1723',
-  /** Barely-there tint inside the geofence ring (the reference fill is clear). */
-  mapFenceFill: 'rgba(15, 23, 35, 0.02)',
+  /**
+   * S4 geofence ring. The NEW reference draws a RED hoop over a RED TRANSLUCENT
+   * FILL (the old artboard used a near-black outline with a clear interior).
+   */
+  mapFence: '#EA061D',
+  /** Translucent red disc inside the geofence ring (was ~clear). */
+  mapFenceFill: 'rgba(234, 6, 29, 0.22)',
+  /** S4 dashed route from the vehicle to its destination pin. */
+  mapRoute: '#EA061D',
   /**
    * F1: last-resort avatar tint so the header can never show a blank white disc.
    */
@@ -116,6 +130,15 @@ export const ecColors = {
   movingInk: '#43A047',
   idleInk: '#E07B00',
   stopInk: '#E53935',
+  /**
+   * S6 status PILL fills — the NEW "Engine Control Vehicle Dashboard" reference
+   * renders each route state as a tinted ROUNDED PILL (Moving green / Pending
+   * amber / Stop red), NOT as bare coloured text. The inks above stay as the
+   * pill's text colour so the pairing keeps the same hue family.
+   */
+  pillMovingBg: '#E3F8E8',
+  pillPendingBg: '#FDF1DB',
+  pillStopBg: '#FDE5E7',
 
   // S7 control rows (sampled #EAF4FC row fill, #071A34 ink)
   rowBg: '#EAF4FC',
@@ -281,7 +304,12 @@ export const ecSizes = {
    * P4: both corner badges are FLUSH to the map's sharp top corners (0), so
    * they no longer float inside a rounded map.
    */
-  mapInset: 0,
+  /**
+   * S4: the corner badges sit INSET from the map's rounded corners. It was 0
+   * under the old edge-to-edge/sharp map; the NEW reference floats both badges
+   * with clear air inside the rounded card.
+   */
+  mapInset: 10,
 
   // S5 change-fence button — P7: 32 -> 27 pt (≈15% shorter)
   fenceBtnH: 27,
@@ -298,6 +326,13 @@ export const ecSizes = {
   // S7 control rows (1400..1452 px → 29 pt)
   controlRowH: 29,
   controlRowPadH: 12,
+  /**
+   * HEADER-ATTACH: the "Control Vehicle" card pads its inner content by this
+   * horizontally. Its gradient header bar is NOT content — it bleeds out by
+   * exactly this amount (negative margin) so it spans the FULL card width and
+   * shares the card's own top corner-radius, leaving zero white seam.
+   */
+  controlCardPadH: 12,
 
   // S8 lock / unlock cards (1535..1603 px → 37 pt is the sampled FILL; the
   // artboard's 1.5 pt red/blue border puts the border-box at 1531..1606 px →
@@ -376,3 +411,32 @@ export const ecSizes = {
    */
   barTitleSize: 12.5,
 } as const;
+
+/**
+ * ENGINE CONTROL VEHICLE DASHBOARD (NEW reference) — the ONE card treatment
+ * for this screen.
+ *
+ * The OLD "engine control.jpeg" language was FLAT / EDGE-TO-EDGE / SHARP /
+ * NO-SHADOW; the NEW reference INVERTS that to INSET ROUNDED CARDS WITH SOFT
+ * SHADOWS. Every S2/S3/S4/S5/S6/S7/S8/S9 surface now paints this instead.
+ *
+ * iOS carries the real blur; Android uses elevation because RN exposes no
+ * shadow radius there. Deliberately a touch softer than `shadows.card` so the
+ * cards float instead of reading as boxed-in.
+ */
+export const ecShadow: ViewStyle = Platform.select({
+  ios: {
+    shadowColor: '#1B2330',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.12,
+    shadowRadius: 10,
+  },
+  android: { elevation: 3 },
+  default: { elevation: 3 },
+}) as ViewStyle;
+
+/**
+ * The inset card radius shared by every card, the map, the alert and the
+ * buttons in the NEW reference, so the screen reads as one system.
+ */
+export const ecCardRadius = 12;

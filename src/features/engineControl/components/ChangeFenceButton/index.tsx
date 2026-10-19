@@ -1,12 +1,12 @@
-// ChangeFenceButton (S5) — outlined deep-green button under the map.
+// ChangeFenceButton (S5) — inset white, rounded, green-hairline button.
 //
-// PHASE-1 (P7): the shuffle-arrows glyph is replaced by a FENCE glyph. The
-// shuffle read as a "shuffle/reorder" affordance; the reference pairs the label
-// with a fence mark. The Pressable, its role, its label and its onPress are
-// untouched — this is a glyph swap only, no behaviour change.
+// ENGINE CONTROL VEHICLE DASHBOARD (NEW reference): the glyph is the PERSON +
+// FENCE mark (GeofenceGlyph), the border is a ~1px green hairline and the
+// radius matches the rest of the screen. The Pressable, its role, its label and
+// its onPress are untouched — styling only, no behaviour change.
 import React, { memo } from 'react';
 import { Pressable, Text, View } from 'react-native';
-import { Fence } from '@shared/components/icons';
+import { GeofenceGlyph } from '@shared/components/icons';
 import { ecColors } from '@shared/theme';
 import { styles } from './styles';
 
@@ -24,7 +24,7 @@ function ChangeFenceButtonImpl({ label, onPress }: ChangeFenceButtonProps) {
       style={({ pressed }) => [styles.button, pressed ? styles.pressed : null]}
       testID="ec-change-fence">
       <View style={styles.icon}>
-        <Fence color={ecColors.fenceGreen} size={14} />
+        <GeofenceGlyph color={ecColors.fenceGreen} size={14} />
       </View>
       <Text style={styles.label}>{label}</Text>
     </Pressable>

@@ -1,24 +1,19 @@
 // styles.ts — S6/S7 section bar: dark maroon gradient with a diagonal red block.
 //
-// PHASE-1 (P7): `barEdge` / `redBlockEdge` / `titleEdge` are the SHARP, toned-down
-// variants used by the Phase-1 "Driving Routes" bar. The default entries are the
-// original rounded / full-swoosh / 14 pt styles and stay in place for the
-// Phase-2 "Control Vehicle" bar.
+// ENGINE CONTROL VEHICLE DASHBOARD (NEW reference): the bar sits on an INSET
+// ROUNDED card, so it keeps ROUNDED TOP CORNERS and the full red swoosh. The
+// PHASE-1 sharp variants (`barEdge` / `redBlockEdge` / `titleEdge`) belonged to
+// the old flat design language and are gone with it.
 import { StyleSheet } from 'react-native';
-import { ecColors, ecSizes } from '@shared/theme';
+import { ecCardRadius, ecColors, ecSizes } from '@shared/theme';
 
 export const styles = StyleSheet.create({
   bar: {
     height: ecSizes.barH,
     justifyContent: 'center',
     overflow: 'hidden',
-    borderTopLeftRadius: ecSizes.cardRadius,
-    borderTopRightRadius: ecSizes.cardRadius,
-  },
-  /** P7: no top rounding — the card under this bar is flat (radius 0). */
-  barEdge: {
-    borderTopLeftRadius: ecSizes.flat,
-    borderTopRightRadius: ecSizes.flat,
+    borderTopLeftRadius: ecCardRadius,
+    borderTopRightRadius: ecCardRadius,
   },
   /**
    * Full-bleed dark base. Written out longhand because this RN version's
@@ -44,29 +39,29 @@ export const styles = StyleSheet.create({
     transform: [{ rotate: '-12deg' }],
   },
   /**
-   * P7: the Phase-1 bar keeps the diagonal DIRECTION and lands just right of the
-   * title. Measured off the reference bar (dark x 25..282, red x 133..277) the
-   * red block covers ~56% of the bar; the old 54% plus its -12 deg over-size read
-   * as a slab reaching into the title, so the Phase-1 bar pulls it back to 38%.
+   * Title lockup, layered over both gradients. The 14 pt left inset lives HERE
+   * (was on `title`), so a leading glyph and a bare title start on the same x.
    */
-  redBlockEdge: {
+  content: {
     position: 'absolute',
-    top: -14,
-    bottom: -14,
-    right: -12,
-    width: '38%',
-    transform: [{ rotate: '-12deg' }],
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: 14,
+  },
+  /** Gap before the title when the bar carries a glyph. */
+  iconSlot: {
+    marginRight: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   title: {
     color: ecColors.barInk,
     fontSize: 14,
     fontWeight: '700',
-    paddingLeft: 14,
-  },
-  /** P7: smaller and semi-bold (14/700 -> 12.5/600). */
-  titleEdge: {
-    fontSize: ecSizes.barTitleSize,
-    fontWeight: '600',
   },
 });
 

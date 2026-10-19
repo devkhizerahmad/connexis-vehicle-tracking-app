@@ -1,17 +1,17 @@
 // styles.ts — S5: "Change Fence" button.
 //
-// PHASE-1 (P7): the reference's button is the one deliberately ROUNDED element in
-// Phase 1 (radius ~8, kept here via `fenceBtnRadius`), with a hairline green
-// outline rather than the old 1.5 pt one, ~15% less height (32 -> 27) and
-// smaller, medium-weight type.
+// ENGINE CONTROL VEHICLE DASHBOARD (NEW reference): an INSET WHITE ROUNDED
+// outline button with a hairline GREEN border and centred green icon + label.
+// The radius now matches every other card on the screen (`ecCardRadius`)
+// instead of the old flat design's dedicated 8pt `fenceBtnRadius`.
 import { StyleSheet } from 'react-native';
-import { ecColors, ecSizes } from '@shared/theme';
+import { ecCardRadius, ecColors, ecSizes } from '@shared/theme';
 
 export const styles = StyleSheet.create({
   button: {
     height: ecSizes.fenceBtnH,
     marginHorizontal: ecSizes.pageGutter,
-    borderRadius: ecSizes.fenceBtnRadius,
+    borderRadius: ecCardRadius,
     borderWidth: 1,
     borderColor: ecColors.fenceGreen,
     backgroundColor: ecColors.card,
@@ -22,10 +22,9 @@ export const styles = StyleSheet.create({
   icon: {
     marginRight: 6,
   },
-  /** P7: 13/700 -> 11.5/600. */
   label: {
     color: ecColors.fenceGreen,
-    fontSize: 11.5,
+    fontSize: 12,
     fontWeight: '600',
   },
   pressed: {

@@ -31,8 +31,8 @@
 //       react-native-maps exposes no size/opacity prop for it. See styles.ts.
 import React, { memo, useMemo } from 'react';
 import { Text, useWindowDimensions, View } from 'react-native';
-import MapView, { Circle, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import { TeardropPin } from '@shared/components/icons';
+import MapView, { Circle, Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
+import { Clock, NavArrow, ShieldCheckGlyph, TeardropPin } from '@shared/components/icons';
 import { ecColors, ecSizes } from '@shared/theme';
 import type { EngineMapState } from '@features/engineControl/types/engineControl';
 import { fitFenceRegion } from './fitRegion';
@@ -102,12 +102,28 @@ function GeofenceMapImpl({ state }: GeofenceMapProps) {
             <TeardropPin color={ecColors.mapPin} size={ecSizes.mapPinSize} />
           </Marker>
         ))}
+        {/*
+         * S4 (NEW reference): a RED DASHED route running from the vehicle to its
+         * destination pin. The mock carries no road-following geometry, so the
+         * leg is drawn straight between its two authored points — the DASH
+         * treatment and colour are the reference's; the exact wobble is not.
+         */}
+        <Polyline
+          coordinates={[
+            { latitude: state.pin.latitude, longitude: state.pin.longitude },
+            { latitude: state.teardrop.latitude, longitude: state.teardrop.longitude },
+          ]}
+          strokeColor={ecColors.mapRoute}
+          strokeWidth={2}
+          lineDashPattern={[4, 4]}
+        />
+        {/* S4 centre marker: the red DIRECTION ARROW (was a teardrop pin). */}
         <Marker
           coordinate={{ latitude: state.pin.latitude, longitude: state.pin.longitude }}
-          anchor={{ x: 0.5, y: 1 }}
+          anchor={{ x: 0.5, y: 0.5 }}
           tracksViewChanges={false}
           testID="ec-map-pin">
-          <TeardropPin color={ecColors.mapPin} size={ecSizes.mapPinSize} />
+          <NavArrow color={ecColors.mapPin} size={22} />
         </Marker>
         <Marker
           coordinate={{ latitude: state.teardrop.latitude, longitude: state.teardrop.longitude }}
@@ -119,15 +135,23 @@ function GeofenceMapImpl({ state }: GeofenceMapProps) {
       </MapView>
 
       <View style={styles.updatedBox} pointerEvents="none">
-        <Text style={styles.updatedLabel} numberOfLines={1}>
-          {state.lastUpdatedLabel}
-        </Text>
-        <Text style={styles.updatedValue} numberOfLines={1}>
-          {state.lastUpdatedValue}
-        </Text>
+        <View style={styles.updatedIcon}>
+          <Clock color={ecColors.mapBoxInk} size={13} />
+        </View>
+        <View>
+          <Text style={styles.updatedLabel} numberOfLines={1}>
+            {state.lastUpdatedLabel}
+          </Text>
+          <Text style={styles.updatedValue} numberOfLines={1}>
+            {state.lastUpdatedValue}
+          </Text>
+        </View>
       </View>
 
       <View style={styles.fenceChip} pointerEvents="none">
+        <View style={styles.fenceChipIcon}>
+          <ShieldCheckGlyph color={ecColors.mapChipIconInk} size={13} />
+        </View>
         <Text style={styles.fenceChipText} numberOfLines={1}>
           {state.fenceLabel}
         </Text>

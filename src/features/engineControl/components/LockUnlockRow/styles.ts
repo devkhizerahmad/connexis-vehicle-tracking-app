@@ -52,10 +52,10 @@ export const styles = StyleSheet.create({
     fontWeight: '600',
   },
   lockLabel: {
-    color: ecColors.lockInk,
+    color: ecColors.lockBorder,
   },
   unlockLabel: {
-    color: ecColors.unlockInk,
+    color: ecColors.unlockBorder,
   },
   pressed: {
     opacity: 0.85,

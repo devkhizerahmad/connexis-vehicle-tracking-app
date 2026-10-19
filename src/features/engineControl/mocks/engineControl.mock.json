@@ -1,16 +1,18 @@
 {
   "vehicle": {
     "lastUpdatedLabel": "Last Updated",
-    "lastUpdatedValue": "6:40PM",
+    "lastUpdatedValue": "5:40PM",
+    "plateLabel": "Vehicle No:",
+    "plateValue": "LKH-0148",
     "name": "Honda Civic (LFA-1464)",
     "fenceState": "Out of Fence",
     "status": "Running",
-    "addressLines": ["Phase 1: Qua Avenue,", "Lahore, Punjab"]
+    "addressLines": ["Phase 1, DHA Avenue,", "Lahore, Punjab"]
   },
-  "alert": "Your Vehicle is out of Geofence, Since 3:50pm",
+  "alert": "Your Vehicle is out of Geofence, Since 3:40pm",
   "map": {
     "lastUpdatedLabel": "Last Updated",
-    "lastUpdatedValue": "6:40PM",
+    "lastUpdatedValue": "5:40PM",
     "fenceLabel": "Current Fence",
     "region": {
       "latitude": 31.5132,
@@ -33,7 +35,7 @@
       "id": "route-1",
       "index": 1,
       "title": "Gar fish Farm kotli Behram",
-      "subtitle": "Gakotli, Punjab",
+      "subtitle": "Gisakko, Punjab",
       "time": "09:00 AM - 10:40 AM",
       "state": "Moving",
       "duration": "40m-8s",
@@ -42,11 +44,11 @@
     {
       "id": "route-2",
       "index": 2,
-      "title": "H3 Phase 2, Johar Town",
+      "title": "H-3 Phase 2, Johar Town",
       "subtitle": "Lahore, Punjab",
       "time": "09:10 AM - 01:00 PM",
-      "state": "Idle",
-      "duration": "20m-20s"
+      "state": "Pending",
+      "duration": "20m-26s"
     },
     {
       "id": "route-3",
@@ -55,7 +57,7 @@
       "subtitle": "Lahore, Punjab",
       "time": "03:00 PM - 04:00 PM",
       "state": "Stop",
-      "duration": "58m-20s"
+      "duration": "30m-20s"
     }
   ],
   "controlSectionTitle": "Control Vehicle",
@@ -82,7 +84,7 @@
     {
       "id": "faq-3",
       "question": "What will happen after I press kill button?",
-      "answer": "The engine of the vehicle will turn off within 20/30 sec after the kill button is pressed. Even if the vehicle is on the road."
+      "answer": "The engine of the vehicle will turn off within 20/30 sec. after the kill button is pressed. Even if the vehicle is on the road."
     },
     {
       "id": "faq-4",

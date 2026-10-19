@@ -1,23 +1,29 @@
-// styles.ts — S12: Support button (x=48..676 px, #0097FE).
+// styles.ts — S9: Support button.
+//
+// ENGINE CONTROL VEHICLE DASHBOARD (NEW reference): an INSET, ROUNDED, BLUE
+// FILLED full-width pill aligned to the same page gutter as every card above it
+// (it used to sit deeper at `innerGutter` with a tighter radius).
 import { StyleSheet } from 'react-native';
-import { ecColors, ecSizes } from '@shared/theme';
+import { ecCardRadius, ecColors, ecShadow, ecSizes } from '@shared/theme';
 
 export const styles = StyleSheet.create({
   button: {
-    height: ecSizes.supportH,
-    marginHorizontal: ecSizes.innerGutter,
-    borderRadius: ecSizes.radiusSm,
+    height: ecSizes.supportH + 8,
+    marginHorizontal: ecSizes.pageGutter,
+    borderRadius: ecCardRadius,
     backgroundColor: ecColors.supportBg,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    // NEW design language: the pills lift off the page like the cards do.
+    ...ecShadow,
   },
   icon: {
     marginRight: 8,
   },
   label: {
     color: ecColors.supportInk,
-    fontSize: 12.5,
+    fontSize: 13,
     fontWeight: '700',
   },
   pressed: {

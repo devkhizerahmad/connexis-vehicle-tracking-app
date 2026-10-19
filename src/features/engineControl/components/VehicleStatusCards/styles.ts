@@ -1,133 +1,151 @@
-// styles.ts — S2: ONE flat, edge-to-edge vehicle + status card.
+// styles.ts — S2: ONE inset, rounded, shadowed vehicle + status card.
 //
-// PHASE-1 DESIGN LANGUAGE (P1): this used to be TWO inset rounded boxes (a left
-// "car card" and a right "status card"), each with its own 10 pt radius, 1 pt
-// border and a 12 pt gutter between them, inside a row that itself carried an
-// 11 pt horizontal margin. The reference has ONE white plane that runs the full
-// page width, is attached directly under the header, and is SQUARE — no radius,
-// no border, no shadow. The red "Out of Fence" badge is not a pill inside a
-// card: it is flush against that plane's top-RIGHT corner.
+// ENGINE CONTROL VEHICLE DASHBOARD (NEW reference): the previous PHASE-1
+// language — a FLAT, EDGE-TO-EDGE, SQUARE, SHADOW-FREE plane attached under the
+// header — is VOID. The new artboard draws an INSET WHITE ROUNDED CARD WITH A
+// SOFT SHADOW, a light-grey caption PILL under the van reading
+// "Vehicle No: <plate>", a hairline column divider, and a rounded red
+// "Out of Fence" pill that is inset rather than flush in the corner.
 //
-// PHASE-1 (P2): the "Running" row was a fixed 24 pt box wrapping 19 pt text, so
-// the descender of "g" was clipped. The row now owns its lineHeight and does not
-// clip (`overflow: visible` on both the row and the Text).
+// The "Running" row keeps its explicit lineHeight + `overflow: visible` so the
+// descender of "g" is never clipped (that fix is unaffected by the redesign).
 import { StyleSheet } from 'react-native';
-import { ecColors, ecSizes } from '@shared/theme';
+import { ecCardRadius, ecColors, ecShadow, ecSizes } from '@shared/theme';
 
 export const styles = StyleSheet.create({
-  /**
-   * The single flat plane. No radius, no border, no shadow, no horizontal
-   * margin — P1/P7 edge-to-edge. Its only padding is INSIDE, so the badge can
-   * sit flush in the corner while the identity/status columns stay indented.
-   */
+  /** The inset card: rounded corners + soft shadow on all four sides. */
   card: {
     flexDirection: 'row',
+    marginHorizontal: ecSizes.pageGutter,
     backgroundColor: ecColors.card,
-    paddingHorizontal: ecSizes.vehicleCardPadH,
-    paddingBottom: ecSizes.vehicleCardPadV,
+    borderRadius: ecCardRadius,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    // NEW design language: shadows are back on every card.
+    ...ecShadow,
   },
-  /**
-   * P1: the identity column (car photo + "Last Updated" caption). Its top band is
-   * left empty because the red badge owns that band — matching the reference,
-   * where the photo starts BELOW the badge's bottom edge.
-   */
+  /** Left column — van photo + the caption pill. */
   identity: {
     flex: 1,
-    paddingTop: ecSizes.pillH + ecSizes.statusTopGap,
     alignItems: 'flex-start',
+    justifyContent: 'center',
+    paddingRight: 10,
+  },
+  /** Hairline that splits the identity and status halves of the card. */
+  divider: {
+    width: 1,
+    backgroundColor: ecColors.cardBorder,
+    marginVertical: 4,
   },
   car: {
     width: ecSizes.carW,
     height: ecSizes.carH,
+    alignSelf: 'center',
   },
   /**
-   * P1: the caption is now the reference's "Last Updated <time>" — a GREY small
-   * label followed by the BOLD time, laid out inline and left-aligned under the
-   * photo. The value is still the mock's; only the text/weight split changed.
+   * S2 caption: a light-grey ROUNDED PILL holding a grey "Vehicle No:" label
+   * and the BOLD plate. Values are the mock's own, verbatim.
    */
   caption: {
     flexDirection: 'row',
-    alignItems: 'baseline',
-    marginTop: 4,
+    alignItems: 'center',
+    marginTop: 6,
+    alignSelf: 'center',
+    backgroundColor: ecColors.rowBg,
+    borderRadius: ecSizes.radiusChip,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
   },
   captionLabel: {
     color: ecColors.captionInk,
-    fontSize: 8.5,
+    fontSize: 9.5,
   },
   captionValue: {
     color: ecColors.nameInk,
-    fontSize: 10,
+    fontSize: 10.5,
     fontWeight: '700',
     marginLeft: 4,
   },
   /**
-   * The live-status column, right half. Same reserved top band as the identity
-   * column so "Running" clears the absolutely-placed badge.
+   * The live-status column, right half. It is a normal flex column now — no
+   * reserved top band — because the red pill is no longer absolutely flush to
+   * the card's corner.
    */
   statusCol: {
     flex: 1,
-    paddingTop: ecSizes.pillH + ecSizes.statusTopGap,
-    paddingLeft: ecSizes.flagSize + ecSizes.flagGap,
+    justifyContent: 'center',
+    paddingLeft: 10,
   },
   /**
-   * P3: "Out of Fence" — flush top-right of the card, SQUARE, and carrying only
-   * the label + the external-link arrow. The camera-lock glyph that used to sit
-   * on the left of this badge is gone (P3): it read as a camera/Instagram mark
-   * and is not in the reference.
+   * S2 "Out of Fence": a rounded red pill INSET inside the card (the flush,
+   * square, corner-anchored badge of the old flat language is VOID). It fills
+   * the status column and carries the target glyph on the left and the
+   * external-link arrow on the right.
    */
   fencePill: {
-    position: 'absolute',
-    top: ecSizes.flat,
-    right: ecSizes.flat,
+    alignSelf: 'stretch',
     height: ecSizes.pillH,
-    borderRadius: ecSizes.flat,
+    borderRadius: ecSizes.radiusSm,
     backgroundColor: ecColors.fencePillBg,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
     paddingHorizontal: 10,
+    marginBottom: 8,
+  },
+  fencePillLeading: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   fencePillText: {
     color: ecColors.fencePillInk,
-    fontSize: 12,
+    fontSize: 12.5,
     fontWeight: '700',
   },
   fencePillIcon: {
-    marginLeft: 5,
+    marginLeft: 6,
   },
   /**
-   * P2 + P8: no fixed height and no clipping — the row simply grows to its
-   * content, so the "g" descender in "Running" is never cut.
+   * "Running" leads with a GREEN DOT (the reference), not the old play
+   * triangle. `overflow: visible` + the explicit lineHeight keep the "g"
+   * descender from being clipped.
    */
   statusRow: {
     flexDirection: 'row',
     alignItems: 'center',
     overflow: 'visible',
+    marginBottom: 4,
   },
-  flag: {
-    width: ecSizes.flagSize,
-    height: ecSizes.flagSize,
-    marginRight: ecSizes.flagGap,
-    alignItems: 'center',
-    justifyContent: 'center',
+  dot: {
+    width: 9,
+    height: 9,
+    borderRadius: 5,
+    backgroundColor: ecColors.runningGreen,
+    marginRight: 7,
   },
-  /**
-   * P2: an explicit lineHeight taller than the glyph box, plus
-   * `overflow: visible`. P8: 19 -> 16.5 pt (≈13% down).
-   */
   statusText: {
     color: ecColors.statusInk,
-    fontSize: 16.5,
+    fontSize: 17,
     lineHeight: 22,
     fontWeight: '700',
     overflow: 'visible',
+  },
+  /** Address block: leading pin glyph + the two mock address lines. */
+  addressRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  addressIcon: {
+    marginTop: 1,
+    marginRight: 4,
+  },
+  addressLines: {
+    flex: 1,
   },
   address: {
     color: ecColors.addressInk,
     fontSize: 11.5,
     lineHeight: ecSizes.addressLineH,
-    marginLeft: ecSizes.addressIndent,
-    marginTop: 2,
   },
   pressed: {
     opacity: 0.85,

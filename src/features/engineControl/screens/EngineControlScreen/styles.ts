@@ -20,36 +20,37 @@ export const styles = StyleSheet.create({
     paddingBottom: ecSizes.scrollBottomPad,
   },
   /**
-   * S2 — PHASE-1 (P1): the flat vehicle card is ATTACHED directly under the
-   * header (`scrollTopPad` is now 0); there is no gap and no top rounding.
+   * S2 — the vehicle card is INSET under the header with clear breathing room
+   * (it used to be attached flush with `scrollTopPad: 0` in the flat language).
    */
   vehicleBlock: {
-    marginTop: ecSizes.scrollTopPad,
-  },
-  /** P8: tighter, denser vertical rhythm across the Phase-1 sections. */
-  alertBlock: {
-    marginTop: 4,
-  },
-  mapBlock: {
-    marginTop: 3,
-  },
-  fenceBlock: {
-    marginTop: 6,
-  },
-  routesBlock: {
-    marginTop: 6,
-  },
-  /** S7 — 13 px under the Driving Routes card. Phase-2: UNCHANGED. */
-  controlBlock: {
     marginTop: 10,
   },
-  /** S11 — 13 px under the Control Vehicle card. Phase-2: UNCHANGED. */
-  faqBlock: {
-    marginTop: 8,
+  /** Consistent inter-section rhythm — the NEW reference spaces its cards evenly. */
+  alertBlock: {
+    marginTop: 10,
   },
-  /** S12 — 16 px under the FAQ card. Phase-2: UNCHANGED. */
+  mapBlock: {
+    marginTop: 10,
+  },
+  fenceBlock: {
+    marginTop: 10,
+  },
+  routesBlock: {
+    marginTop: 12,
+  },
+  /** S7 — under the Driving Routes card. */
+  controlBlock: {
+    marginTop: 12,
+  },
+  /** S11 — under the Control Vehicle card. */
+  faqBlock: {
+    marginTop: 12,
+  },
+  /** S12 — under the FAQ card. */
   supportBlock: {
-    marginTop: 6,
+    marginTop: 12,
+    marginBottom: 8,
   },
   /**
    * S1 avatar — PHASE-1 (P8): 32 -> 28 pt (≈12% smaller). This frame is the

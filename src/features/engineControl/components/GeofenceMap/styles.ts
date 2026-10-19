@@ -1,73 +1,73 @@
-// styles.ts — S4: geofence map (edge-to-edge, sharp) + its two corner badges.
+// styles.ts — S4: geofence map (INSET ROUNDED CARD) + its two corner badges.
 //
-// PHASE-1 DESIGN LANGUAGE (P5a): the custom `ecLightMapStyle` is DELETED. It
-// desaturated every road to white/grey and flattened the land to #F2F2F2, which
-// is why the map rendered washed-out next to the reference's full-colour Google
-// map. With no `customMapStyle` the provider falls back to the DEFAULT colourful
-// Google style.
+// ENGINE CONTROL VEHICLE DASHBOARD (NEW reference): the map is no longer an
+// edge-to-edge, sharp-cornered plane — it is an INSET ROUNDED CARD WITH A SOFT
+// SHADOW, and both badges float INSET from those rounded corners.
 //
-// PHASE-1 (P5d) is deliberately NOT implemented here: the Google logo is
-// mandatory attribution and react-native-maps exposes no size/opacity prop for
-// it — `padding` only RELOCATES it, which would push it onto the POI labels
-// instead of making it less prominent.
+// The DEFAULT colourful Google basemap is kept (the flat version's washed-out
+// custom style stays deleted), and the Google logo stays: it is mandatory
+// attribution and react-native-maps exposes no size/opacity prop for it.
+// Basemap tile labels (Arabic / "Lahore" / POIs) are Google's, not the app's.
 import { StyleSheet } from 'react-native';
-import { ecColors, ecSizes } from '@shared/theme';
+import { ecCardRadius, ecColors, ecShadow, ecSizes } from '@shared/theme';
 
 export const styles = StyleSheet.create({
   wrap: {
     height: ecSizes.mapH,
-    marginHorizontal: ecSizes.flat,
-    borderRadius: ecSizes.flat,
+    marginHorizontal: ecSizes.pageGutter,
+    borderRadius: ecCardRadius,
     overflow: 'hidden',
     backgroundColor: ecColors.rowBg,
+    // NEW design language: shadows are back on every card.
+    ...ecShadow,
   },
   map: {
     flex: 1,
   },
-  /**
-   * P4: top-left read-out, FLUSH to the map's sharp corner (was inset 12 pt
-   * inside a rounded map) and ~30% smaller — padding 5/10 -> 3/7, label 8 -> 7,
-   * value 13 -> 10.5. `borderRadius: flat` matches P7's sharp language.
-   */
+  /** Top-left dark read-out: clock glyph + "Last Updated" over the time. */
   updatedBox: {
     position: 'absolute',
     top: ecSizes.mapInset,
     left: ecSizes.mapInset,
-    paddingVertical: 3,
-    paddingHorizontal: 7,
-    borderRadius: ecSizes.flat,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 5,
+    paddingHorizontal: 9,
+    borderRadius: 8,
     backgroundColor: ecColors.mapBoxBg,
+  },
+  updatedIcon: {
+    marginRight: 6,
   },
   updatedLabel: {
     color: ecColors.mapBoxLabel,
-    fontSize: 7,
-    lineHeight: 9,
+    fontSize: 7.5,
+    lineHeight: 9.5,
   },
   updatedValue: {
     color: ecColors.mapBoxInk,
-    fontSize: 10.5,
+    fontSize: 11.5,
     fontWeight: '700',
-    lineHeight: 12.5,
+    lineHeight: 14,
   },
-  /**
-   * P4: top-right chip, flush to the sharp corner, with the shield glyph removed
-   * (the reference carries the label alone) and the ink repointed to dark green
-   * on the brighter #67DC52 fill — white-on-lime was a hard contrast failure.
-   */
+  /** Top-right green pill: shield-check glyph + white label. */
   fenceChip: {
     position: 'absolute',
     top: ecSizes.mapInset,
     right: ecSizes.mapInset,
-    paddingVertical: 4,
-    paddingHorizontal: 8,
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: ecSizes.flat,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: 8,
     backgroundColor: ecColors.mapChipBg,
+  },
+  fenceChipIcon: {
+    marginRight: 5,
   },
   fenceChipText: {
     color: ecColors.mapChipInk,
-    fontSize: 10,
+    fontSize: 11,
     fontWeight: '700',
   },
 });

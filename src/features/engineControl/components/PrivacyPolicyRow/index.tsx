@@ -1,4 +1,5 @@
-// PrivacyPolicyRow (S9) — centred shield + "Privacy Policy" on the light row.
+// PrivacyPolicyRow (S9) — centred shield + "Privacy Policy" flanked by thin
+// divider lines, exactly as the NEW "Engine Control Vehicle Dashboard" reference.
 import React, { memo } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { Shield } from '@shared/components/icons';
@@ -18,10 +19,14 @@ function PrivacyPolicyRowImpl({ label, onPress }: PrivacyPolicyRowProps) {
       accessibilityLabel={label}
       style={({ pressed }) => [styles.row, pressed ? styles.pressed : null]}
       testID="ec-privacy-policy">
-      <View style={styles.icon}>
-        <Shield color={ecColors.privacyInk} size={14} />
+      <View style={styles.line} />
+      <View style={styles.center}>
+        <View>
+          <Shield color={ecColors.privacyInk} size={14} />
+        </View>
+        <Text style={styles.label}>{label}</Text>
       </View>
-      <Text style={styles.label}>{label}</Text>
+      <View style={styles.line} />
     </Pressable>
   );
 }

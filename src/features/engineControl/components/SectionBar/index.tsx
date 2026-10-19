@@ -1,9 +1,13 @@
 // SectionBar (S6/S7) — dark maroon bar with the reference's diagonal red seam.
 //
-// PHASE-1 (P7) adds an OPT-IN `edge` variant so "Driving Routes" can render with
-// SHARP top corners and a toned-down red swoosh while the Phase-2 "Control
-// Vehicle" bar keeps rendering exactly as before. `edge` is absent by default, so
-// ControlRows (S7) is byte-identical to its previous output.
+// ENGINE CONTROL VEHICLE DASHBOARD (NEW reference): BOTH bars now render with
+// ROUNDED TOP corners over an inset, rounded card. The PHASE-1 opt-in `edge`
+// (sharp-cornered, toned-down) variant — built against the old flat
+// "engine control.jpeg" — is removed with that design language.
+//
+// The reference's bars are a GLYPH + TITLE lockup: a white route/car glyph
+// sits left of the title. The trailing white ">" that used to be pinned to the
+// bar's right edge has been removed, so the title row runs to the bar's edge.
 import React from 'react';
 import { Text, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
@@ -12,18 +16,14 @@ import { styles } from './styles';
 
 export interface SectionBarProps {
   title: string;
+  /** Leading glyph (white on the dark base) — route icon, car glyph, … */
+  icon?: React.ReactNode;
   testID?: string;
-  /**
-   * PHASE-1 (P7): flat/sharp variant for the Phase-1 "Driving Routes" bar —
-   * square top corners (the card is flat and edge-to-edge below it) and a much
-   * smaller red swoosh. Omit for the Phase-2 rounded, full-swoosh bar.
-   */
-  edge?: boolean;
 }
 
-function SectionBarImpl({ title, testID, edge }: SectionBarProps) {
+function SectionBarImpl({ title, icon, testID }: SectionBarProps) {
   return (
-    <View style={[styles.bar, edge ? styles.barEdge : null]} testID={testID}>
+    <View style={styles.bar} testID={testID}>
       <LinearGradient
         colors={[ecColors.barDarkEdge, ecColors.barDark]}
         start={{ x: 0, y: 0 }}
@@ -35,10 +35,14 @@ function SectionBarImpl({ title, testID, edge }: SectionBarProps) {
         colors={[ecColors.barRedDeep, ecColors.barRedBright]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
-        style={edge ? styles.redBlockEdge : styles.redBlock}
+        style={styles.redBlock}
         pointerEvents="none"
       />
-      <Text style={[styles.title, edge ? styles.titleEdge : null]}>{title}</Text>
+      {/* Content sits over both gradients and never swallows touches. */}
+      <View style={styles.content} pointerEvents="none">
+        {icon != null ? <View style={styles.iconSlot}>{icon}</View> : null}
+        <Text style={styles.title}>{title}</Text>
+      </View>
     </View>
   );
 }

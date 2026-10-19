@@ -72,6 +72,15 @@ export interface AppHeaderProps {
   backWeight?: TextStyle['fontWeight'];
   /** Vertical gradient stops. Default = colors.gradientHeader. */
   gradientColors?: readonly string[];
+  /**
+   * Gradient START point. Default {x:0,y:0} — every other screen is unchanged.
+   * Engine Control only: the NEW "Engine Control Vehicle Dashboard" reference
+   * paints its header diagonally (red towards the top-right, dark at the
+   * bottom-left) instead of the shared vertical run.
+   */
+  gradientStart?: { x: number; y: number };
+  /** Gradient END point. Default {x:0,y:1}. Engine Control only. */
+  gradientEnd?: { x: number; y: number };
 }
 
 function AppHeaderImpl({
@@ -89,6 +98,8 @@ function AppHeaderImpl({
   backSize = 16,
   backWeight = '700',
   gradientColors,
+  gradientStart = { x: 0, y: 0 },
+  gradientEnd = { x: 0, y: 1 },
 }: AppHeaderProps) {
   const insets = useSafeAreaInsets();
   // LEGACY-EXCEPTION (frozen Profile): replicates the pre-K2 layout exactly —
@@ -139,13 +150,15 @@ function AppHeaderImpl({
 
   return (
     <View style={[styles.container, makeHeightStyle(total)]}>
-      {/* Figma-exact vertical gradient — top #B2250C to bottom #160F12 (covers row + band).
-          P8: `gradientColors` lets Engine Control override the stops for itself
-          only; every other screen still gets colors.gradientHeader. */}
+      {/* Diagonal-capable gradient — default start/end reproduce the shared
+          Figma-exact VERTICAL run (#B2250C 0% -> #160F12 100%) byte-for-byte.
+          P8 lets Engine Control override stops; the NEW Engine Control Vehicle
+          Dashboard reference additionally overrides the AXIS so its red sits at
+          the top-right. */}
       <LinearGradient
         colors={gradientColors ? [...gradientColors] : [...colors.gradientHeader]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 0, y: 1 }}
+        start={gradientStart}
+        end={gradientEnd}
         style={styles.gradientFill}
         pointerEvents="none"
       />

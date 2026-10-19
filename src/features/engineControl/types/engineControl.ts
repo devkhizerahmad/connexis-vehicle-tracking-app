@@ -3,8 +3,8 @@
 // Nothing here is derived from the reference at runtime — the mock is the single
 // source of truth for the frozen layout (copy, order, states).
 
-/** Route lifecycle state → drives the S6 badge + state chip tone. */
-export type RouteState = 'Moving' | 'Idle' | 'Stop';
+/** Route lifecycle state → drives the S6 badge + state pill tone. */
+export type RouteState = 'Moving' | 'Pending' | 'Stop';
 
 /** One S6 "Driving Routes" row. */
 export interface ControlRoute {
@@ -13,7 +13,7 @@ export interface ControlRoute {
   index: number;
   title: string;
   subtitle: string;
-  /** "08:00 AM - 10:40 AM" — rendered next to the clock glyph. */
+  /** Retained by the payload; the NEW reference rows do NOT paint a time line. */
   time: string;
   state: RouteState;
   /** "40m-8s" — right-aligned on the title line. */
@@ -54,6 +54,12 @@ export interface EngineVehicle {
    */
   lastUpdatedLabel: string;
   lastUpdatedValue: string;
+  /**
+   * S2 caption pill under the van: grey "Vehicle No:" label + BOLD black plate.
+   * The NEW reference captions the photo with the plate, not with a time.
+   */
+  plateLabel: string;
+  plateValue: string;
   /** Vehicle model name. Retained by the payload; no longer painted (P1). */
   name: string;
   /** Right-card pill copy. */

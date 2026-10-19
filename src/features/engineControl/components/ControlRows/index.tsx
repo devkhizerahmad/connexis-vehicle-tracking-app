@@ -3,7 +3,7 @@
 // trailing chevron.
 import React, { memo } from 'react';
 import { Pressable, Text, View } from 'react-native';
-import { Chevron, Clock, Pin } from '@shared/components/icons';
+import { CarGlyph, Chevron, Clock, Pin } from '@shared/components/icons';
 import { ecColors } from '@shared/theme';
 import type { ControlRow } from '@features/engineControl/types/engineControl';
 import SectionBar from '../SectionBar';
@@ -50,7 +50,13 @@ const Row = memo(function RowBase({
 function ControlRowsImpl({ title, rows, onRowPress, children }: ControlRowsProps) {
   return (
     <View style={styles.card} testID="ec-control-card">
-      <SectionBar title={title} testID="ec-control-bar" />
+      <View style={styles.barWrap}>
+        <SectionBar
+          title={title}
+          icon={<CarGlyph color={ecColors.barInk} size={17} />}
+          testID="ec-control-bar"
+        />
+      </View>
       {rows.map(row => (
         <Row key={row.id} row={row} onPress={onRowPress} />
       ))}
