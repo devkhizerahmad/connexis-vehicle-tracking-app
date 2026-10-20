@@ -296,10 +296,27 @@
         "horizontalInset": 16,
         "slotWidth": 44,
         "minTouchTarget": 44,
-        "back": { "size": 14, "weight": "600", "label": "Back" },
-        "title": { "fontSize": 16, "fontWeight": "600", "color": "#FFFFFF" },
-        "avatar": { "size": 32, "cropScale": 1.16 },
-        "background": { "colors": "colors.gradientHeader (now ['#2A0508','#C0110F'])", "start": "{x:1,y:0}", "end": "{x:0,y:1}", "stripHeight": 56, "bandBackdrop": "colors.gradientHeader[0]" },
+        "back": {
+          "size": 14,
+          "weight": "600",
+          "label": "Back"
+        },
+        "title": {
+          "fontSize": 16,
+          "fontWeight": "600",
+          "color": "#FFFFFF"
+        },
+        "avatar": {
+          "size": 32,
+          "cropScale": 1.16
+        },
+        "background": {
+          "colors": "colors.gradientHeader (now ['#2A0508','#C0110F'])",
+          "start": "{x:1,y:0}",
+          "end": "{x:0,y:1}",
+          "stripHeight": 56,
+          "bandBackdrop": "colors.gradientHeader[0]"
+        },
         "retired": "contentHeight + contentCenterOffset (deleted from AppHeader and from all 3 call sites)"
       },
       "step2_perScreen": {
@@ -326,6 +343,48 @@
       "removedTokens": "AppHeader props {contentHeight, contentCenterOffset, titleSize, titleWeight, backSize, backWeight, gradientColors, gradientStart, gradientEnd}; ecColors.headerGradient, ecSizes.{avatar, avatarCropScale, headerTitleSize, headerBackSize, headerBackWeight}",
       "staticGates": "tsc 0, eslint 0, jest 28/28 (3 suites), deps 18, AIza 0, no raw hex in the new header/theme code, no static style={{ additions, no console.log, processingRef + forceResetRef + clearTimeout-on-unmount untouched, TODO(V9-a11y) + TODO(KNOWN-ISSUE) present, engineControl.mock.json + details.mock.json + history.mock.json + livemap.mock.json = ZERO diff",
       "artifacts": "ui-baseline/Headers/{Home,Reports,EngineControl,LiveMap,History,Profile,Details}-header.png + _all-headers-comparison.png"
+    },
+    {
+      "label": "Step-B correction: Home one-gradient header 2026-10-20",
+      "capturedAt": "2026-10-20",
+      "scope": "Home EXTENDED-BAND backdrop ONLY. Nav-row ramp, title 16/600, 44dp slots, 16dp inset, back label, Details goBack and the shared avatar clip were NOT touched.",
+      "rootCause": "The band was already a SINGLE SOLID (AppHeader/styles.ts bandBackdrop -> headerSpec.background.bandBackdrop) and the header already had exactly ONE LinearGradient (AppHeader.tsx:116, the nav-row strip) - no second gradient, no leftover old/vertical ramp. The visible double colour was a hard STEP at the strip/band boundary: the strip bottom edge is the ramp BRIGHT end on the left (#BE110F measured) while the band was painted the ramp DARK start stop (#2A0508).",
+      "fix": "headerSpec.background.bandBackdrop reuses the ramp END STOP instead of its start stop - one token, no new hex, no new gradient.",
+      "measuredBefore": "strip bottom (y=156) x8=#BE110F -> band (y=158) #2A0508 = hard red->maroon step; band column x8 y160..400 = #2A0508 solid",
+      "measuredAfter": "strip bottom (y=156) x8=#BE110F -> band (y=158) #C0110F = 2-value step; band column x8 y160..400 = #C0110F single colour; header now holds only the ramp two stops (#2A0508, #C0110F)",
+      "note": "Task text named #160F12 as the band colour, but that is the PRE-D1 vertical ramp end stop, not a colour in the D1 ramp (['#2A0508','#C0110F']); using it would add a third tone AND make the left step a red->near-black cliff, i.e. keep the very seam to remove. The ramp actual end stop was used instead.",
+      "staticGates": "tsc 0, eslint 0, jest 28/28, deps 18, no raw hex/style={{/console.log added, swipe guards + TODOs intact, all mocks mtime-unchanged"
+    },
+    {
+      "label": "Step-B correction #2: Home continuous diagonal header 2026-10-20",
+      "capturedAt": "2026-10-20",
+      "scope": "Home header BACKGROUND LAYER only. Nav-row ramp colours/angle, title 16/600, 44dp slots, 16dp inset, back label, Details goBack and the shared avatar clip NOT touched.",
+      "variantUsed": "single-layer - ONE LinearGradient as the header own background filling the whole container (nav row + band). The flat band backdrop View and the per-zone strip were both removed; exactly one background layer paints the header.",
+      "implementation": "AppHeader.tsx - band backdrop View deleted, the single LinearGradient changed from fixed-height strip to container fill; AppHeader/styles.ts - gradientStrip gained bottom:0, bandBackdrop style deleted; shared/theme/header.ts - dead bandBackdrop token removed.",
+      "invariants": {
+        "I1_noFlatRegion": "band column x=8 y=160..400 = 27 DISTINCT colours (live ramp) #AB0F0E -> #BE110F; every band row differs between x=8 and x=772",
+        "I2_noSeam": "strip bottom (y=156) vs band top (y=158): x=8 #AB0F0E->#AB0F0E, x=200 #8E0D0D->#8E0D0D, x=390 #710B0B->#710B0B, x=600 #51080A->#52080A, x=772 #370609->#380609 - identical within 0-1 unit",
+        "I3_titleHueHeld": "title-row backdrop (mode over y=77..126, glyph pixels excluded) Home vs Reports: dR=8..10 across the title footprint (x=340..460), 2-5 on the right, max 22 at the far-left edge (x=40) = 5-7% of the ramp red span",
+        "I4_bandContentUnchanged": "greeting, Adeel Hussein pill and its inner avatar untouched",
+        "I5_navRowStandardUnchanged": "title 16/600, 44dp slots, 16dp inset, back label, avatar clip - none edited"
+      },
+      "otherScreensUnaffected": "REPORTS header band re-compared pixel-for-pixel vs the pre-fix baseline: 440 pixels, 0 different -> byte-identical",
+      "note": "RN gradient is a PIXEL-space projection, so a single linear ramp cannot both exactly reproduce another ramp top region and stay unclamped below (the exact-top-match variant clamps into a large flat wedge bottom-left). The un-tuned single layer is the only joint solution.",
+      "staticGates": "tsc 0, eslint 0, jest 28/28, deps 18, no raw hex/style={{/console.log added, swipe guards + TODOs intact, all mocks mtime-unchanged",
+      "artifacts": "ui-baseline/Headers/Home-header.png re-captured (other 6 strips stand)"
+    },
+    {
+      "label": "Home status-box title+number colour unification 2026-10-20",
+      "capturedAt": "2026-10-20",
+      "scope": "Home status boxes ONLY - title and number COLOURS of all 5 boxes (Total/Running/Idle/Stop/No Data). Box backgrounds, sizes, layout, icons and counts UNTOUCHED.",
+      "rootCause": "3 of 5 boxes painted their NUMBER in a muted per-hue shade under a WHITE title: SummaryCards/styles.ts runningValue -> colors.home.runningValueGreen (#47A000), idleValue -> colors.home.idleValueAmber (#D9A62E), stopValue -> colors.home.stopValueRed (#D9534F). Those muted numbers measured 1.61 / 1.14 / 1.42 : 1 against their own fills - WORSE than white.",
+      "fix": "ONE shared token for every title+number pair: colors.onAccent = #FFFFFF (new token, shared/theme/colors.ts). All 10 SummaryCards styles use it; the 3 orphaned muted tokens removed.",
+      "measuredAfter": "all 10 texts render pure #FFFFFF (glyph px: Total title 763/num 446, Running title 875/num 302 (was #47A000 x305), Idle title 422/num 246 (was #D9A62E x250), Stop title 464/num 298 (was #D9534F x303), NoData title 787/num 312)",
+      "layoutProof": "before/after pixel diff of the whole status band: 1405 differing pixels confined to y=571..779 / x=52..528 = exactly the 3 number glyphs. Fills, titles, icons and box boundaries pixel-identical; the 10 a11y text bounds unchanged.",
+      "whiteContrastMeasured": "Total 7.54-15.22:1, Stop 5.62:1, Running 2.07:1, Idle 1.94:1, NoData 2.30:1 - user decision: pure white everywhere, so the last three sit below the 3:1 large-bold-text bar on their bright fills (recorded; backgrounds frozen here)",
+      "newTokens": "colors.onAccent = #FFFFFF (shared/theme/colors.ts, exported by the theme barrel)",
+      "staticGates": "tsc 0, eslint 0, jest 28/28 (3 suites), deps 18, AIza 0, no raw hex in the Home status code, no static style={{ additions, no console.log, processingRef + forceResetRef + clearTimeout-on-unmount untouched, TODO(V9-a11y) + TODO(KNOWN-ISSUE) present, all mocks mtime-unchanged",
+      "artifacts": "ui-baseline/_status_compare.png (before/after strip)"
     }
   ]
 }
