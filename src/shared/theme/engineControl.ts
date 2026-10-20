@@ -99,46 +99,14 @@ export const ecColors = {
   barInk: '#FFFFFF',
 
   // S6 route rows
-  badgeGreen: '#55D003',
-  /**
-   * PHASE-1 (P6): route-2's badge is ORANGE in the reference (sampled #EEB748,
-   * a warm amber-orange). The old `badgeAmber` #FDBE07 read as flat yellow and
-   * was repointed here; nothing else consumed the old value.
-   */
-  badgeOrange: '#F0941F',
-  badgeRed: '#E90821',
-  badgeInk: '#FFFFFF',
-  /**
-   * PHASE-1 (P6): the duration read as a BLUE-grey (#7C93AE) against an otherwise
-   * neutral row. The reference paints it plain grey, so it is neutralised.
-   */
-  durationInk: '#9AA0A6',
-  routeTitleInk: '#1A1A1A',
-  routeSubInk: '#8A9199',
+  //
+  // ROUTES LIST CONVERGENCE: every route-row token below was MOVED to the
+  // shared canonical block `@shared/theme/routeRows`, so the Engine Control
+  // "Driving Routes" list and the Details "Routes" list read from ONE source of
+  // truth and cannot drift apart. Removed here: badgeGreen, badgeOrange,
+  // badgeRed, badgeInk, durationInk, routeTitleInk, routeSubInk, movingInk,
+  // idleInk, stopInk, pillMovingBg, pillPendingBg, pillStopBg, connectorInk.
   timeInk: '#7A8288',
-  /**
-   * PHASE-1 (P6): the dashed connector that chains the number badges. The old
-   * hairline grey (#EDF1F5) was effectively invisible on white; this is the
-   * mid grey the reference's dashes actually read as.
-   */
-  connectorInk: '#C2C8CE',
-  /**
-   * PHASE-1 (P6): route state is PLAIN COLOURED TEXT, so only inks survive —
-   * the chip background tokens (movingBg / idleBg / stopBg) are gone with the
-   * chips. Idle moved #E5A200 -> #E07B00 so it matches the new orange badge.
-   */
-  movingInk: '#43A047',
-  idleInk: '#E07B00',
-  stopInk: '#E53935',
-  /**
-   * S6 status PILL fills — the NEW "Engine Control Vehicle Dashboard" reference
-   * renders each route state as a tinted ROUNDED PILL (Moving green / Pending
-   * amber / Stop red), NOT as bare coloured text. The inks above stay as the
-   * pill's text colour so the pairing keeps the same hue family.
-   */
-  pillMovingBg: '#E3F8E8',
-  pillPendingBg: '#FDF1DB',
-  pillStopBg: '#FDE5E7',
 
   // S7 control rows (sampled #EAF4FC row fill, #071A34 ink)
   rowBg: '#EAF4FC',
@@ -318,10 +286,9 @@ export const ecSizes = {
   // "Control Vehicle" bar via SectionBar, so it is deliberately unchanged.
   barH: 23,
 
-  // S6 route rows — P6: tighter rows, smaller number badges, no chip metrics
-  routeRowH: 60,
-  badge: 20,
-  badgeRadius: 5,
+  // S6 route rows — the row pitch, badge metrics and every route-row colour
+  // moved to the shared canonical block `@shared/theme/routeRows`
+  // (routeRowSizes.rowMinH / .badge / .badgeRadius, routeRowColors.*).
 
   // S7 control rows (1400..1452 px → 29 pt)
   controlRowH: 29,

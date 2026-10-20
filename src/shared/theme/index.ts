@@ -9,3 +9,4 @@ export * from './profile';
 export * from './history';
 export * from './reports';
 export * from './engineControl';
+export * from './routeRows';
