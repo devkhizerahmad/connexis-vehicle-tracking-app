@@ -1,6 +1,6 @@
 // styles.ts — LiveMapScreen S1–S6 geometry (390pt reference)
 import { ImageStyle, StyleSheet, ViewStyle } from 'react-native';
-import { colors } from '@shared/theme';
+import { headerSpec } from '@shared/theme';
 
 /**
  * PATCH L1: visible white gap between the map box bottom and the BottomNav top.
@@ -31,11 +31,20 @@ export const styles = StyleSheet.create({
     marginTop: 40,
     overflow: 'hidden',
   } as ViewStyle,
-  // S1: 32pt circular avatar in the header right slot
+  /**
+   * S1: the SHARED 32dp portrait in the header right slot, cropped to a circle
+   * by an over-scaled photo so the asset's baked-in white hoop is cropped away.
+   */
+  avatarFrame: {
+    width: headerSpec.avatar.size,
+    height: headerSpec.avatar.size,
+    borderRadius: headerSpec.avatar.size / 2,
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+  } as ViewStyle,
   avatar: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: colors.surface.border,
+    width: headerSpec.avatar.size * headerSpec.avatar.cropScale,
+    height: headerSpec.avatar.size * headerSpec.avatar.cropScale,
   } as ImageStyle,
 });

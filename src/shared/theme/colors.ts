@@ -103,7 +103,13 @@ export const colors = {
   // PATCH J1: shared AppHeader gradient — Figma-exact stops:
   // 0% #B2250C (opacity 100) -> 100% #160F12 (opacity 100), Linear 180° (vertical).
   // Used by react-native-linear-gradient (LinearGradient) in AppHeader.
-  gradientHeader: ['#B2250C', '#160F12'] as const,
+  //
+  // PATCH TOP-HEADER STANDARD: the shared header ramp is now the DIAGONAL pair
+  // adopted from the "Engine Control Vehicle Dashboard" reference — a near-black
+  // maroon (#2A0508) easing into the brand red (#C0110F). It is the ONE ramp for
+  // EVERY screen; the axis and the 56dp strip scope live in `headerSpec`
+  // (shared/theme/header.ts).
+  gradientHeader: ['#2A0508', '#C0110F'] as const,
   // PATCH HOME: HomeScreen tokens (reference mock; summary cards / chip / sensor strip)
   home: {
     totalGradStart: '#4E555E',

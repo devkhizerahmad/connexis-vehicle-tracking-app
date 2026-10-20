@@ -29,7 +29,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { AppHeader } from '@shared/components/layout/AppHeader';
-import { ecColors, ecSizes, sizes, spacing } from '@shared/theme';
+import { ecSizes, sizes, spacing } from '@shared/theme';
 import { goToLiveMap } from '@shared/utils/navigationHelpers';
 import type { RootTabParamList } from '@navigation/types';
 import { ChangeFenceButton } from '@features/engineControl/components/ChangeFenceButton';
@@ -128,27 +128,6 @@ export function EngineControlScreen({ navigation }: EngineControlScreenProps) {
   // (reference parity + the ReportsScreen precedent).
   const handleBack = useCallback(() => {}, []);
 
-  /**
-   * PHASE-1 DESIGN LANGUAGE (P8) — this screen's header overrides. All four are
-   * opt-in AppHeader props that default to the shared values, so every other
-   * screen's header is untouched: a smaller semi-bold title, a thinner/lighter
-   * back chevron, and a brick red that is slightly less deep than the shared
-   * `colors.gradientHeader` pair.
-   */
-  const headerOverrides = {
-    titleSize: ecSizes.headerTitleSize,
-    titleWeight: '600' as const,
-    backSize: ecSizes.headerBackSize,
-    backWeight: ecSizes.headerBackWeight,
-    gradientColors: ecColors.headerGradient,
-    // S1 (NEW "Engine Control Vehicle Dashboard" reference): the header runs
-    // DIAGONALLY — dark at the bottom-left, red at the top-right — instead of
-    // the shared vertical run. Both props are opt-in and default to the shared
-    // axis, so every other screen's header is byte-identical.
-    gradientStart: { x: 1, y: 0 },
-    gradientEnd: { x: 0, y: 1 },
-  };
-
   // S1 avatar -> ProfileTab (cross-tab, same cast ReportsScreen uses).
   const handleAvatar = useCallback(() => {
     navigation.getParent<{ navigate: (name: string) => void }>()?.navigate('ProfileTab');
@@ -204,7 +183,6 @@ export function EngineControlScreen({ navigation }: EngineControlScreenProps) {
           onBack={handleBack}
           showAvatar={false}
           actions={headerAvatar}
-          {...headerOverrides}
         />
       </View>
     );
@@ -217,7 +195,6 @@ export function EngineControlScreen({ navigation }: EngineControlScreenProps) {
         onBack={handleBack}
         showAvatar={false}
         actions={headerAvatar}
-        {...headerOverrides}
       />
 
       <ScrollView

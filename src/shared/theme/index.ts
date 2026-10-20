@@ -10,3 +10,4 @@ export * from './history';
 export * from './reports';
 export * from './engineControl';
 export * from './routeRows';
+export * from './header';

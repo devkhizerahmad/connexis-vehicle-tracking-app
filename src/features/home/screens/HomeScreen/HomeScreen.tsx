@@ -2,7 +2,7 @@
 // Header: AppHeader variant="extended" (band 80: greeting + user chip); nav row has the
 // standard 56dp row with visual-only back (tab root) + bell action.
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { Animated, FlatList, Image, Pressable, StatusBar, Text, View } from 'react-native';
+import { Animated, FlatList, Image, Pressable, Text, View } from 'react-native';
 import AppHeader from '@shared/components/layout/AppHeader';
 import { BellIcon, RefreshIcon } from '@shared/components/icons';
 import { goToLiveMap, goToReports } from '@shared/utils/navigationHelpers';
@@ -129,7 +129,9 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
 
   return (
     <View style={styles.screen}>
-      <StatusBar barStyle="light-content" />
+      {/* TOP-HEADER STANDARD: the shared AppHeader already renders the
+          light-content StatusBar — this screen's own copy was a duplicate, so
+          exactly one remains. */}
       <AppHeader
         variant="extended"
         // PATCH H-A: band tail of 124pt — the greeting/chip stack (29 + 20 + 8 + 30) plus the
@@ -142,7 +144,11 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
           // tab root — back chevron is visual-only
         }}
         actions={
-          <Pressable onPress={onBell} hitSlop={8}>
+          <Pressable
+            onPress={onBell}
+            hitSlop={13}
+            accessibilityRole="button"
+            accessibilityLabel="Notifications">
             <BellIcon color={colors.white} size={18} />
           </Pressable>
         }

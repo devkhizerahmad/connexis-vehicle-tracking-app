@@ -1,6 +1,6 @@
 // styles.ts — ReportsScreen assembly (scroll gutters, picker rows, toast, avatar).
 import { StyleSheet } from 'react-native';
-import { colors, reportColors, reportSizes, sizes } from '@shared/theme';
+import { colors, headerSpec, reportColors, reportSizes, sizes } from '@shared/theme';
 
 export const styles = StyleSheet.create({
   screen: {
@@ -56,11 +56,22 @@ export const styles = StyleSheet.create({
   calendarBlock: {
     marginHorizontal: sizes.marginH,
   },
-  /** S1 right slot avatar (32pt circle, same metric as the shared header's). */
+  /**
+   * S1 right slot avatar — the SHARED 32dp portrait, cropped to a circle by
+   * an over-scaled photo so the asset's baked-in white hoop is cropped away
+   * (clipping, not an asset swap).
+   */
+  avatarFrame: {
+    width: headerSpec.avatar.size,
+    height: headerSpec.avatar.size,
+    borderRadius: headerSpec.avatar.size / 2,
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   avatar: {
-    width: sizes.avatar,
-    height: sizes.avatar,
-    borderRadius: sizes.avatar / 2,
+    width: headerSpec.avatar.size * headerSpec.avatar.cropScale,
+    height: headerSpec.avatar.size * headerSpec.avatar.cropScale,
   },
   toast: {
     position: 'absolute',

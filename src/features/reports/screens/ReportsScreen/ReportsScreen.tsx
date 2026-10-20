@@ -58,10 +58,6 @@ import { styles } from './styles';
 
 type ReportsScreenProps = NativeStackScreenProps<ReportStackParamList, 'Reports'>;
 
-/** Legacy header tuning, identical to the History pass (header standard exception). */
-const HEADER_CONTENT_H = 80;
-const HEADER_CENTER_OFFSET = 17;
-
 /**
  * `REPORTS_INITIAL = MOCK_VALUES`: the calendar opens on the mock's own window
  * (from 13.12.18, until 24.12.18, December 2018) so the rest state reproduces
@@ -266,17 +262,21 @@ export function ReportsScreen({ navigation, route }: ReportsScreenProps) {
   );
 
   // S1 right slot. AppHeader only renders `actions` when showAvatar is false, so
-  // Reports supplies its OWN tappable 32pt avatar there rather than asking the
+  // Reports supplies its OWN tappable avatar there rather than asking the
   // shared header to grow an onPress prop (which would touch frozen screens).
+  // TOP-HEADER STANDARD: the shared 32dp portrait (`profile_avatar.png`), not
+  // the full Profile-screen JPEG, which cropped to a circle as a white disc.
   const headerAvatar = useMemo(
     () => (
       <Pressable
         onPress={handleAvatar}
-        hitSlop={8}
+        hitSlop={6}
         accessibilityRole="button"
         accessibilityLabel="Open profile"
         testID="reports-avatar">
-        <Image source={require('../../../../assets/profile.jpeg')} style={styles.avatar} />
+        <View style={styles.avatarFrame}>
+          <Image source={require('../../../../assets/profile_avatar.png')} style={styles.avatar} />
+        </View>
       </Pressable>
     ),
     [handleAvatar],
@@ -291,8 +291,6 @@ export function ReportsScreen({ navigation, route }: ReportsScreenProps) {
           onBack={handleBack}
           showAvatar={false}
           actions={headerAvatar}
-          contentHeight={HEADER_CONTENT_H}
-          contentCenterOffset={HEADER_CENTER_OFFSET}
         />
       </View>
     );
@@ -305,8 +303,6 @@ export function ReportsScreen({ navigation, route }: ReportsScreenProps) {
         onBack={handleBack}
         showAvatar={false}
         actions={headerAvatar}
-        contentHeight={HEADER_CONTENT_H}
-        contentCenterOffset={HEADER_CENTER_OFFSET}
       />
 
       <ScrollView

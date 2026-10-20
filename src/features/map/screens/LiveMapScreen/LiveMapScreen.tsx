@@ -101,15 +101,19 @@ export function LiveMapScreen({ route, navigation }: LiveMapScreenProps) {
       <AppHeader
         title="Live Map"
         showAvatar={false}
-        contentHeight={100}
-        contentCenterOffset={32}
         onBack={handleBack}
         actions={
-          <Pressable onPress={handleAvatar} hitSlop={8}>
-            <Image
-              source={require('../../../../assets/profile_avatar.png')}
-              style={styles.avatar}
-            />
+          <Pressable
+            onPress={handleAvatar}
+            hitSlop={6}
+            accessibilityRole="button"
+            accessibilityLabel="Open profile">
+            <View style={styles.avatarFrame}>
+              <Image
+                source={require('../../../../assets/profile_avatar.png')}
+                style={styles.avatar}
+              />
+            </View>
           </Pressable>
         }
       />

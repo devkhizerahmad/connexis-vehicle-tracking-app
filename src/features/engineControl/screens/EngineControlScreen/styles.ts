@@ -1,6 +1,6 @@
 // styles.ts — EngineControlScreen assembly (section rhythm, scroll gutters, toast).
 import { StyleSheet } from 'react-native';
-import { colors, ecColors, ecSizes, reportColors } from '@shared/theme';
+import { colors, ecColors, ecSizes, headerSpec, reportColors } from '@shared/theme';
 
 export const styles = StyleSheet.create({
   screen: {
@@ -55,10 +55,16 @@ export const styles = StyleSheet.create({
    * asset's baked-in white hoop falls outside the clip. That removes the ring by
    * cropping rather than by swapping the asset.
    */
+  /**
+   * S1 avatar — the SHARED header avatar (32dp portrait, cropped to a circle
+   * by an over-scaled photo so the asset's baked-in white hoop is cropped
+   * away). TOP-HEADER STANDARD: this screen no longer keeps a private 28dp
+   * avatar; it uses the same token as every other screen.
+   */
   avatar: {
-    width: ecSizes.avatar,
-    height: ecSizes.avatar,
-    borderRadius: ecSizes.avatar / 2,
+    width: headerSpec.avatar.size,
+    height: headerSpec.avatar.size,
+    borderRadius: headerSpec.avatar.size / 2,
     // F1: the photo is circular and opaque so a transparent asset can never
     // read as a blank white disc against the gradient header.
     backgroundColor: ecColors.avatarFallback,
@@ -67,8 +73,8 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   avatarImage: {
-    width: ecSizes.avatar * ecSizes.avatarCropScale,
-    height: ecSizes.avatar * ecSizes.avatarCropScale,
+    width: headerSpec.avatar.size * headerSpec.avatar.cropScale,
+    height: headerSpec.avatar.size * headerSpec.avatar.cropScale,
   },
   /** F1: painted only if the photo fails to decode — guarantees a visible disc. */
   avatarFallback: {
@@ -80,7 +86,7 @@ export const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     backgroundColor: ecColors.avatarFallback,
-    borderRadius: ecSizes.avatar / 2,
+    borderRadius: headerSpec.avatar.size / 2,
   },
   /**
    * PATCH EC-SWIPE: `bottom` is NO LONGER set here.

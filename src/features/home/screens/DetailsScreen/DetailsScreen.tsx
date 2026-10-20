@@ -66,7 +66,12 @@ export function DetailsScreen({ route, navigation }: DetailsScreenProps) {
     <SafeAreaProvider>
       <View style={styles.screen}>
         <StatusBar barStyle="light-content" />
-        <AppHeader variant="standard" onBack={() => showToast('Back pressed')} />
+        {/*
+          TOP-HEADER STANDARD: the back affordance now really pops the stack
+          (it used to raise a toast and stay put). The shared header supplies
+          the "Back" label and the 44dp target.
+        */}
+        <AppHeader variant="standard" onBack={() => navigation?.goBack()} />
 
         <ScrollView
           contentContainerStyle={[styles.scrollViewContent, { paddingBottom: scrollPadBottom }]}

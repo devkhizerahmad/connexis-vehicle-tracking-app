@@ -277,6 +277,55 @@
       "staticGates": "tsc 0, eslint 0, jest 28/28 (3 suites), deps 18 (rn-swipe-button only vs baseline), AIza 0 in src, static style={{ 0 in engineControl, console.log 0, raw hex 0 in engineControl CODE (ecLightMapStyle's 8 literal hex deleted; the 5 remaining hits are prose in comments), processingRef + forceResetRef + clearTimeout-on-unmount still present, TODO(V9-a11y) + TODO(KNOWN-ISSUE map leak) still present",
       "dataIsMockAndWasIgnored": "no duration recalculated, no trip reordered, no time range fixed, no car-image asset swapped. The only payload edit is the P1 caption label/value pair, copied verbatim from the mock's existing lastUpdated value.",
       "untouched": "Phase-2 (Control Vehicle bar, Live Location, Scheduled Remote Starts, Lock/Unlock, Privacy Policy, Slide to Proceed, FAQ, Support, bottom nav); swipe V4-V8; map-leak (parked); playback; calendar; V9; Arabic tile-label"
+    },
+    {
+      "label": "Top-header standardization applied (EC diagonal ramp global) 2026-10-20",
+      "capturedAt": "2026-10-20",
+      "scope": "HEADER REGIONS ONLY on all 7 screens (Home, Reports, Engine Control, LiveMap, History, Profile, Details). Bodies / cards / maps / route-rows FROZEN - no body style file was edited.",
+      "supersedesBaseline": "ui-baseline/Headers/* - the header strips did not exist before; the previous per-screen frames still show the OLD header.",
+      "reference": "shared AppHeader (the ONE header component) + shared/theme/header.ts (the ONE token block). No written doc spec existed; the de-facto spec was the component + its tokens.",
+      "step0_extractedEcDiagonalSpec": {
+        "colors": "['#2A0508', '#C0110F']  (src/shared/theme/engineControl.ts:26, ecColors.headerGradient)",
+        "axis": "start {x:1,y:0} -> end {x:0,y:1}  (EngineControlScreen.tsx:148-149)",
+        "paintedBy": "AppHeader.tsx LinearGradient, style=styles.gradientFill (absolute fill of the header container)",
+        "copiedVerbatim": true
+      },
+      "step1_sharedTokenBlock": {
+        "newFile": "src/shared/theme/header.ts (exported from the theme barrel)",
+        "navRowH": 56,
+        "horizontalInset": 16,
+        "slotWidth": 44,
+        "minTouchTarget": 44,
+        "back": { "size": 14, "weight": "600", "label": "Back" },
+        "title": { "fontSize": 16, "fontWeight": "600", "color": "#FFFFFF" },
+        "avatar": { "size": 32, "cropScale": 1.16 },
+        "background": { "colors": "colors.gradientHeader (now ['#2A0508','#C0110F'])", "start": "{x:1,y:0}", "end": "{x:0,y:1}", "stripHeight": 56, "bandBackdrop": "colors.gradientHeader[0]" },
+        "retired": "contentHeight + contentCenterOffset (deleted from AppHeader and from all 3 call sites)"
+      },
+      "step2_perScreen": {
+        "AppHeader": "consumes the shared spec; gradient scoped to a fixed 56dp nav-row strip; always-rendered 44dp right slot (transparent spacer when empty); title numberOfLines=1 ellipsizeMode=tail",
+        "Home": "bell labelled 'Notifications' + 44dp target; duplicate StatusBar removed (AppHeader already renders one)",
+        "Reports": "legacy contentHeight/contentCenterOffset retired; profile.jpeg -> profile_avatar.png (white disc gone); 44dp slot",
+        "EngineControl": "P8 local overrides REMOVED (titleSize 15.5, backSize 13, backWeight 400, local gradient + axis) so EC consumes the shared token; avatar 28 -> shared 32",
+        "LiveMap": "legacy 100/32 retired; avatar labelled 'Open profile' + 44dp",
+        "History": "shared showAvatar now paints profile_avatar.png (clipped circle, white hoop cropped)",
+        "Profile": "legacy profileTokens geometry retired; transparent 44dp right spacer (D4) - title now optically centred",
+        "Details": "back chevron: toast stub -> real navigation.goBack(); shared avatar asset fixed"
+      },
+      "step3_verification": {
+        "rampIdenticalAll7": "exact-RGB at 10 identical (x,y) probes across all 7 headers: #BB110F #970E0D #740B0B #4D080A #2D0508 ... byte-identical",
+        "stripScope": "ramp/strip bottom edge = y=157px (inset.top 45 + nav row 112) on every screen",
+        "navRowCentre": "y=101px (50.5dp) on all 7 (was 50.5 / 67.5 / 82.5dp before)",
+        "title": "16/600 white, height 49px, centred on all 7 (Profile now centre 389.5 = screen centre, was 421.5)",
+        "back": "a11y node 'Button label=Back' at x=32 (16dp inset) on all 7; glyph 20x44px; 44dp slot = touch target",
+        "avatars": "all circular (corner probes read the gradient, not photo) - no white disc anywhere",
+        "functional": "Details back pops to Home (no toast); Profile back -> previous tab; EC avatar -> Profile; back-nav reverse order still holds",
+        "bugsFoundAndFixed": "the shared header's pointerEvents='none' chain made the back chevron AND (after my first pass) the right-slot actions UNTAPPABLE on Android - switched the interactive layers to 'box-none'; the shared avatar frame was missing borderRadius+overflow so the over-scaled photo painted SQUARE on History/Details - added both"
+      },
+      "newTokens": "src/shared/theme/header.ts - headerSpec { navRowH, horizontalInset, slotWidth, minTouchTarget, back{size,weight,label}, title{fontSize,fontWeight,color}, avatar{size,cropScale}, background{colors,start,end,stripHeight,bandBackdrop} }; colors.gradientHeader now ['#2A0508','#C0110F']",
+      "removedTokens": "AppHeader props {contentHeight, contentCenterOffset, titleSize, titleWeight, backSize, backWeight, gradientColors, gradientStart, gradientEnd}; ecColors.headerGradient, ecSizes.{avatar, avatarCropScale, headerTitleSize, headerBackSize, headerBackWeight}",
+      "staticGates": "tsc 0, eslint 0, jest 28/28 (3 suites), deps 18, AIza 0, no raw hex in the new header/theme code, no static style={{ additions, no console.log, processingRef + forceResetRef + clearTimeout-on-unmount untouched, TODO(V9-a11y) + TODO(KNOWN-ISSUE) present, engineControl.mock.json + details.mock.json + history.mock.json + livemap.mock.json = ZERO diff",
+      "artifacts": "ui-baseline/Headers/{Home,Reports,EngineControl,LiveMap,History,Profile,Details}-header.png + _all-headers-comparison.png"
     }
   ]
 }

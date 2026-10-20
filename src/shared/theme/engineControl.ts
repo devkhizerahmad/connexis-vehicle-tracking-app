@@ -13,17 +13,8 @@ import { Platform, type ViewStyle } from 'react-native';
 
 /** Engine Control palette. */
 export const ecColors = {
-  // S1 header ink (gradient header comes from colors.gradientHeader)
+  // S1 header ink (the gradient ramp comes from the shared colors.gradientHeader)
   headerInk: '#FFFFFF',
-  /**
-   * ENGINE CONTROL VEHICLE DASHBOARD (NEW reference) — the screen header is a
-   * DARK MAROON -> RED gradient. The previous stop pair (#A13E16 -> #251E1D)
-   * was sampled from the OLD flat "engine control.jpeg" and is VOID for this
-   * screen. These two stops are read off
-   * `design-references/Engine Control Vehicle Dashboard.png`: a near-black
-   * maroon base easing into the brand red.
-   */
-  headerGradient: ['#2A0508', '#C0110F'] as const,
 
   // S2 vehicle cards
   card: '#FFFFFF',
@@ -221,23 +212,14 @@ export const ecSizes = {
   toastNavGap: 10,
 
   /**
-   * PHASE-1 (P8): header avatar. 32 -> 28 pt (~12% smaller, per P8).
-   * `avatarCropScale` over-scales the photo inside the circular frame so the
-   * asset's BAKED-IN white ring (profile_avatar.png is an opaque 96x96 square
-   * with a white hoop at ~92% radius) falls outside the clip — the ring is
-   * removed by clipping, not by swapping the asset.
+   * TOP-HEADER STANDARD: the header avatar, the header title size, the back
+   * chevron size/weight and the header gradient are all owned by the shared
+   * `headerSpec` block (shared/theme/header.ts) and the shared
+   * `colors.gradientHeader` ramp. The screen-local copies that used to live
+   * here (headerGradient, avatar, avatarCropScale, headerTitleSize,
+   * headerBackSize, headerBackWeight) were removed so Engine Control consumes
+   * exactly the same tokens as every other screen.
    */
-  avatar: 28,
-  avatarCropScale: 1.16,
-  /**
-   * P8: header title one step down from the shared 18 pt, and semi-bold.
-   * The shared AppHeader reads typography.title (18/700); this is passed in as
-   * an override so every other screen keeps its own frozen value.
-   */
-  headerTitleSize: 15.5,
-  /** P8: back chevron size and lighter weight (the shared default is 16 / 700). */
-  headerBackSize: 13,
-  headerBackWeight: '400' as const,
 
   // S2 — ONE flat full-width card (left identity | right live status)
   /**
