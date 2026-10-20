@@ -1,8 +1,13 @@
 // styles.ts — S4: geofence map (INSET ROUNDED CARD) + its two corner badges.
 //
-// ENGINE CONTROL VEHICLE DASHBOARD (NEW reference): the map is no longer an
-// edge-to-edge, sharp-cornered plane — it is an INSET ROUNDED CARD WITH A SOFT
-// SHADOW, and both badges float INSET from those rounded corners.
+// LIVE CORRECTION (C2): the map is RESTORED to the Vehicle-Dashboard REBUILD
+// state — an INSET, ROUNDED card WITH its soft shadow, exactly as that rebuild
+// shipped it. The "rounded-only / no shadow" frame that step 3 had introduced
+// is REVERTED for the EC map; the `mapRounded` token is reserved for Step 2
+// (LiveMap / History).
+//
+// The alert is NOT part of this card: the pink geofence alert lives in the
+// vehicle card's BOTTOM footer (C3), so this card is the map again.
 //
 // The DEFAULT colourful Google basemap is kept (the flat version's washed-out
 // custom style stays deleted), and the Google logo stays: it is mandatory
@@ -18,7 +23,6 @@ export const styles = StyleSheet.create({
     borderRadius: ecCardRadius,
     overflow: 'hidden',
     backgroundColor: ecColors.rowBg,
-    // NEW design language: shadows are back on every card.
     ...ecShadow,
   },
   map: {

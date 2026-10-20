@@ -13,16 +13,27 @@ import { StyleSheet } from 'react-native';
 import { ecCardRadius, ecColors, ecShadow, ecSizes } from '@shared/theme';
 
 export const styles = StyleSheet.create({
-  /** The inset card: rounded corners + soft shadow on all four sides. */
+  /**
+   * The inset card: rounded corners + soft shadow on all four sides.
+   *
+   * LIVE CORRECTION (C3): the card is now a COLUMN — the vehicle + live-status
+   * body on top and the pink geofence alert as its BOTTOM footer. The card's own
+   * padding moved onto `body` so the footer can run edge-to-edge and sit flush
+   * with the card's bottom corners.
+   */
   card: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     marginHorizontal: ecSizes.pageGutter,
     backgroundColor: ecColors.card,
     borderRadius: ecCardRadius,
-    paddingHorizontal: 12,
-    paddingVertical: 12,
     // NEW design language: shadows are back on every card.
     ...ecShadow,
+  },
+  /** The identity | status row that sits above the alert footer. */
+  body: {
+    flexDirection: 'row',
+    paddingHorizontal: 12,
+    paddingVertical: 12,
   },
   /** Left column — van photo + the caption pill. */
   identity: {

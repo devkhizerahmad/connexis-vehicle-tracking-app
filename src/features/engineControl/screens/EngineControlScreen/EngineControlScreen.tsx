@@ -36,7 +36,6 @@ import { ChangeFenceButton } from '@features/engineControl/components/ChangeFenc
 import { ControlRows } from '@features/engineControl/components/ControlRows';
 import { ControlSwipeCard } from '@features/engineControl/components/ControlSwipeCard';
 import { FaqCard } from '@features/engineControl/components/FaqCard';
-import { FenceAlertBanner } from '@features/engineControl/components/FenceAlertBanner';
 import { GeofenceMap } from '@features/engineControl/components/GeofenceMap';
 import { PrivacyPolicyRow } from '@features/engineControl/components/PrivacyPolicyRow';
 import { RouteList } from '@features/engineControl/components/RouteList';
@@ -226,17 +225,18 @@ export function EngineControlScreen({ navigation }: EngineControlScreenProps) {
         contentContainerStyle={[styles.scrollContent, { paddingBottom: scrollPadBottom }]}
         showsVerticalScrollIndicator={false}
         testID="engine-control-scroll">
-        {/* S2 vehicle identity + live status */}
+        {/* S2 vehicle identity + live status, with the out-of-geofence alert as
+            the card's BOTTOM footer (live correction C3). */}
         <View style={styles.vehicleBlock}>
-          <VehicleStatusCards vehicle={data.vehicle} onFencePress={handleChangeFence} />
+          <VehicleStatusCards
+            vehicle={data.vehicle}
+            alert={data.alert}
+            onFencePress={handleChangeFence}
+          />
         </View>
 
-        {/* S3 out-of-geofence alert */}
-        <View style={styles.alertBlock}>
-          <FenceAlertBanner message={data.alert} />
-        </View>
-
-        {/* S4 read-only geofence map */}
+        {/* S4 read-only geofence map — its own inset, rounded, shadowed card
+            (Vehicle-Dashboard rebuild state restored in C2). No alert inside. */}
         <View style={styles.mapBlock}>
           <GeofenceMap state={data.map} />
         </View>

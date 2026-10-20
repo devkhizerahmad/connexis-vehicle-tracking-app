@@ -1,23 +1,25 @@
-// styles.ts — S3: "out of geofence" alert card.
+// styles.ts — S3: the "out of geofence" alert, now the VEHICLE CARD's BOTTOM
+// FOOTER.
 //
-// ENGINE CONTROL VEHICLE DASHBOARD (NEW reference): the old PHASE-1 target was
-// a full-width, SQUARE, hairline-bordered STRIP. The new artboard draws an
-// INSET ROUNDED PINK CARD WITH A SOFT SHADOW, so the flat rectangle, its
-// radius-0 corners and its border are all gone.
+// LIVE CORRECTION (C3): the alert is NOT a standalone floating card and NOT the
+// map card's top banner. It is embedded INSIDE the vehicle + status card as
+// that card's bottom footer, flush with the card's bottom-left / bottom-right
+// corners and sharing their radius — the exact mirror of the header-attach
+// rule (a header bar flush with the TOP radius; this strip flush with the
+// BOTTOM radius). No gap, no separate card, no shadow of its own.
 import { StyleSheet } from 'react-native';
-import { ecCardRadius, ecColors, ecShadow, ecSizes } from '@shared/theme';
+import { ecCardRadius, ecColors } from '@shared/theme';
 
 export const styles = StyleSheet.create({
   banner: {
-    marginHorizontal: ecSizes.pageGutter,
-    borderRadius: ecCardRadius,
+    // Shared corner with the vehicle card's bottom corners.
+    borderBottomLeftRadius: ecCardRadius,
+    borderBottomRightRadius: ecCardRadius,
     backgroundColor: ecColors.alertBg,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 10,
+    paddingHorizontal: 12,
     paddingVertical: 10,
-    // NEW design language: shadows are back on every card.
-    ...ecShadow,
   },
   icon: {
     marginRight: 8,

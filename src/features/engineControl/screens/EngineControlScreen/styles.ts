@@ -27,9 +27,6 @@ export const styles = StyleSheet.create({
     marginTop: 10,
   },
   /** Consistent inter-section rhythm — the NEW reference spaces its cards evenly. */
-  alertBlock: {
-    marginTop: 10,
-  },
   mapBlock: {
     marginTop: 10,
   },
