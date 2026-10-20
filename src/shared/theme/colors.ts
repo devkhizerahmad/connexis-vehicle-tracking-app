@@ -60,6 +60,18 @@ export const colors = {
   // Flattened exact tokens
   bg: '#F5F6F8',
   white: '#FFFFFF',
+  /**
+   * HOME STATUS BOXES — the ONE shared "text on a saturated fill" colour.
+   *
+   * Every status box (Total / Running / Idle / Stop / No Data) paints its title
+   * AND its number in this ONE pure white, so no box shows a muted number under
+   * a white title. Sizes and weights are unchanged — only the colour.
+   *
+   * Measured white-on-fill contrast (WCAG): Total 7.5-15.2:1, Stop 5.6:1,
+   * Running 2.1:1, Idle 1.9:1, No Data 2.3:1 — the last three sit below the
+   * 3:1 large-bold-text bar on their bright fills.
+   */
+  onAccent: '#FFFFFF',
   black: '#0F0F0F',
   red: '#E03131',
   green: '#3ECF3E',
@@ -114,9 +126,11 @@ export const colors = {
   home: {
     totalGradStart: '#4E555E',
     totalGradEnd: '#22262B',
-    runningValueGreen: '#47A000',
-    idleValueAmber: '#D9A62E',
-    stopValueRed: '#D9534F',
+    // `runningValueGreen` / `idleValueAmber` / `stopValueRed` were the MUTED
+    // per-hue number inks that made the status boxes inconsistent (a muted
+    // number under a white title, at 1.1-1.6:1 against its own fill). The
+    // status row now uses ONE shared ink for every title+number pair —
+    // `colors.onAccent` — so those three tokens were removed.
     chipGray: '#B9B9B9',
     sensorDivider: '#E0E0E0',
     thermoOrange: '#F57C00',

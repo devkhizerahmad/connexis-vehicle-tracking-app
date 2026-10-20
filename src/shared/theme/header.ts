@@ -46,19 +46,16 @@ export const headerSpec = {
      */
     cropScale: 1.16,
   },
+  // The ramp is painted as the header's OWN background layer — the whole
+  // container (nav row, plus the band below it on the extended screen). On a
+  // standard screen the container IS the nav-row strip, so the hue behind the
+  // title is identical everywhere; on the extended screen the SAME single layer
+  // continues through the band, so there is no flat slab and no seam.
   background: {
     /** The ONE ramp (shared/theme/colors.ts). */
     colors: colors.gradientHeader,
     /** Diagonal axis: start top-right, end bottom-left. */
     start: { x: 1, y: 0 },
     end: { x: 0, y: 1 },
-    /**
-     * The ramp is painted as the header's OWN background layer — the whole
-     * container (nav row, plus the band below it on the extended screen). On a
-     * standard screen the container IS the nav-row strip, so the hue behind the
-     * title is identical everywhere; on the extended screen the SAME single
-     * layer continues through the band, so there is no flat slab and no seam.
-     */
-    stripHeight: 56,
   },
 } as const;

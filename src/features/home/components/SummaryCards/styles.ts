@@ -29,13 +29,13 @@ export const styles = StyleSheet.create({
     paddingRight: 24,
   },
   totalLabel: {
-    color: colors.white,
+    color: colors.onAccent,
     fontSize: 15,
     fontWeight: '700',
     marginLeft: 20,
   },
   totalValue: {
-    color: colors.white,
+    color: colors.onAccent,
     fontSize: 17,
     fontWeight: '700',
     marginLeft: 'auto',
@@ -47,14 +47,19 @@ export const styles = StyleSheet.create({
     paddingTop: 12,
     paddingLeft: 12,
   },
+  /**
+   * ONE shared ink for the whole status row: every box paints its title AND its
+   * number in the same pure white (`colors.onAccent`), so no box shows a muted
+   * number under a white title. Sizes/weights are unchanged — only the colour.
+   */
   runningLabel: {
-    color: colors.white,
+    color: colors.onAccent,
     fontSize: 12,
     fontWeight: '700',
     marginTop: 10,
   },
   runningValue: {
-    color: colors.home.runningValueGreen,
+    color: colors.onAccent,
     fontSize: 13,
     fontWeight: '700',
     marginTop: 6,
@@ -67,13 +72,13 @@ export const styles = StyleSheet.create({
     paddingLeft: 12,
   },
   idleLabel: {
-    color: colors.white,
+    color: colors.onAccent,
     fontSize: 12,
     fontWeight: '700',
     marginTop: 10,
   },
   idleValue: {
-    color: colors.home.idleValueAmber,
+    color: colors.onAccent,
     fontSize: 13,
     fontWeight: '700',
     marginTop: 6,
@@ -91,13 +96,13 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.white,
   },
   stopLabel: {
-    color: colors.white,
+    color: colors.onAccent,
     fontSize: 12,
     fontWeight: '700',
     marginTop: 10,
   },
   stopValue: {
-    color: colors.home.stopValueRed,
+    color: colors.onAccent,
     fontSize: 13,
     fontWeight: '700',
     marginTop: 6,
@@ -109,13 +114,13 @@ export const styles = StyleSheet.create({
     paddingLeft: 12,
   },
   noDataLabel: {
-    color: colors.white,
+    color: colors.onAccent,
     fontSize: 12,
     fontWeight: '700',
     marginTop: 10,
   },
   noDataValue: {
-    color: colors.white,
+    color: colors.onAccent,
     fontSize: 13,
     fontWeight: '700',
     marginTop: 6,
