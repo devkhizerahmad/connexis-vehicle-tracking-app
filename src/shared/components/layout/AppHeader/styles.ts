@@ -10,25 +10,17 @@ export const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   /**
-   * The shared diagonal ramp, painted on a FIXED nav-row strip
-   * (status bar + nav row) so the hue behind the title is identical on every
-   * screen. The height comes from `makeHeightStyle` at render time.
+   * The ONE background layer: the shared diagonal ramp fills the whole header
+   * container (nav row, and the band below it on the extended screen). On a
+   * standard screen the container IS the nav-row strip, so this renders
+   * exactly as the previous strip-only gradient did.
    */
   gradientStrip: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
-    zIndex: 0,
-  },
-  /** Extended-band backdrop (Home only) = the ramp's own dark stop. */
-  bandBackdrop: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
     bottom: 0,
-    backgroundColor: headerSpec.background.bandBackdrop,
     zIndex: 0,
   },
   // PATCH K2: chevron + title + right slot sit above the gradient

@@ -106,18 +106,22 @@ function AppHeaderImpl({
 
   return (
     <View style={[styles.container, makeHeightStyle(total)]}>
-      {/* Extended-band backdrop (only Home has a band): the ramp's own dark
-          stop, so the band's white text keeps its contrast. Painted first, so
-          the nav-row strip below covers the part of it that is not a band. */}
-      {variant === 'extended' ? (
-        <View style={styles.bandBackdrop} pointerEvents="none" />
-      ) : null}
-      {/* The ONE shared diagonal ramp, on a fixed nav-row strip. */}
+      {/*
+        THE ONE background layer: the shared diagonal ramp painted as the
+        header's own background, edge to edge — nav row AND (for the one
+        extended screen) the band below it.
+
+        On a standard screen the container IS the nav-row strip, so this is
+        byte-identical to the previous strip-only gradient. On the extended
+        screen the same single layer continues through the band, so the header
+        has exactly ONE gradient surface: no flat slab, no seam, and no
+        per-zone duplicate gradient.
+      */}
       <LinearGradient
         colors={[...headerSpec.background.colors]}
         start={headerSpec.background.start}
         end={headerSpec.background.end}
-        style={[styles.gradientStrip, makeHeightStyle(insets.top + headerSpec.navRowH)]}
+        style={styles.gradientStrip}
         pointerEvents="none"
       />
       {statusBar}

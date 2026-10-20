@@ -53,14 +53,12 @@ export const headerSpec = {
     start: { x: 1, y: 0 },
     end: { x: 0, y: 1 },
     /**
-     * The ramp is painted on a FIXED nav-row strip (status bar + nav row) on
-     * every screen, so the hue behind the title is identical everywhere.
+     * The ramp is painted as the header's OWN background layer — the whole
+     * container (nav row, plus the band below it on the extended screen). On a
+     * standard screen the container IS the nav-row strip, so the hue behind the
+     * title is identical everywhere; on the extended screen the SAME single
+     * layer continues through the band, so there is no flat slab and no seam.
      */
     stripHeight: 56,
-    /**
-     * Extended-band backdrop = the ramp's own dark stop, so the band's white
-     * text keeps its contrast on the one screen that has a band (Home).
-     */
-    bandBackdrop: colors.gradientHeader[0],
   },
 } as const;
