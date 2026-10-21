@@ -21,6 +21,8 @@
 //                                    only the band shows through
 //   *_label colours              app tokens (dark ink on the white chips)
 //   month/year_selector_label    app token + semibold (the demo's title weight)
+//   range_fill                   app token (the highlighted range band; the
+//                                library would paint it with its own accent)
 //
 // Everything else is left to the library — the old per-cell colour overrides,
 // the weekday-format override, the `days` height hack, the navy-disc chevrons
@@ -67,6 +69,13 @@ export const calendarOverrides = StyleSheet.create({
   range_end_label: {
     color: reportColors.dayStartInk,
     fontWeight: '700',
+  },
+  // The HIGHLIGHTED RANGE band — the continuous strip behind the days between
+  // the FROM and UNTIL picks. The library paints it with its own `accent`
+  // colour; this override routes it through the app token, so the band colour
+  // is changed in ONE place: `reportColors.rangeFill` (src/shared/theme/reports.ts).
+  range_fill: {
+    backgroundColor: reportColors.rangeFill,
   },
   // The header title ("October 2026") — the month and the year are SEPARATE
   // pressable buttons, so tapping either opens the library's own month / year

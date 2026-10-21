@@ -45,6 +45,15 @@ export const styles = StyleSheet.create({
     color: reportColors.calLabel,
     marginBottom: 4,
   },
+  /**
+   * The UNTIL label is right-aligned so it sits DIRECTLY ABOVE its chip, the
+   * mirror of FROM (label + chip both flush left). Without this the label
+   * stranded itself at the left edge of the right-hand column while its chip
+   * sat flush right, so the two did not read as one block.
+   */
+  readoutLabelUntil: {
+    textAlign: 'right',
+  },
   readoutValue: {
     alignSelf: 'flex-start',
     paddingHorizontal: 10,

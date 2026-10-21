@@ -29,6 +29,12 @@ export const reportColors = {
   calLabel: '#7A8288',
   calValue: '#FFFFFF',
   calValueDim: '#7A8288',
+  /**
+   * The HIGHLIGHTED RANGE band — the continuous strip behind the days between
+   * the FROM and UNTIL picks. Change this ONE value to re-colour the whole
+   * highlighted range (it is the only place the band colour lives).
+   */
+  rangeFill: '#ffffff2f',
 
   // S5/S6 hour + minute rows
   pickerLabel: '#7A8288',

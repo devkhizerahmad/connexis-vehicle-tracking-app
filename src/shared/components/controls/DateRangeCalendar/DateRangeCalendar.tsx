@@ -253,7 +253,9 @@ export function DateRangeCalendar({
           </Text>
         </View>
         <View style={styles.readoutCol}>
-          <Text style={styles.readoutLabel}>UNTIL</Text>
+          <Text style={[styles.readoutLabel, styles.readoutLabelUntil]}>
+            UNTIL
+          </Text>
           <Text
             style={[styles.readoutValue, styles.readoutValueUntil]}
             testID={`${testIDPrefix}-until`}>
