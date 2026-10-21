@@ -15,6 +15,8 @@ import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import ProfileActions from '@features/profile/components/ProfileActions';
 import ProfileAvatar from '@features/profile/components/ProfileAvatar';
+import ProfileDobField from '@features/profile/components/ProfileDobPicker/ProfileDobField';
+import ProfileDobSheet from '@features/profile/components/ProfileDobPicker/ProfileDobSheet';
 import ProfileFormField from '@features/profile/components/ProfileFormField';
 import ProfileHeader from '@features/profile/components/ProfileHeader';
 import { useProfile } from '@features/profile/hooks/useProfile';
@@ -42,6 +44,8 @@ export function ProfileScreen({ navigation }: ProfileScreenProps) {
   const [toast, setToast] = useState<string | null>(null);
   const toastAnim = useRef(new Animated.Value(0)).current;
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  /** The 3-segment DOB sheet is open. */
+  const [dobSheetOpen, setDobSheetOpen] = useState(false);
 
   const contentStyle = useMemo(
     () => makeProfileScrollContentStyle(insets.bottom),
@@ -118,19 +122,40 @@ export function ProfileScreen({ navigation }: ProfileScreenProps) {
           <ProfileAvatar />
 
           <View style={styles.formCard}>
-            {PROFILE_FIELDS.map(field => (
-              <ProfileFormField
-                key={field.key}
-                fieldKey={field.key}
-                label={field.label}
-                value={values[field.key]}
-                placeholder={field.placeholder}
-                keyboardType={field.keyboardType}
-                showDivider={field.dividerAfter}
-                onChange={setField}
-              />
-            ))}
+            {PROFILE_FIELDS.map(field =>
+              // The Date of Birth row is a BUTTON, not a text input: it opens the
+              // international 3-segment (Month / Day / Year) picker with
+              // auto-save. Every other row keeps the plain editable field.
+              field.key === 'dob' ? (
+                <ProfileDobField
+                  key={field.key}
+                  value={values.dob}
+                  onPress={() => setDobSheetOpen(true)}
+                  showDivider={field.dividerAfter}
+                />
+              ) : (
+                <ProfileFormField
+                  key={field.key}
+                  fieldKey={field.key}
+                  label={field.label}
+                  value={values[field.key]}
+                  placeholder={field.placeholder}
+                  keyboardType={field.keyboardType}
+                  showDivider={field.dividerAfter}
+                  onChange={setField}
+                />
+              ),
+            )}
           </View>
+
+          {/* The 3-segment DOB sheet. Auto-saves on every selection - there is
+              no OK/Done button. */}
+          <ProfileDobSheet
+            visible={dobSheetOpen}
+            value={values.dob}
+            onChange={iso => setField('dob', iso)}
+            onClose={() => setDobSheetOpen(false)}
+          />
 
           <ProfileActions onUpdate={handleUpdate} onLogout={handleLogout} saving={saving} />
         </ScrollView>

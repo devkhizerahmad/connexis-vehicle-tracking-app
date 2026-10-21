@@ -30,6 +30,8 @@ export const profileTokens = {
     logoutText: '#B05656',
     onDark: '#FFFFFF',
     toastSurface: '#1B2430',
+    /** Scrim behind the DOB bottom sheet. */
+    sheetBackdrop: 'rgba(0, 0, 0, 0.45)',
   },
   size: {
     // PATCH A: gradient band below the safe-area inset -> header = inset + 100 (≈140)

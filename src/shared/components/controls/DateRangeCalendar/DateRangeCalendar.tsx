@@ -24,15 +24,12 @@
 //
 // The remaining freedom — prev/next chevrons — moves the view WITHOUT changing the
 // selection, which is a different axis and cannot desync.
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { Text, View } from 'react-native';
-import DateTimePicker, {
-  useDefaultStyles,
-  type CalendarComponents,
-  type DateType,
-} from 'react-native-ui-datepicker';
+import DateTimePicker, { type DateType } from 'react-native-ui-datepicker';
 import dayjs from 'dayjs';
-import { calendarMetrics, calendarOverrides, styles } from './styles';
+import { useCalendarTheme } from './theme';
+import { styles } from './styles';
 
 export interface DateRangeCalendarProps {
   /** Range start. `null`/omitted = nothing selected yet. */
@@ -67,13 +64,9 @@ export function DateRangeCalendar({
   onYearChange,
   testIDPrefix = 'date-range-calendar',
 }: DateRangeCalendarProps) {
-  // 'dark' is passed explicitly so the resolved theme does not depend on the
-  // device's system appearance — the calendar must look identical on every unit.
-  const libraryDefaults = useDefaultStyles('dark');
-  const pickerStyles = useMemo(
-    () => ({ ...libraryDefaults, ...calendarOverrides }),
-    [libraryDefaults],
-  );
+  // ONE shared theme for both calendar pickers (range + single). It is the
+  // library's own dark defaults plus the demo-matching deltas — see theme.ts.
+  const pickerStyles = useCalendarTheme();
 
   /**
    * Live mirror of everything `handleChange` needs.
@@ -233,42 +226,25 @@ export function DateRangeCalendar({
     [syncViewTo],
   );
 
-  // Circular navy chevrons with a glyph, replacing the library's PNG arrows so
-  // the discs match the reference's 22pt buttons exactly.
-  const components: CalendarComponents = useMemo(
-    () => ({
-      IconPrev: (
-        <View style={styles.navButton}>
-          <Text style={styles.navIcon}>◀</Text>
-        </View>
-      ),
-      IconNext: (
-        <View style={styles.navButton}>
-          <Text style={styles.navIcon}>▶</Text>
-        </View>
-      ),
-      // DEFECT 1: single-letter weekday header ("S M T W T F S").
-      //
-      // `weekdaysFormat` CANNOT produce this. It defaults to 'min' already, and
-      // dayjs's `en` locale defines neither `weekdaysMin` nor `weekdaysShort`, so
-      // both formats fall back to `full.slice(0, 2)` and print "Su Mo Tu We Th
-      // Fr Sa" — verified directly against the installed dayjs. Rendering the
-      // cell ourselves is the only way to reach single letters.
-      //
-      // `name.full` is taken from `dayjs.weekdays()` and keeps the ORIGINAL index
-      // even after the library rotates the array for `firstDayOfWeek`, so
-      // slicing the full name stays correct in any locale and any week start.
-      Weekday: weekday => <Text style={styles.weekdayLabel}>{weekday.name.full.charAt(0)}</Text>,
-    }),
-    [],
-  );
+  // MONTH / YEAR SELECTORS — the LIBRARY'S OWN, no custom header.
+  //
+  // The library's default header renders `<MonthButton/>` + `<YearButton/>` as
+  // two Pressables (testID "btn-month" / "btn-year") next to the nav buttons.
+  // Pressing one flips the calendar view to the library's own MONTH / YEAR grid,
+  // and picking a value calls `onMonthChange` / `onYearChange` — which this
+  // component forwards to the screen, so the grid follows. The demo's
+  // "‹ October 2026 ›" title IS that default (navigationPosition="around").
+  //
+  // The old custom `components` overrides are GONE: the single-letter weekday
+  // header ("S M T W T F S") and the navy-disc chevrons were both the "unclean"
+  // look the demo supersedes.
 
-  const fromLabel = startDate ? dayjs(startDate).format('DD.MM.YY') : '';
-  const untilLabel = endDate ? dayjs(endDate).format('DD.MM.YY') : '';
+  const fromLabel = startDate ? dayjs(startDate).format('DD.MM.YY') : '—';
+  const untilLabel = endDate ? dayjs(endDate).format('DD.MM.YY') : '—';
 
   return (
     <View style={styles.card} testID={testIDPrefix}>
-      {/* FROM / UNTIL read-out — the reference's selection summary. */}
+      {/* FROM / UNTIL read-out — the selection summary, above the calendar. */}
       <View style={styles.readout}>
         <View style={styles.readoutCol}>
           <Text style={styles.readoutLabel}>FROM</Text>
@@ -309,11 +285,8 @@ export function DateRangeCalendar({
         // and blanks also remove the only way to reach another month without
         // paging first, which is exactly the interaction AUTO_NAVIGATE is for.
         showOutsideDays
-        containerHeight={calendarMetrics.containerHeight}
-        weekdaysHeight={calendarMetrics.weekdaysHeight}
         navigationPosition="around"
         styles={pickerStyles}
-        components={components}
       />
     </View>
   );
