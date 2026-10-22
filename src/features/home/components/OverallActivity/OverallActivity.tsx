@@ -5,6 +5,36 @@ import { SadFace } from '@shared/components/icons';
 import { colors, sizes } from '@shared/theme';
 import { styles } from './styles';
 
+function RingView({
+  size,
+  radius,
+  stroke,
+  style,
+}: {
+  size: number;
+  radius: number;
+  stroke: number;
+  style?: any;
+}) {
+  return (
+    <View
+      style={[
+        {
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          width: size,
+          height: size,
+          borderRadius: radius,
+          borderWidth: stroke,
+          borderColor: colors.text.sub,
+        },
+        style,
+      ]}
+    />
+  );
+}
+
 function Donut({ score = 64 }: { score?: number }) {
   const size = sizes.donut; // 84
   const stroke = sizes.ringW; // 18.5
@@ -16,13 +46,23 @@ function Donut({ score = 64 }: { score?: number }) {
   const anim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
+    // B12: throttle the count-up to ~31 fps. The previous listener called
+    // setState on every JS frame, and RingView used to be declared inside this
+    // render body, so each frame remounted the whole ring subtree.
+    let lastTime = 0;
+    const id = anim.addListener(({ value }) => {
+      const now = Date.now();
+      if (now - lastTime > 32 || value >= 1) {
+        lastTime = now;
+        setProgress(value * score);
+      }
+    });
     Animated.timing(anim, {
       toValue: 1,
       duration: 900,
       easing: Easing.out(Easing.cubic),
       useNativeDriver: false,
     }).start();
-    const id = anim.addListener(({ value }) => setProgress(value * score));
     return () => anim.removeListener(id);
   }, [anim, score]);
 
@@ -38,36 +78,22 @@ function Donut({ score = 64 }: { score?: number }) {
 
   const effectiveStartAngle = currentScore >= 99.5 ? 14 : gapDeg;
 
-  const RingView = ({ style }: { style?: any }) => (
-    <View
-      style={[
-        {
-          position: 'absolute',
-          left: 0,
-          top: 0,
-          width: size,
-          height: size,
-          borderRadius: c,
-          borderWidth: stroke,
-                  borderColor: colors.text.sub,
-        },
-        style,
-      ]}
-    />
-  );
-
   return (
-    <View style={{ width: size, height: size }}>
+    <View
+      style={{ width: size, height: size }}
+      accessible
+      accessibilityRole="progressbar"
+      accessibilityLabel={`Driving score ${Math.round(currentScore)} percent`}>
       {currentScore > 0.1 && (
         <View style={{ position: 'absolute', width: size, height: size }}>
           {effectiveStartAngle < 360 && (
             <View style={{ position: 'absolute', left: 0, top: 0, width: c, height: c, overflow: 'hidden' }}>
               {effectiveStartAngle <= 270 ? (
-                <RingView />
+                <RingView size={size} radius={c} stroke={stroke} />
               ) : (
                 <View style={{ position: 'absolute', left: 0, top: 0, width: size, height: size, transform: [{ rotate: `${effectiveStartAngle - 270}deg` }] }}>
                   <View style={{ position: 'absolute', left: 0, top: 0, width: c, height: size, overflow: 'hidden' }}>
-                    <RingView />
+                    <RingView size={size} radius={c} stroke={stroke} />
                   </View>
                 </View>
               )}
@@ -77,11 +103,11 @@ function Donut({ score = 64 }: { score?: number }) {
           {effectiveStartAngle < 270 && (
             <View style={{ position: 'absolute', left: 0, top: c, width: c, height: c, overflow: 'hidden' }}>
               {effectiveStartAngle <= 180 ? (
-                <RingView style={{ top: -c }} />
+                <RingView size={size} radius={c} stroke={stroke} style={{ top: -c }} />
               ) : (
                 <View style={{ position: 'absolute', left: 0, top: -c, width: size, height: size, transform: [{ rotate: `${effectiveStartAngle - 180}deg` }] }}>
                   <View style={{ position: 'absolute', left: 0, top: c, width: size, height: c, overflow: 'hidden' }}>
-                    <RingView style={{ top: -c }} />
+                    <RingView size={size} radius={c} stroke={stroke} style={{ top: -c }} />
                   </View>
                 </View>
               )}
@@ -91,11 +117,11 @@ function Donut({ score = 64 }: { score?: number }) {
           {effectiveStartAngle < 180 && (
             <View style={{ position: 'absolute', left: c, top: c, width: c, height: c, overflow: 'hidden' }}>
               {effectiveStartAngle <= 90 ? (
-                <RingView style={{ left: -c, top: -c }} />
+                <RingView size={size} radius={c} stroke={stroke} style={{ left: -c, top: -c }} />
               ) : (
                 <View style={{ position: 'absolute', left: -c, top: -c, width: size, height: size, transform: [{ rotate: `${effectiveStartAngle - 90}deg` }] }}>
                   <View style={{ position: 'absolute', left: 0, top: c, width: size, height: c, overflow: 'hidden' }}>
-                    <RingView style={{ top: -c }} />
+                    <RingView size={size} radius={c} stroke={stroke} style={{ top: -c }} />
                   </View>
                 </View>
               )}
@@ -105,11 +131,11 @@ function Donut({ score = 64 }: { score?: number }) {
           {effectiveStartAngle < 90 && (
             <View style={{ position: 'absolute', left: c, top: 0, width: c, height: c, overflow: 'hidden' }}>
               {effectiveStartAngle <= 0 ? (
-                <RingView style={{ left: -c }} />
+                <RingView size={size} radius={c} stroke={stroke} style={{ left: -c }} />
               ) : (
                 <View style={{ position: 'absolute', left: -c, top: 0, width: size, height: size, transform: [{ rotate: `${effectiveStartAngle}deg` }] }}>
                   <View style={{ position: 'absolute', left: c, top: 0, width: c, height: size, overflow: 'hidden' }}>
-                    <RingView style={{ left: -c }} />
+                    <RingView size={size} radius={c} stroke={stroke} style={{ left: -c }} />
                   </View>
                 </View>
               )}
@@ -169,6 +195,9 @@ export function OverallActivity({
           <Pressable
             key={t}
             onPress={() => setActive(i)}
+            accessibilityRole="tab"
+            accessibilityLabel={t}
+            accessibilityState={{ selected: i === active }}
             style={[
               styles.tab,
               i === active ? styles.tabActive : styles.tabIdle,

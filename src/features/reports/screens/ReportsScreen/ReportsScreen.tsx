@@ -42,6 +42,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { DateType } from 'react-native-ui-datepicker';
 import { AppHeader } from '@shared/components/layout/AppHeader';
+import { ScreenState } from '@shared/components/feedback/ScreenState';
 import {
   SelectField,
   type SelectFieldOption,
@@ -82,6 +83,8 @@ export function ReportsScreen({ navigation, route }: ReportsScreenProps) {
     route?.params?.vehicleId,
   );
   const [data, setData] = useState<ReportsData | null>(null);
+  const [loadError, setLoadError] = useState<Error | null>(null);
+  const [attempt, setAttempt] = useState(0);
   const [vehicleOpen, setVehicleOpen] = useState(false);
   /** S4 range selection + the grid's view cursor, both owned by this screen. */
   const [startDate, setStartDate] = useState<DateType>(MOCK_START_DATE);
@@ -148,19 +151,28 @@ export function ReportsScreen({ navigation, route }: ReportsScreenProps) {
 
   useEffect(() => {
     let mounted = true;
-    reportsService.getReportsData().then(payload => {
-      if (!mounted) {
-        return;
-      }
-      setData(payload);
-      // seed the pickers from the mock's pre-selected indices
-      setHour(payload.hourRow.chips[payload.hourRow.selected] ?? '');
-      setMinute(payload.minRow.chips[payload.minRow.selected] ?? '');
-    });
+    setLoadError(null);
+    reportsService
+      .getReportsData()
+      .then(payload => {
+        if (!mounted) {
+          return;
+        }
+        setData(payload);
+        // seed the pickers from the mock's pre-selected indices
+        setHour(payload.hourRow.chips[payload.hourRow.selected] ?? '');
+        setMinute(payload.minRow.chips[payload.minRow.selected] ?? '');
+      })
+      .catch((reason: unknown) => {
+        if (!mounted) {
+          return;
+        }
+        setLoadError(reason instanceof Error ? reason : new Error(String(reason)));
+      });
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [attempt]);
 
   /** S1: the only real navigation on this screen. */
   const handleAvatar = useCallback(() => {
@@ -283,7 +295,6 @@ export function ReportsScreen({ navigation, route }: ReportsScreenProps) {
   );
 
   if (!data) {
-    // header-only shell while the mock payload resolves
     return (
       <View style={styles.screen}>
         <AppHeader
@@ -292,6 +303,15 @@ export function ReportsScreen({ navigation, route }: ReportsScreenProps) {
           showAvatar={false}
           actions={headerAvatar}
         />
+        {loadError ? (
+          <ScreenState
+            kind="error"
+            message="We could not load your reports. Check your connection and try again."
+            onAction={() => setAttempt(n => n + 1)}
+          />
+        ) : (
+          <ScreenState kind="loading" message="Loading your reports." />
+        )}
       </View>
     );
   }

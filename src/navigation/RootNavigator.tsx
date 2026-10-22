@@ -84,7 +84,7 @@ export function RootNavigator({onReady}: {onReady?: () => void}) {
          * back press first when they have somewhere to go.
          */
         backBehavior="history"
-        screenOptions={{ headerShown: false }}>
+        screenOptions={{ headerShown: false, freezeOnBlur: true }}>
         <Tab.Screen name="HomeTab" component={HomeStack} />
         <Tab.Screen name="ReportTab" component={ReportStack} />
         <Tab.Screen name="EngineControlTab" component={EngineControlStack} />

@@ -51,7 +51,9 @@ export function SensorBlock(p: Props) {
           <Text style={styles.headerTitle}>{p.title}</Text>
         </View>
 
-        <Pressable onPress={p.onSelectPress} style={styles.headerRight}>
+        <Pressable onPress={p.onSelectPress} style={styles.headerRight}
+          accessibilityRole="button"
+          accessibilityLabel="Select sensor">
           <Text style={styles.dropdownText}>{p.dropdown}</Text>
           <Chevron dir="down" color={colors.grayText} size={12} />
         </Pressable>

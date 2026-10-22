@@ -13,6 +13,7 @@ import AppHeader from '@shared/components/layout/AppHeader';
 import { sizes } from '@shared/theme';
 import { mapService } from '@features/map/services/mapService';
 import type { LiveMapData, VehicleOption } from '@features/map/types/map';
+import { ScreenState } from '@shared/components/feedback/ScreenState';
 import { LiveMapView } from '@features/map/components/LiveMapView';
 import { MapVehicleCard } from '@features/map/components/MapVehicleCard';
 import { SelectVehicleField } from '@features/map/components/SelectVehicleField';
@@ -23,6 +24,8 @@ type LiveMapScreenProps = NativeStackScreenProps<MapStackParamList, 'LiveMap'>;
 
 export function LiveMapScreen({ route, navigation }: LiveMapScreenProps) {
   const [data, setData] = useState<LiveMapData | null>(null);
+  const [loadError, setLoadError] = useState<Error | null>(null);
+  const [attempt, setAttempt] = useState(0);
   const [options, setOptions] = useState<VehicleOption[]>([]);
   const [vehicleId, setVehicleId] = useState<string | undefined>(route?.params?.vehicleId);
   // typed cross-tab handle (avatar -> ProfileTab, stack-root back -> HomeTab)
@@ -39,11 +42,16 @@ export function LiveMapScreen({ route, navigation }: LiveMapScreenProps) {
   // Load dropdown options once; reload the live payload when the selection changes.
   useEffect(() => {
     let mounted = true;
-    mapService.getVehicleOptions().then(opts => {
-      if (mounted) {
-        setOptions(opts);
-      }
-    });
+    mapService
+      .getVehicleOptions()
+      .then(opts => {
+        if (mounted) {
+          setOptions(opts);
+        }
+      })
+      .catch(() => {
+        // Non-fatal: the field falls back to the payload's own vehicle name.
+      });
     return () => {
       mounted = false;
     };
@@ -51,15 +59,23 @@ export function LiveMapScreen({ route, navigation }: LiveMapScreenProps) {
 
   useEffect(() => {
     let mounted = true;
-    mapService.getLiveMapData(vehicleId).then(payload => {
-      if (mounted) {
-        setData(payload);
-      }
-    });
+    setLoadError(null);
+    mapService
+      .getLiveMapData(vehicleId)
+      .then(payload => {
+        if (mounted) {
+          setData(payload);
+        }
+      })
+      .catch((reason: unknown) => {
+        if (mounted) {
+          setLoadError(reason instanceof Error ? reason : new Error(String(reason)));
+        }
+      });
     return () => {
       mounted = false;
     };
-  }, [vehicleId]);
+  }, [attempt, vehicleId]);
 
   /** S1: left chevron pops the Map stack (falls back to the Home tab at root). */
   const handleBack = useCallback(() => {
@@ -137,7 +153,15 @@ export function LiveMapScreen({ route, navigation }: LiveMapScreenProps) {
             />
           </View>
         </View>
-      ) : null}
+      ) : loadError ? (
+        <ScreenState
+          kind="error"
+          message="We could not load the live map. Check your connection and try again."
+          onAction={() => setAttempt(n => n + 1)}
+        />
+      ) : (
+        <ScreenState kind="loading" message="Loading the live map." />
+      )}
     </View>
   );
 }

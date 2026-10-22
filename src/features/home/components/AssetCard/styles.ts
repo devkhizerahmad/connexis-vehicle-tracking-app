@@ -53,6 +53,11 @@ export const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '700',
   },
+  // B14: the three bright status fills fail white-text contrast, so they
+  // use dark ink; the red Stop fill keeps white.
+  headerStatusTextDark: {
+    color: colors.black,
+  },
   // body — PATCH H-D: photo 86x55 at (14,12)
   body: {
     backgroundColor: colors.surface.card,
@@ -93,8 +98,8 @@ export const styles = StyleSheet.create({
     marginTop: 3,
   },
   batteryText: {
-    color: colors.grayText,
-    fontSize: 7.5,
+    color: colors.grayStrong,
+    fontSize: 10,
     marginLeft: 3,
   },
   // PATCH H-D: "More Details" 10pt/600 #8A9199 with an ArrowRight glyph (10)
@@ -104,7 +109,7 @@ export const styles = StyleSheet.create({
     marginTop: 8,
   },
   moreDetails: {
-    color: colors.home.moreDetails,
+    color: colors.grayStrong,
     fontSize: 10,
     fontWeight: '600',
     marginRight: 2,

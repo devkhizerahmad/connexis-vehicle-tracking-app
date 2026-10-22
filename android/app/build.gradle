@@ -72,6 +72,43 @@ def enableProguardInReleaseBuilds = false
  */
 def jscFlavor = 'io.github.react-native-community:jsc-android:2026004.+'
 
+/**
+ * Release signing. Credentials live in android/keystore.properties (gitignored)
+ * or in the environment. There is deliberately NO fallback to the debug key:
+ * a debug-signed release can be impersonated by anyone.
+ */
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+def hasReleaseKeystore = keystorePropertiesFile.exists()
+if (hasReleaseKeystore) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
+/**
+ * Google Maps SDK key. Resolution order: -PMAPS_API_KEY, the MAPS_API_KEY
+ * environment variable, then ~/.gradle/gradle.properties. It is never read
+ * from a file that is committed to the repository.
+ */
+def mapsApiKey = (project.findProperty("MAPS_API_KEY") ?: System.getenv("MAPS_API_KEY") ?: "").toString().trim()
+def buildingRelease = gradle.startParameter.taskNames.any { it.toLowerCase().contains("release") }
+
+if (mapsApiKey.isEmpty()) {
+    if (buildingRelease) {
+        throw new GradleException(
+            "MAPS_API_KEY is missing. Add it to ~/.gradle/gradle.properties " +
+            "or export MAPS_API_KEY before building a release."
+        )
+    }
+    logger.warn("[ConnexisTracker] MAPS_API_KEY is not set - Google Maps will render blank in this build.")
+}
+
+if (buildingRelease && !hasReleaseKeystore) {
+    throw new GradleException(
+        "Release signing is not configured. Create android/keystore.properties with " +
+        "storeFile, storePassword, keyAlias and keyPassword (see keystore.properties.example)."
+    )
+}
+
 android {
     ndkVersion rootProject.ext.ndkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
@@ -84,9 +121,9 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
-        // Google Maps key comes ONLY from android/gradle.properties (MAPS_API_KEY,
-        // gitignored) — never from source control or JS.
-        manifestPlaceholders += [MAPS_API_KEY: MAPS_API_KEY]
+        // Google Maps key is injected here from the local environment only
+        // (see the resolution order above). Never commit it.
+        manifestPlaceholders += [MAPS_API_KEY: mapsApiKey]
     }
     signingConfigs {
         debug {
@@ -95,15 +132,26 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        if (hasReleaseKeystore) {
+            release {
+                storeFile rootProject.file(keystoreProperties["storeFile"])
+                storePassword keystoreProperties["storePassword"]
+                keyAlias keystoreProperties["keyAlias"]
+                keyPassword keystoreProperties["keyPassword"]
+            }
+        }
     }
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
         }
         release {
-            // Caution! In production, you need to generate your own keystore file.
-            // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
+            // Signed with the private release key when keystore.properties exists.
+            // A release without it fails at configuration time (see the guard above)
+            // rather than silently shipping the public debug signature.
+            if (hasReleaseKeystore) {
+                signingConfig signingConfigs.release
+            }
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
         }

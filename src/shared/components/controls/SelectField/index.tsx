@@ -76,6 +76,7 @@ function SelectFieldBase({
           key={option.id}
           style={({ pressed }) => [styles.option, pressed && styles.optionPressed]}
           onPress={() => handleOption(option)}
+            accessibilityLabel={option.label}
           accessibilityRole="button"
           accessibilityState={{ selected: option.id === selectedId }}
           testID={testID ? `${testID}-option-${option.id}` : undefined}>

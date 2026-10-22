@@ -51,7 +51,10 @@ export function BottomNav({
       {tabs.map(t => {
         const isActive = t === active || (active === 'Details' && t === 'Home');
         return (
-          <Pressable key={t} style={styles.tab} onPress={() => onTabPress?.(t)}>
+          <Pressable key={t} style={styles.tab} onPress={() => onTabPress?.(t)}
+            accessibilityRole="tab"
+            accessibilityLabel={t}
+            accessibilityState={{ selected: isActive }}>
             {isActive ? (
               <View style={styles.activeTile}>
                 <NavIcon name={t} color={colors.white} />

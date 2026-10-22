@@ -70,7 +70,8 @@ export function RoutesCard({ routes, viewMore, onViewMore }: Props) {
         style={styles.header}
         onPress={toggle}
         accessibilityRole="button"
-        accessibilityState={{ expanded }}>
+        accessibilityState={{ expanded }}
+          accessibilityLabel="Routes">
         <RouteIcon color={colors.white} size={sizes.headerIcon - 2} />
         <Text style={styles.headerTitle}>Routes</Text>
         <View style={styles.spacer} />
@@ -137,7 +138,9 @@ export function RoutesCard({ routes, viewMore, onViewMore }: Props) {
             );
           })}
 
-          <Pressable style={styles.viewMoreButton} onPress={onViewMore}>
+          <Pressable style={styles.viewMoreButton} onPress={onViewMore}
+            accessibilityRole="button"
+            accessibilityLabel={viewMore}>
             <Text style={styles.viewMoreText}>{viewMore}</Text>
           </Pressable>
         </View>

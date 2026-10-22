@@ -22,11 +22,18 @@ function ProfileActionsBase({ onUpdate, onLogout, saving = false }: ProfileActio
         onPress={onUpdate}
         disabled={saving}
         style={resolveButtonStyle}
-        accessibilityRole="button">
+        accessibilityRole="button"
+        accessibilityLabel="Update profile"
+        accessibilityState={{ disabled: saving }}>
         <Text style={styles.buttonLabel}>UPDATE PROFILE</Text>
       </Pressable>
 
-      <Pressable onPress={onLogout} hitSlop={12} style={styles.logoutBtn} accessibilityRole="button">
+      <Pressable
+        onPress={onLogout}
+        hitSlop={12}
+        style={styles.logoutBtn}
+        accessibilityRole="button"
+        accessibilityLabel="Log out">
         <Text style={styles.logoutLabel}>LOGOUT</Text>
       </Pressable>
     </View>

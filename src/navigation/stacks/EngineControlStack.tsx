@@ -8,7 +8,7 @@ const Stack = createNativeStackNavigator<EngineControlStackParamList>();
 
 export function EngineControlStack() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator screenOptions={{ headerShown: false, freezeOnBlur: true }}>
       <Stack.Screen name="EngineControlMain" component={EngineControlScreen} />
     </Stack.Navigator>
   );

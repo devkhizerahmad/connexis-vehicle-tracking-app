@@ -70,7 +70,9 @@ function MapVehicleCardBase({ vehicle, onViewHistory }: MapVehicleCardProps) {
       </View>
 
       {/* S3 link row (PATCH L4): same 50% column as the right column above */}
-      <Pressable style={styles.historyRow} onPress={handleHistory} hitSlop={6}>
+      <Pressable style={styles.historyRow} onPress={handleHistory} hitSlop={6}
+        accessibilityRole="button"
+        accessibilityLabel="View trip history">
         <Text style={styles.historyText}>View History</Text>
         <ArrowRight color={colors.icon.blue} size={10} />
       </Pressable>

@@ -42,7 +42,9 @@ function SelectVehicleFieldBase({ selectedName, options, onSelect }: SelectVehic
         <Pressable
           key={option.id}
           style={({ pressed }) => [styles.option, pressed && styles.optionPressed]}
-          onPress={() => handleSelect(option)}>
+          onPress={() => handleSelect(option)}
+          accessibilityRole="button"
+          accessibilityLabel={option.name}>
           <Text style={styles.optionText} numberOfLines={1}>
             {option.name}
           </Text>
@@ -53,7 +55,10 @@ function SelectVehicleFieldBase({ selectedName, options, onSelect }: SelectVehic
 
   return (
     <View style={fieldStyles.wrap}>
-      <Pressable style={styles.field} onPress={toggle}>
+      <Pressable style={styles.field} onPress={toggle}
+        accessibilityRole="button"
+        accessibilityLabel={`Select vehicle, current ${selectedName ?? 'none'}`}
+        accessibilityState={{ expanded: open }}>
         <Text style={styles.label} numberOfLines={1}>
           {selectedName ?? 'Select Vehicle'}
         </Text>

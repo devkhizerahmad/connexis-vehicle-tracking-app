@@ -29,25 +29,37 @@ export function useProfile() {
   const [values, setValues] = useState<ProfileFormValues>(EMPTY_VALUES);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [loadError, setLoadError] = useState<Error | null>(null);
+  const [saveError, setSaveError] = useState<Error | null>(null);
   const valuesRef = useRef<ProfileFormValues>(EMPTY_VALUES);
 
   useEffect(() => {
     let mounted = true;
-    profileService.getProfile().then((profile: Profile) => {
-      if (!mounted) {
-        return;
-      }
-      const next: ProfileFormValues = {
-        firstName: profile.firstName,
-        lastName: profile.lastName,
-        dob: profile.dob,
-        email: profile.email,
-        phone: profile.phone,
-      };
-      valuesRef.current = next;
-      setValues(next);
-      setLoading(false);
-    });
+    setLoadError(null);
+    profileService
+      .getProfile()
+      .then((profile: Profile) => {
+        if (!mounted) {
+          return;
+        }
+        const next: ProfileFormValues = {
+          firstName: profile.firstName,
+          lastName: profile.lastName,
+          dob: profile.dob,
+          email: profile.email,
+          phone: profile.phone,
+        };
+        valuesRef.current = next;
+        setValues(next);
+        setLoading(false);
+      })
+      .catch((reason: unknown) => {
+        if (!mounted) {
+          return;
+        }
+        setLoadError(reason instanceof Error ? reason : new Error(String(reason)));
+        setLoading(false);
+      });
     return () => {
       mounted = false;
     };
@@ -62,14 +74,25 @@ export function useProfile() {
     setValues(next);
   }, []);
 
-  const save = useCallback(async (): Promise<ProfileUpdateResult> => {
+  /**
+   * Returns null when the update could not be performed, so the caller can
+   * report failure instead of unconditionally claiming success (M6). `saving`
+   * is always cleared, including on rejection.
+   */
+  const save = useCallback(async (): Promise<ProfileUpdateResult | null> => {
     setSaving(true);
-    const result = await profileService.updateProfile({ ...valuesRef.current });
-    setSaving(false);
-    return result;
+    setSaveError(null);
+    try {
+      return await profileService.updateProfile({ ...valuesRef.current });
+    } catch (reason) {
+      setSaveError(reason instanceof Error ? reason : new Error(String(reason)));
+      return null;
+    } finally {
+      setSaving(false);
+    }
   }, []);
 
-  return { values, setField, save, loading, saving };
+  return { values, setField, save, loading, saving, loadError, saveError };
 }
 
 export default useProfile;

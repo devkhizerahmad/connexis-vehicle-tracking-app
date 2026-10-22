@@ -55,6 +55,7 @@ yarn-error.log
 
 # Bundle artifact
 *.jsbundle
+*.bundle
 
 # Ruby / CocoaPods
 **/Pods/
@@ -82,3 +83,13 @@ yarn-error.log
 
 #logs
 /logs
+
+# Generated gate output, device dumps and scratch screenshots
+gate_*.txt
+tsc_*.txt
+uidump.xml
+ec_*.png
+
+# Release signing credentials (see android/keystore.properties.example)
+/android/keystore.properties
+*.jks

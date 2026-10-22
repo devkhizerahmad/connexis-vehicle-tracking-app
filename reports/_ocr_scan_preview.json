@@ -1,0 +1,2487 @@
+﻿{
+  "files": [
+    {
+      "path": ".bundle/config",
+      "status": "scan",
+      "insertions": 2,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "default_path"
+    },
+    {
+      "path": ".eslintignore",
+      "status": "scan",
+      "insertions": 2,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": ".eslintrc.js",
+      "status": "scan",
+      "insertions": 9,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": ".gitignore",
+      "status": "scan",
+      "insertions": 84,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": ".prettierrc.js",
+      "status": "scan",
+      "insertions": 5,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": ".watchmanconfig",
+      "status": "scan",
+      "insertions": 1,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "App.tsx",
+      "status": "scan",
+      "insertions": 148,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "Gemfile",
+      "status": "scan",
+      "insertions": 17,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "KNOWN_ISSUES.md",
+      "status": "scan",
+      "insertions": 75,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "unsupported_ext"
+    },
+    {
+      "path": "README.md",
+      "status": "scan",
+      "insertions": 43,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "unsupported_ext"
+    },
+    {
+      "path": "__mocks__/react-native-maps.js",
+      "status": "scan",
+      "insertions": 20,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "__mocks__/react-native-reanimated.js",
+      "status": "scan",
+      "insertions": 88,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "__tests__/App.test.tsx",
+      "status": "scan",
+      "insertions": 14,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "default_path"
+    },
+    {
+      "path": "__tests__/ReportsScreen.test.tsx",
+      "status": "scan",
+      "insertions": 668,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "default_path"
+    },
+    {
+      "path": "__tests__/mapService.test.ts",
+      "status": "scan",
+      "insertions": 52,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "default_path"
+    },
+    {
+      "path": "agent task prompt.md",
+      "status": "scan",
+      "insertions": 71,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "unsupported_ext"
+    },
+    {
+      "path": "android/app/build.gradle",
+      "status": "scan",
+      "insertions": 122,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "android/app/debug.keystore",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "android/app/proguard-rules.pro",
+      "status": "scan",
+      "insertions": 10,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "unsupported_ext"
+    },
+    {
+      "path": "android/app/src/main/AndroidManifest.xml",
+      "status": "scan",
+      "insertions": 33,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "android/app/src/main/java/com/connexistracker/MainActivity.kt",
+      "status": "scan",
+      "insertions": 22,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "android/app/src/main/java/com/connexistracker/MainApplication.kt",
+      "status": "scan",
+      "insertions": 27,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "android/app/src/main/res/drawable-mdpi/node_modules_reactnavigation_elements_lib_module_assets_backicon.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-mdpi/node_modules_reactnavigation_elements_lib_module_assets_backiconmask.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-mdpi/node_modules_reactnavigation_elements_lib_module_assets_clearicon.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-mdpi/node_modules_reactnavigation_elements_lib_module_assets_closeicon.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-mdpi/node_modules_reactnavigation_elements_lib_module_assets_searchicon.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-mdpi/src_assets_img_car_sedan.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-mdpi/src_assets_logo.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-mdpi/src_assets_profile.jpeg",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-mdpi/src_assets_profile_avatar.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-mdpi/src_assets_promo_man.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-xhdpi/node_modules_reactnavigation_elements_lib_module_assets_backicon.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-xhdpi/node_modules_reactnavigation_elements_lib_module_assets_clearicon.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-xhdpi/node_modules_reactnavigation_elements_lib_module_assets_closeicon.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-xhdpi/node_modules_reactnavigation_elements_lib_module_assets_searchicon.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-xxhdpi/node_modules_reactnavigation_elements_lib_module_assets_backicon.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-xxhdpi/node_modules_reactnavigation_elements_lib_module_assets_clearicon.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-xxhdpi/node_modules_reactnavigation_elements_lib_module_assets_closeicon.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-xxhdpi/node_modules_reactnavigation_elements_lib_module_assets_searchicon.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-xxxhdpi/node_modules_reactnavigation_elements_lib_module_assets_backicon.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-xxxhdpi/node_modules_reactnavigation_elements_lib_module_assets_clearicon.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-xxxhdpi/node_modules_reactnavigation_elements_lib_module_assets_closeicon.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-xxxhdpi/node_modules_reactnavigation_elements_lib_module_assets_searchicon.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/rn_edit_text_material.xml",
+      "status": "scan",
+      "insertions": 37,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-hdpi/ic_launcher.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-hdpi/ic_launcher_round.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-mdpi/ic_launcher.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-mdpi/ic_launcher_round.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xhdpi/ic_launcher.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "android/app/src/main/res/raw/keep.xml",
+      "status": "scan",
+      "insertions": 1,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "android/app/src/main/res/values/colors.xml",
+      "status": "scan",
+      "insertions": 4,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "android/app/src/main/res/values/strings.xml",
+      "status": "scan",
+      "insertions": 3,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "android/app/src/main/res/values/styles.xml",
+      "status": "scan",
+      "insertions": 12,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "android/build.gradle",
+      "status": "scan",
+      "insertions": 21,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "android/gradle/gradle-daemon-jvm.properties",
+      "status": "scan",
+      "insertions": 12,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "android/gradle/wrapper/gradle-wrapper.jar",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "android/gradle/wrapper/gradle-wrapper.properties",
+      "status": "scan",
+      "insertions": 7,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "android/gradlew",
+      "status": "scan",
+      "insertions": 248,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "android/gradlew.bat",
+      "status": "scan",
+      "insertions": 98,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "unsupported_ext"
+    },
+    {
+      "path": "android/settings.gradle",
+      "status": "scan",
+      "insertions": 6,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "app.json",
+      "status": "scan",
+      "insertions": 4,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "babel.config.js",
+      "status": "scan",
+      "insertions": 35,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "design-references/Engine Control Vehicle Dashboard.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "design-references/Fuel expert man.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "design-references/date range ui.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "design-references/engine control.jpeg",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "design-references/home individual assets details.jpeg",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "design-references/home total assts records.jpeg",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "design-references/map date wise and reports alerts show indiviual assets.jpeg",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "design-references/map date wise individual assets details show enhance version.jpeg",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "design-references/map date wise individual assets details show.jpeg",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "design-references/map individual assets map show.jpeg",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "design-references/single date ui.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "design-references/term \u0026 conditions.jpeg",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "docs/PROJECT_GUIDE.html",
+      "status": "scan",
+      "insertions": 400,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "docs/PROJECT_GUIDE.md",
+      "status": "scan",
+      "insertions": 406,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "unsupported_ext"
+    },
+    {
+      "path": "docs/screenshots/DetailsScreen_390x844.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "docs/screenshots/phase1_vehicle.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "docs/screenshots/phase2_header.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "docs/screenshots/phase3_donut.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "docs/screenshots/profile_390x844.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "ec_device_top.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "ec_s1.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "ec_s1b.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "ec_s1c.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "gate_eslint.txt",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "unsupported_ext"
+    },
+    {
+      "path": "gate_eslint_exit.txt",
+      "status": "scan",
+      "insertions": 1,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "unsupported_ext"
+    },
+    {
+      "path": "gate_jest.txt",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "gate_jest_exit.txt",
+      "status": "scan",
+      "insertions": 1,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "unsupported_ext"
+    },
+    {
+      "path": "gate_tsc.txt",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "unsupported_ext"
+    },
+    {
+      "path": "index.js",
+      "status": "scan",
+      "insertions": 9,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "ios/.xcode.env",
+      "status": "scan",
+      "insertions": 11,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "ios/ConnexisTracker.xcodeproj/project.pbxproj",
+      "status": "scan",
+      "insertions": 475,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "unsupported_ext"
+    },
+    {
+      "path": "ios/ConnexisTracker.xcodeproj/xcshareddata/xcschemes/ConnexisTracker.xcscheme",
+      "status": "scan",
+      "insertions": 88,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "unsupported_ext"
+    },
+    {
+      "path": "ios/ConnexisTracker/AppDelegate.swift",
+      "status": "scan",
+      "insertions": 48,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "ios/ConnexisTracker/Images.xcassets/AppIcon.appiconset/Contents.json",
+      "status": "scan",
+      "insertions": 53,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "ios/ConnexisTracker/Images.xcassets/Contents.json",
+      "status": "scan",
+      "insertions": 6,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "ios/ConnexisTracker/Info.plist",
+      "status": "scan",
+      "insertions": 59,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "unsupported_ext"
+    },
+    {
+      "path": "ios/ConnexisTracker/LaunchScreen.storyboard",
+      "status": "scan",
+      "insertions": 47,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "unsupported_ext"
+    },
+    {
+      "path": "ios/ConnexisTracker/PrivacyInfo.xcprivacy",
+      "status": "scan",
+      "insertions": 37,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "unsupported_ext"
+    },
+    {
+      "path": "ios/Podfile",
+      "status": "scan",
+      "insertions": 34,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "jest.config.js",
+      "status": "scan",
+      "insertions": 16,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "metro.config.js",
+      "status": "scan",
+      "insertions": 11,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "package-lock.json",
+      "status": "scan",
+      "insertions": 13270,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "default_path"
+    },
+    {
+      "path": "package.json",
+      "status": "scan",
+      "insertions": 57,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "pending before release.md",
+      "status": "scan",
+      "insertions": 2,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "unsupported_ext"
+    },
+    {
+      "path": "src/assets/img_car_sedan.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "src/assets/logo.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "src/assets/profile.jpeg",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "src/assets/profile_avatar.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "src/assets/promo_man.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "src/features/engineControl/components/ChangeFenceButton/index.tsx",
+      "status": "scan",
+      "insertions": 35,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/engineControl/components/ChangeFenceButton/styles.ts",
+      "status": "scan",
+      "insertions": 35,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/engineControl/components/ControlRows/index.tsx",
+      "status": "scan",
+      "insertions": 69,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/engineControl/components/ControlRows/styles.ts",
+      "status": "scan",
+      "insertions": 53,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/engineControl/components/ControlSwipeCard/index.tsx",
+      "status": "scan",
+      "insertions": 264,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/engineControl/components/ControlSwipeCard/styles.ts",
+      "status": "scan",
+      "insertions": 65,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/engineControl/components/FaqCard/index.tsx",
+      "status": "scan",
+      "insertions": 46,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/engineControl/components/FaqCard/styles.ts",
+      "status": "scan",
+      "insertions": 76,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/engineControl/components/FenceAlertBanner/index.tsx",
+      "status": "scan",
+      "insertions": 30,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/engineControl/components/FenceAlertBanner/styles.ts",
+      "status": "scan",
+      "insertions": 36,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/engineControl/components/GeofenceMap/fitRegion.ts",
+      "status": "scan",
+      "insertions": 73,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/engineControl/components/GeofenceMap/index.tsx",
+      "status": "scan",
+      "insertions": 164,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/engineControl/components/GeofenceMap/styles.ts",
+      "status": "scan",
+      "insertions": 79,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/engineControl/components/LockUnlockRow/index.tsx",
+      "status": "scan",
+      "insertions": 92,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/engineControl/components/LockUnlockRow/styles.ts",
+      "status": "scan",
+      "insertions": 65,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/engineControl/components/PrivacyPolicyRow/index.tsx",
+      "status": "scan",
+      "insertions": 35,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/engineControl/components/PrivacyPolicyRow/styles.ts",
+      "status": "scan",
+      "insertions": 42,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/engineControl/components/RouteList/index.tsx",
+      "status": "scan",
+      "insertions": 91,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/engineControl/components/RouteList/styles.ts",
+      "status": "scan",
+      "insertions": 166,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/engineControl/components/SectionBar/index.tsx",
+      "status": "scan",
+      "insertions": 51,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/engineControl/components/SectionBar/styles.ts",
+      "status": "scan",
+      "insertions": 68,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/engineControl/components/SupportButton/index.tsx",
+      "status": "scan",
+      "insertions": 30,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/engineControl/components/SupportButton/styles.ts",
+      "status": "scan",
+      "insertions": 34,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/engineControl/components/VehicleStatusCards/index.tsx",
+      "status": "scan",
+      "insertions": 99,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/engineControl/components/VehicleStatusCards/styles.ts",
+      "status": "scan",
+      "insertions": 166,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/engineControl/mocks/engineControl.mock.json",
+      "status": "scan",
+      "insertions": 96,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/engineControl/screens/EngineControlScreen/EngineControlScreen.tsx",
+      "status": "scan",
+      "insertions": 277,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/engineControl/screens/EngineControlScreen/index.tsx",
+      "status": "scan",
+      "insertions": 4,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/engineControl/screens/EngineControlScreen/styles.ts",
+      "status": "scan",
+      "insertions": 121,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/engineControl/services/engineControlService.ts",
+      "status": "scan",
+      "insertions": 60,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/engineControl/types/engineControl.ts",
+      "status": "scan",
+      "insertions": 121,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/home/components/AssetCard/AssetCard.tsx",
+      "status": "scan",
+      "insertions": 193,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/home/components/AssetCard/index.ts",
+      "status": "scan",
+      "insertions": 3,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/home/components/AssetCard/styles.ts",
+      "status": "scan",
+      "insertions": 243,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/home/components/KpiRow/KpiRow.tsx",
+      "status": "scan",
+      "insertions": 41,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/home/components/KpiRow/index.ts",
+      "status": "scan",
+      "insertions": 2,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/home/components/KpiRow/styles.ts",
+      "status": "scan",
+      "insertions": 32,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/home/components/OverallActivity/OverallActivity.tsx",
+      "status": "scan",
+      "insertions": 202,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/home/components/OverallActivity/index.ts",
+      "status": "scan",
+      "insertions": 2,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/home/components/OverallActivity/styles.ts",
+      "status": "scan",
+      "insertions": 69,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/home/components/PromoBanner/PromoBanner.tsx",
+      "status": "scan",
+      "insertions": 35,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/home/components/PromoBanner/index.ts",
+      "status": "scan",
+      "insertions": 3,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/home/components/PromoBanner/styles.ts",
+      "status": "scan",
+      "insertions": 72,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/home/components/QuickReportGrid/QuickReportGrid.tsx",
+      "status": "scan",
+      "insertions": 97,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/home/components/QuickReportGrid/index.ts",
+      "status": "scan",
+      "insertions": 2,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/home/components/QuickReportGrid/styles.ts",
+      "status": "scan",
+      "insertions": 51,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/home/components/RoutesCard/RoutesCard.tsx",
+      "status": "scan",
+      "insertions": 149,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/home/components/RoutesCard/index.ts",
+      "status": "scan",
+      "insertions": 2,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/home/components/RoutesCard/styles.ts",
+      "status": "scan",
+      "insertions": 141,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/home/components/SensorBlock/SensorBlock.tsx",
+      "status": "scan",
+      "insertions": 114,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/home/components/SensorBlock/index.ts",
+      "status": "scan",
+      "insertions": 2,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/home/components/SensorBlock/styles.ts",
+      "status": "scan",
+      "insertions": 126,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/home/components/SummaryCards/SummaryCards.tsx",
+      "status": "scan",
+      "insertions": 53,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/home/components/SummaryCards/index.ts",
+      "status": "scan",
+      "insertions": 2,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/home/components/SummaryCards/styles.ts",
+      "status": "scan",
+      "insertions": 128,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/home/hooks/useVehicleDetails.ts",
+      "status": "scan",
+      "insertions": 24,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/home/hooks/useVehicleList.ts",
+      "status": "scan",
+      "insertions": 31,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/home/mocks/details.mock.json",
+      "status": "scan",
+      "insertions": 65,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/home/mocks/vehicles.mock.json",
+      "status": "scan",
+      "insertions": 204,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/home/screens/DetailsScreen/DetailsScreen.tsx",
+      "status": "scan",
+      "insertions": 159,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/home/screens/DetailsScreen/index.ts",
+      "status": "scan",
+      "insertions": 2,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/home/screens/DetailsScreen/styles.ts",
+      "status": "scan",
+      "insertions": 32,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/home/screens/HomeScreen/HomeScreen.tsx",
+      "status": "scan",
+      "insertions": 189,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/home/screens/HomeScreen/index.tsx",
+      "status": "scan",
+      "insertions": 2,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/home/screens/HomeScreen/styles.ts",
+      "status": "scan",
+      "insertions": 93,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/home/services/vehicleService.ts",
+      "status": "scan",
+      "insertions": 16,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/home/types/details.ts",
+      "status": "scan",
+      "insertions": 29,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/home/types/home.ts",
+      "status": "scan",
+      "insertions": 49,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/map/components/HistoryListRow/HistoryListRow.tsx",
+      "status": "scan",
+      "insertions": 157,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/map/components/HistoryListRow/index.ts",
+      "status": "scan",
+      "insertions": 2,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/map/components/HistoryMiniMap/HistoryMiniMap.tsx",
+      "status": "scan",
+      "insertions": 150,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/map/components/HistoryMiniMap/historyMapStyle.ts",
+      "status": "scan",
+      "insertions": 15,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/map/components/HistoryMiniMap/index.ts",
+      "status": "scan",
+      "insertions": 2,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/map/components/HistorySummaryPanel/HistorySummaryPanel.tsx",
+      "status": "scan",
+      "insertions": 187,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/map/components/HistorySummaryPanel/index.ts",
+      "status": "scan",
+      "insertions": 2,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/map/components/LiveMapView/LiveMapView.tsx",
+      "status": "scan",
+      "insertions": 216,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/map/components/LiveMapView/darkMapStyle.ts",
+      "status": "scan",
+      "insertions": 21,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/map/components/LiveMapView/index.ts",
+      "status": "scan",
+      "insertions": 3,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/map/components/MapVehicleCard/MapVehicleCard.tsx",
+      "status": "scan",
+      "insertions": 217,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/map/components/MapVehicleCard/index.ts",
+      "status": "scan",
+      "insertions": 3,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/map/components/PlaybackPanel/PlaybackPanel.tsx",
+      "status": "scan",
+      "insertions": 262,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/map/components/PlaybackPanel/PlaybackScrubber.tsx",
+      "status": "scan",
+      "insertions": 205,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/map/components/PlaybackPanel/index.ts",
+      "status": "scan",
+      "insertions": 4,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/map/components/SelectVehicleField/SelectVehicleField.tsx",
+      "status": "scan",
+      "insertions": 132,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/map/components/SelectVehicleField/index.ts",
+      "status": "scan",
+      "insertions": 3,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/map/components/SelectVehicleField/styles.ts",
+      "status": "scan",
+      "insertions": 9,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/map/mocks/history.mock.json",
+      "status": "scan",
+      "insertions": 101,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/map/mocks/livemap.mock.json",
+      "status": "scan",
+      "insertions": 116,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/map/screens/HistoryScreen/index.tsx",
+      "status": "scan",
+      "insertions": 317,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/map/screens/HistoryScreen/styles.ts",
+      "status": "scan",
+      "insertions": 100,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/map/screens/LiveMapScreen/LiveMapScreen.tsx",
+      "status": "scan",
+      "insertions": 145,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/map/screens/LiveMapScreen/index.ts",
+      "status": "scan",
+      "insertions": 2,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/map/screens/LiveMapScreen/styles.ts",
+      "status": "scan",
+      "insertions": 50,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/map/services/historyService.ts",
+      "status": "scan",
+      "insertions": 64,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/map/services/mapService.ts",
+      "status": "scan",
+      "insertions": 35,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/map/types/history.ts",
+      "status": "scan",
+      "insertions": 126,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/map/types/map.ts",
+      "status": "scan",
+      "insertions": 75,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/map/utils/historyDates.ts",
+      "status": "scan",
+      "insertions": 30,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/profile/components/ProfileActions/ProfileActions.tsx",
+      "status": "scan",
+      "insertions": 37,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/profile/components/ProfileActions/index.ts",
+      "status": "scan",
+      "insertions": 3,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/profile/components/ProfileActions/styles.ts",
+      "status": "scan",
+      "insertions": 37,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/profile/components/ProfileAvatar/ProfileAvatar.tsx",
+      "status": "scan",
+      "insertions": 19,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/profile/components/ProfileAvatar/index.ts",
+      "status": "scan",
+      "insertions": 2,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/profile/components/ProfileAvatar/styles.ts",
+      "status": "scan",
+      "insertions": 25,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/profile/components/ProfileDobPicker/ProfileDobField.tsx",
+      "status": "scan",
+      "insertions": 61,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/profile/components/ProfileDobPicker/ProfileDobSheet.tsx",
+      "status": "scan",
+      "insertions": 305,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/profile/components/ProfileDobPicker/dob.ts",
+      "status": "scan",
+      "insertions": 108,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/profile/components/ProfileDobPicker/index.ts",
+      "status": "scan",
+      "insertions": 16,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/profile/components/ProfileDobPicker/styles.ts",
+      "status": "scan",
+      "insertions": 129,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/profile/components/ProfileFormField/ProfileFormField.tsx",
+      "status": "scan",
+      "insertions": 54,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/profile/components/ProfileFormField/index.ts",
+      "status": "scan",
+      "insertions": 3,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/profile/components/ProfileFormField/styles.ts",
+      "status": "scan",
+      "insertions": 30,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/profile/components/ProfileHeader/ProfileHeader.tsx",
+      "status": "scan",
+      "insertions": 28,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/profile/components/ProfileHeader/index.ts",
+      "status": "scan",
+      "insertions": 2,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/profile/hooks/useProfile.ts",
+      "status": "scan",
+      "insertions": 75,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/profile/mocks/profile.mock.json",
+      "status": "scan",
+      "insertions": 7,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/profile/screens/ProfileScreen/ProfileScreen.tsx",
+      "status": "scan",
+      "insertions": 175,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/profile/screens/ProfileScreen/index.ts",
+      "status": "scan",
+      "insertions": 2,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/profile/screens/ProfileScreen/styles.ts",
+      "status": "scan",
+      "insertions": 39,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/profile/services/profileService.ts",
+      "status": "scan",
+      "insertions": 18,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/profile/types/profile.ts",
+      "status": "scan",
+      "insertions": 46,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/reports/components/ReportCategorySection/ReportCategorySection.tsx",
+      "status": "scan",
+      "insertions": 86,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/reports/components/ReportCategorySection/index.ts",
+      "status": "scan",
+      "insertions": 4,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/reports/components/ReportTile/ReportTile.tsx",
+      "status": "scan",
+      "insertions": 144,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/reports/components/ReportTile/index.ts",
+      "status": "scan",
+      "insertions": 4,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/reports/mocks/reports.mock.json",
+      "status": "scan",
+      "insertions": 78,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/reports/screens/ReportsScreen/ReportsScreen.tsx",
+      "status": "scan",
+      "insertions": 396,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/reports/screens/ReportsScreen/index.tsx",
+      "status": "scan",
+      "insertions": 4,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/reports/screens/ReportsScreen/styles.ts",
+      "status": "scan",
+      "insertions": 94,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/reports/services/reportsService.ts",
+      "status": "scan",
+      "insertions": 31,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/features/reports/types/reports.ts",
+      "status": "scan",
+      "insertions": 77,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/navigation/RootNavigator.tsx",
+      "status": "scan",
+      "insertions": 99,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/navigation/stacks/EngineControlStack.tsx",
+      "status": "scan",
+      "insertions": 17,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/navigation/stacks/HomeStack.tsx",
+      "status": "scan",
+      "insertions": 24,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/navigation/stacks/MapStack.tsx",
+      "status": "scan",
+      "insertions": 27,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/navigation/stacks/ProfileStack.tsx",
+      "status": "scan",
+      "insertions": 17,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/navigation/stacks/ReportStack.tsx",
+      "status": "scan",
+      "insertions": 24,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/navigation/types.ts",
+      "status": "scan",
+      "insertions": 38,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/components/controls/Collapsible/Collapsible.tsx",
+      "status": "scan",
+      "insertions": 45,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/components/controls/Collapsible/index.ts",
+      "status": "scan",
+      "insertions": 2,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/components/controls/Collapsible/styles.ts",
+      "status": "scan",
+      "insertions": 13,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/components/controls/DateRangeCalendar/DateRangeCalendar.tsx",
+      "status": "scan",
+      "insertions": 297,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/components/controls/DateRangeCalendar/DateRangeField.tsx",
+      "status": "scan",
+      "insertions": 58,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/components/controls/DateRangeCalendar/index.ts",
+      "status": "scan",
+      "insertions": 10,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/components/controls/DateRangeCalendar/styles.ts",
+      "status": "scan",
+      "insertions": 70,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/components/controls/DateRangeCalendar/theme.ts",
+      "status": "scan",
+      "insertions": 105,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/components/controls/HourMinPicker/index.tsx",
+      "status": "scan",
+      "insertions": 210,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/components/controls/SelectField/index.tsx",
+      "status": "scan",
+      "insertions": 197,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/components/feedback/Banner/index.tsx",
+      "status": "scan",
+      "insertions": 52,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/components/icons/index.tsx",
+      "status": "scan",
+      "insertions": 1597,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/components/layout/AppHeader/AppHeader.tsx",
+      "status": "scan",
+      "insertions": 183,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/components/layout/AppHeader/index.ts",
+      "status": "scan",
+      "insertions": 2,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/components/layout/AppHeader/styles.ts",
+      "status": "scan",
+      "insertions": 111,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/components/layout/BottomNav/BottomNav.tsx",
+      "status": "scan",
+      "insertions": 87,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/components/layout/BottomNav/index.ts",
+      "status": "scan",
+      "insertions": 2,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/components/layout/BottomNav/styles.ts",
+      "status": "scan",
+      "insertions": 50,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/components/vehicle/CyanLocationBox/CyanLocationBox.tsx",
+      "status": "scan",
+      "insertions": 31,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/components/vehicle/CyanLocationBox/index.ts",
+      "status": "scan",
+      "insertions": 2,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/components/vehicle/CyanLocationBox/styles.ts",
+      "status": "scan",
+      "insertions": 33,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/components/vehicle/PlateStatusRow/PlateStatusRow.tsx",
+      "status": "scan",
+      "insertions": 26,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/components/vehicle/PlateStatusRow/index.ts",
+      "status": "scan",
+      "insertions": 2,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/components/vehicle/PlateStatusRow/styles.ts",
+      "status": "scan",
+      "insertions": 38,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/components/vehicle/VehicleChip/index.tsx",
+      "status": "scan",
+      "insertions": 18,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/components/vehicle/VehicleChip/styles.ts",
+      "status": "scan",
+      "insertions": 18,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/components/vehicle/VehicleInfoCard/VehicleInfoCard.tsx",
+      "status": "scan",
+      "insertions": 68,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/components/vehicle/VehicleInfoCard/index.ts",
+      "status": "scan",
+      "insertions": 2,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/components/vehicle/VehicleInfoCard/styles.ts",
+      "status": "scan",
+      "insertions": 84,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/hooks/useCollapsible.ts",
+      "status": "scan",
+      "insertions": 63,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/hooks/useDonutProgress.ts",
+      "status": "scan",
+      "insertions": 35,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/theme/colors.ts",
+      "status": "scan",
+      "insertions": 166,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/theme/engineControl.ts",
+      "status": "scan",
+      "insertions": 391,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/theme/header.ts",
+      "status": "scan",
+      "insertions": 61,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/theme/history.ts",
+      "status": "scan",
+      "insertions": 146,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/theme/index.ts",
+      "status": "scan",
+      "insertions": 13,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/theme/profile.ts",
+      "status": "scan",
+      "insertions": 98,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/theme/radii.ts",
+      "status": "scan",
+      "insertions": 27,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/theme/reports.ts",
+      "status": "scan",
+      "insertions": 111,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/theme/routeRows.ts",
+      "status": "scan",
+      "insertions": 107,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/theme/shadows.ts",
+      "status": "scan",
+      "insertions": 19,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/theme/sizes.ts",
+      "status": "scan",
+      "insertions": 72,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/theme/spacing.ts",
+      "status": "scan",
+      "insertions": 25,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/theme/typography.ts",
+      "status": "scan",
+      "insertions": 11,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/types/common.ts",
+      "status": "scan",
+      "insertions": 24,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/types/vehicle.ts",
+      "status": "scan",
+      "insertions": 65,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/utils/format.ts",
+      "status": "scan",
+      "insertions": 23,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/utils/navigationHelpers.ts",
+      "status": "scan",
+      "insertions": 25,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "src/shared/utils/styleFactories.ts",
+      "status": "scan",
+      "insertions": 82,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "tsc_out.txt",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "unsupported_ext"
+    },
+    {
+      "path": "tsconfig.json",
+      "status": "scan",
+      "insertions": 13,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "ui-baseline/00-boot.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "ui-baseline/EngineControl/bottom-half.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "ui-baseline/EngineControl/mid-swipe.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "ui-baseline/EngineControl/routes-connector.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "ui-baseline/EngineControl/top-half-p1.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "ui-baseline/EngineControl/top-half.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "ui-baseline/Headers/Details-header.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "ui-baseline/Headers/EngineControl-header.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "ui-baseline/Headers/History-header.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "ui-baseline/Headers/Home-header.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "ui-baseline/Headers/LiveMap-header.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "ui-baseline/Headers/Profile-dob.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "ui-baseline/Headers/Profile-header.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "ui-baseline/Headers/Reports-header.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "ui-baseline/Headers/_all-headers-comparison.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "ui-baseline/History.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "ui-baseline/Profile.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "ui-baseline/Reports.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "ui-baseline/baseline_record.json",
+      "status": "scan",
+      "insertions": 421,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "ui-baseline/v2/Details-full.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "ui-baseline/v2/Details-top.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "ui-baseline/v2/EngineControl-full.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "ui-baseline/v2/EngineControl-top.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "ui-baseline/v2/History-full.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "ui-baseline/v2/History-top.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "ui-baseline/v2/Home-full.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "ui-baseline/v2/Home-top.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "ui-baseline/v2/Profile-top.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "ui-baseline/v2/Reports-full.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "ui-baseline/v2/Reports-top.png",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": false,
+      "exclude_reason": "binary"
+    },
+    {
+      "path": "uidump.xml",
+      "status": "scan",
+      "insertions": 1,
+      "deletions": 0,
+      "will_review": true
+    },
+    {
+      "path": "reports/_ocr_scan_preview.json",
+      "status": "scan",
+      "insertions": 0,
+      "deletions": 0,
+      "will_review": true
+    }
+  ],
+  "total_insertions": 17463,
+  "total_deletions": 0,
+  "total_files": 338,
+  "reviewable_count": 226,
+  "excluded_count": 112
+}

@@ -50,6 +50,8 @@ export function VehicleInfoCard(p: Props) {
       <View style={styles.liveLocationContainer}>
         <Pressable
           onPress={p.onLiveLocation}
+            accessibilityRole="button"
+            accessibilityLabel="Open live location"
           style={styles.liveLocationButton}>
           <Pin color={colors.icon.btnPin} size={14} />
           <Text style={styles.liveLocationText}>{p.liveLocation}</Text>

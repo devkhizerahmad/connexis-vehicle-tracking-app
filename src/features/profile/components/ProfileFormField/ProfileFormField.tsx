@@ -1,9 +1,55 @@
 // ProfileFormField.tsx — memoized label + editable value + optional divider row
 import React, { memo, useCallback } from 'react';
-import { KeyboardTypeOptions, Text, TextInput, View } from 'react-native';
+import {
+  KeyboardTypeOptions,
+  Text,
+  TextInput,
+  TextInputProps,
+  View,
+} from 'react-native';
 import { profileTokens } from '@shared/theme';
 import { ProfileFieldKey } from '@features/profile/types/profile';
 import { styles } from './styles';
+
+/**
+ * B13: autofill + keyboard contract per field. Without these, TalkBack
+ * announced five identical "edit box" fields and email auto-capitalised.
+ */
+const FIELD_PROPS: Record<
+  ProfileFieldKey,
+  Pick<TextInputProps, 'autoComplete' | 'textContentType' | 'autoCapitalize' | 'returnKeyType'>
+> = {
+  firstName: {
+    autoComplete: 'given-name',
+    textContentType: 'givenName',
+    autoCapitalize: 'words',
+    returnKeyType: 'next',
+  },
+  lastName: {
+    autoComplete: 'family-name',
+    textContentType: 'familyName',
+    autoCapitalize: 'words',
+    returnKeyType: 'next',
+  },
+  dob: {
+    autoComplete: 'off',
+    textContentType: 'none',
+    autoCapitalize: 'none',
+    returnKeyType: 'next',
+  },
+  email: {
+    autoComplete: 'email',
+    textContentType: 'emailAddress',
+    autoCapitalize: 'none',
+    returnKeyType: 'next',
+  },
+  phone: {
+    autoComplete: 'tel',
+    textContentType: 'telephoneNumber',
+    autoCapitalize: 'none',
+    returnKeyType: 'done',
+  },
+};
 
 export interface ProfileFormFieldProps {
   fieldKey: ProfileFieldKey;
@@ -44,6 +90,9 @@ function ProfileFormFieldBase({
         editable
         autoCorrect={false}
         underlineColorAndroid="transparent"
+        accessibilityLabel={label}
+        accessibilityHint={placeholder}
+        {...FIELD_PROPS[fieldKey]}
       />
       {showDivider ? <View style={styles.divider} /> : null}
     </View>

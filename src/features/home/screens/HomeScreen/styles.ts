@@ -33,7 +33,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   chipName: {
-    color: colors.white,
+    color: colors.textDark,
     fontSize: 11,
     paddingLeft: 12,
     flexShrink: 1,

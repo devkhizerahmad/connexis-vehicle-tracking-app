@@ -29,6 +29,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { AppHeader } from '@shared/components/layout/AppHeader';
+import { ScreenState } from '@shared/components/feedback/ScreenState';
 import { ecSizes, sizes, spacing } from '@shared/theme';
 import { goToLiveMap } from '@shared/utils/navigationHelpers';
 import type { RootTabParamList } from '@navigation/types';
@@ -60,6 +61,8 @@ const CURRENT_VEHICLE_ID = 'LFA-1464';
 
 export function EngineControlScreen({ navigation }: EngineControlScreenProps) {
   const [data, setData] = useState<EngineControlData | null>(null);
+  const [loadError, setLoadError] = useState<Error | null>(null);
+  const [attempt, setAttempt] = useState(0);
   // W4: this screen's `navigation` is a STACK prop (EngineControlStack), but the
   // helper needs the ROOT tab prop to switch tabs — same typed handle LiveMap uses.
   const tabNav = useNavigation<BottomTabNavigationProp<RootTabParamList>>();
@@ -77,15 +80,23 @@ export function EngineControlScreen({ navigation }: EngineControlScreenProps) {
 
   useEffect(() => {
     let alive = true;
-    engineControlService.getEngineControlData().then(payload => {
-      if (alive) {
-        setData(payload);
-      }
-    });
+    setLoadError(null);
+    engineControlService
+      .getEngineControlData()
+      .then(payload => {
+        if (alive) {
+          setData(payload);
+        }
+      })
+      .catch((reason: unknown) => {
+        if (alive) {
+          setLoadError(reason instanceof Error ? reason : new Error(String(reason)));
+        }
+      });
     return () => {
       alive = false;
     };
-  }, []);
+  }, [attempt]);
 
   // Cancel a pending toast dismissal if the screen unmounts mid-fade.
   useEffect(
@@ -175,7 +186,6 @@ export function EngineControlScreen({ navigation }: EngineControlScreenProps) {
   );
 
   if (!data) {
-    // header-only shell while the mock payload resolves
     return (
       <View style={styles.screen}>
         <AppHeader
@@ -184,6 +194,15 @@ export function EngineControlScreen({ navigation }: EngineControlScreenProps) {
           showAvatar={false}
           actions={headerAvatar}
         />
+        {loadError ? (
+          <ScreenState
+            kind="error"
+            message="We could not load engine control. Check your connection and try again."
+            onAction={() => setAttempt(n => n + 1)}
+          />
+        ) : (
+          <ScreenState kind="loading" message="Loading engine control." />
+        )}
       </View>
     );
   }

@@ -65,7 +65,13 @@ export function AssetCard({ vehicle, onMoreDetails, onViewOnMap, onReports }: As
           <Text style={styles.headerNameText}>{vehicle.name}</Text>
         </View>
         <View style={[styles.headerStatus, { backgroundColor: statusColors[vehicle.status] }]}>
-          <Text style={styles.headerStatusText}>{statusLabels[vehicle.status]}</Text>
+          <Text
+            style={[
+              styles.headerStatusText,
+              vehicle.status !== 'stop' && styles.headerStatusTextDark,
+            ]}>
+            {statusLabels[vehicle.status]}
+          </Text>
         </View>
       </View>
 
@@ -121,20 +127,26 @@ export function AssetCard({ vehicle, onMoreDetails, onViewOnMap, onReports }: As
             "More Details →" left, the two compact buttons right, both centred.
             Matches the sampled reference footer. */}
         <View style={styles.footerRow}>
-          <Pressable style={styles.moreDetailsLink} onPress={() => onMoreDetails(vehicle)}>
+          <Pressable style={styles.moreDetailsLink} onPress={() => onMoreDetails(vehicle)}
+            accessibilityRole="button"
+            accessibilityLabel={`More details for ${vehicle.name}`}>
             <Text style={styles.moreDetails}>More Details</Text>
             <ArrowRight color={colors.home.moreDetails} size={10} />
           </Pressable>
           <View style={styles.buttonsRow}>
             <Pressable
               style={[styles.actionBtn, { backgroundColor: colors.home.reportsBtn }]}
-              onPress={() => onReports(vehicle)}>
+              onPress={() => onReports(vehicle)}
+                accessibilityRole="button"
+                accessibilityLabel={`Reports for ${vehicle.name}`}>
               <ListIcon color={colors.white} size={12} />
               <Text style={styles.actionBtnText}> Reports</Text>
             </Pressable>
             <Pressable
               style={[styles.actionBtn, { backgroundColor: colors.surface.navy }]}
-              onPress={() => onViewOnMap(vehicle)}>
+              onPress={() => onViewOnMap(vehicle)}
+                accessibilityRole="button"
+                accessibilityLabel={`View ${vehicle.name} on the map`}>
               <Pin color={colors.white} size={12} />
               <Text style={styles.actionBtnText}> View on Map</Text>
             </Pressable>
@@ -143,7 +155,9 @@ export function AssetCard({ vehicle, onMoreDetails, onViewOnMap, onReports }: As
       </View>
 
       {/* premium bar: maroon h26, chevron only when a sensor strip exists */}
-      <Pressable style={styles.premiumBar} onPress={strip ? toggle : undefined}>
+      <Pressable style={styles.premiumBar} onPress={strip ? toggle : undefined}
+        accessibilityRole="button"
+        accessibilityLabel="Vehicle sensors">
         <StarIcon color={colors.white} size={12} />
         <Text style={styles.premiumText}>Premium</Text>
         {strip ? (

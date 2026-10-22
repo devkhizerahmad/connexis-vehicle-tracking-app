@@ -125,6 +125,7 @@ function HourMinPickerBase({
         return (
           <Pressable
             key={option}
+              accessibilityLabel={option}
             style={[
               styles.chip,
               { height: v.chipH, borderRadius: v.chipRadius, paddingHorizontal: v.chipPadH },

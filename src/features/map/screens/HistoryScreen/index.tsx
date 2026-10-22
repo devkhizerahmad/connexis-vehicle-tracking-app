@@ -26,10 +26,10 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Animated, FlatList, Image, Pressable, Text, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { MD3DarkTheme, Provider as PaperProvider } from 'react-native-paper';
 import dayjs from 'dayjs';
 import type { DateType } from 'react-native-ui-datepicker';
 import { AppHeader } from '@shared/components/layout/AppHeader';
+import { ScreenState } from '@shared/components/feedback/ScreenState';
 import { ArrowLeft } from '@shared/components/icons';
 import { DateRangeCalendar, DateRangeField } from '@shared/components/controls/DateRangeCalendar';
 import { useCollapsible } from '@shared/hooks/useCollapsible';
@@ -69,39 +69,6 @@ type HistoryScreenProps = NativeStackScreenProps<MapStackParamList, 'History'>;
 const DEFAULT_MONTH = 11;
 const DEFAULT_YEAR = 2018;
 
-/**
- * Paper theme, retained for History's other Paper-based surfaces.
- *
- * MUST be spread over `MD3DarkTheme` rather than written as a bare literal:
- * `PaperProvider` merges with a SHALLOW spread, so a partial `colors` object
- * REPLACES the whole default palette and drops `colors.elevation` — which
- * Paper's `AnimatedCrossView` dereference (`theme.colors.elevation.level3`).
- * Deriving from MD3DarkTheme keeps every token and only overrides the handful
- * that carry the History look.
- */
-const paperTheme = {
-  ...MD3DarkTheme,
-  colors: {
-    ...MD3DarkTheme.colors,
-    primary: historyColors.rangeEdge,
-    background: historyColors.panel,
-    surface: historyColors.panel,
-    onSurface: historyColors.panelTitle,
-    onBackground: historyColors.panelTitle,
-    outline: historyColors.panelBorder,
-    backdrop: 'rgba(0,0,0,0.6)',
-    elevation: {
-      ...MD3DarkTheme.colors.elevation,
-      level0: historyColors.panel,
-      level1: historyColors.panel,
-      level2: historyColors.panel,
-      level3: historyColors.panelSoft,
-      level4: historyColors.panelSoft,
-      level5: historyColors.panelSoft,
-    },
-  },
-};
-
 export function HistoryScreen({ route, navigation }: HistoryScreenProps) {
   const vehicleId = route.params?.vehicleId;
   // V5-PART1: the shared BottomNav is an absolute overlay (RootNavigator's tabBar),
@@ -110,6 +77,8 @@ export function HistoryScreen({ route, navigation }: HistoryScreenProps) {
   const scrollPadBottom = sizes.bottomNavH + insets.bottom + 12;
 
   const [data, setData] = useState<HistoryData | null>(null);
+  const [loadError, setLoadError] = useState<Error | null>(null);
+  const [attempt, setAttempt] = useState(0);
   /** Range the panels currently reflect; changing it triggers a refetch. */
   const [range, setRange] = useState<HistoryDateRange | null>(null);
   /** Range being edited in the calendar until the day tap commits it. */
@@ -128,21 +97,30 @@ export function HistoryScreen({ route, navigation }: HistoryScreenProps) {
   // Initial load — no range yet, so the service returns its mock default.
   useEffect(() => {
     let cancelled = false;
-    historyService.getHistoryData(vehicleId).then(payload => {
-      if (cancelled) {
-        return;
-      }
-      setData(payload);
-      setRange(payload.range);
-      setDraftRange(payload.range);
-      setDisplayedMonth(payload.month.month);
-      setDisplayedYear(payload.month.year);
-      setViewSeeded(true);
-    });
+    setLoadError(null);
+    historyService
+      .getHistoryData(vehicleId)
+      .then(payload => {
+        if (cancelled) {
+          return;
+        }
+        setData(payload);
+        setRange(payload.range);
+        setDraftRange(payload.range);
+        setDisplayedMonth(payload.month.month);
+        setDisplayedYear(payload.month.year);
+        setViewSeeded(true);
+      })
+      .catch((reason: unknown) => {
+        if (cancelled) {
+          return;
+        }
+        setLoadError(reason instanceof Error ? reason : new Error(String(reason)));
+      });
     return () => {
       cancelled = true;
     };
-  }, [vehicleId]);
+  }, [attempt, vehicleId]);
 
   /** Confirmed range changed -> refetch for the new window. */
   useEffect(() => {
@@ -150,11 +128,18 @@ export function HistoryScreen({ route, navigation }: HistoryScreenProps) {
       return undefined;
     }
     let cancelled = false;
-    historyService.getHistoryData(vehicleId, range).then(payload => {
-      if (!cancelled) {
-        setData(payload);
-      }
-    });
+    historyService
+      .getHistoryData(vehicleId, range)
+      .then(payload => {
+        if (!cancelled) {
+          setData(payload);
+        }
+      })
+      .catch((reason: unknown) => {
+        if (!cancelled) {
+          setLoadError(reason instanceof Error ? reason : new Error(String(reason)));
+        }
+      });
     return () => {
       cancelled = true;
     };
@@ -230,86 +215,95 @@ export function HistoryScreen({ route, navigation }: HistoryScreenProps) {
     return (
       <View style={styles.screen}>
         <AppHeader title="History" onBack={handleBack} />
+        {loadError ? (
+          <ScreenState
+            kind="error"
+            message="We could not load the trip history. Check your connection and try again."
+            onAction={() => setAttempt(n => n + 1)}
+          />
+        ) : (
+          <ScreenState kind="loading" message="Loading trip history." />
+        )}
       </View>
     );
   }
 
   return (
-    <PaperProvider theme={paperTheme}>
-      <View style={styles.screen}>
-        <AppHeader title="History" onBack={handleBack} />
+    <View style={styles.screen}>
+      <AppHeader title="History" onBack={handleBack} />
 
-        <FlatList
-          data={data.stops}
-          keyExtractor={item => item.id}
-          renderItem={({ item, index }) => (
-            <HistoryListRow stop={item} isLast={index === data.stops.length - 1} />
-          )}
-          style={styles.list}
-          contentContainerStyle={[styles.listContent, { paddingBottom: scrollPadBottom }]}
-          showsVerticalScrollIndicator={false}
-          testID="history-list"
-          ListHeaderComponent={
-            <View style={styles.header}>
-              {/* S2 vehicle chip + live link */}
-              <View style={styles.vehicleRow}>
-                <View style={styles.vehicleChip} testID="history-vehicle-chip">
-                  <Image
-                    source={require('../../../../assets/img_car_sedan.png')}
-                    style={styles.vehiclePhoto}
-                  />
-                  <Text style={styles.vehicleName} numberOfLines={1}>
-                    {data.vehicle.name}
-                  </Text>
-                </View>
-                <Pressable
-                  style={styles.viewLive}
-                  onPress={handleBack}
-                  hitSlop={8}
-                  testID="history-view-live">
-                  <ArrowLeft color={historyColors.viewLiveInk} size={14} />
-                  <Text style={styles.viewLiveText}>{'View Live'}</Text>
-                </Pressable>
+      <FlatList
+        data={data.stops}
+        keyExtractor={item => item.id}
+        renderItem={({ item, index }) => (
+          <HistoryListRow stop={item} isLast={index === data.stops.length - 1} />
+        )}
+        style={styles.list}
+        contentContainerStyle={[styles.listContent, { paddingBottom: scrollPadBottom }]}
+        showsVerticalScrollIndicator={false}
+        testID="history-list"
+        ListHeaderComponent={
+          <View style={styles.header}>
+            {/* S2 vehicle chip + live link */}
+            <View style={styles.vehicleRow}>
+              <View style={styles.vehicleChip} testID="history-vehicle-chip">
+                <Image
+                  source={require('../../../../assets/img_car_sedan.png')}
+                  style={styles.vehiclePhoto}
+                />
+                <Text style={styles.vehicleName} numberOfLines={1}>
+                  {data.vehicle.name}
+                </Text>
               </View>
-
-              {/* S3 date field + S4 calendar (the SAME component Reports uses) */}
-              <DateRangeField value={rangeLabel} onPress={toggle} />
-              <Animated.View
-                style={[styles.collapseWrap, { height: animatedHeight, opacity: anim }]}>
-                <View
-                  onLayout={e => onMeasureLayout(e.nativeEvent.layout.height)}
-                  testID="history-date-body">
-                  <DateRangeCalendar
-                    startDate={fromIsoDate(draftRange.from)}
-                    endDate={draftRange.until ? fromIsoDate(draftRange.until) : null}
-                    displayedMonth={displayedMonth}
-                    displayedYear={displayedYear}
-                    onRangeChange={handleRangeChange}
-                    onMonthChange={handleMonthChange}
-                    onYearChange={handleYearChange}
-                    testIDPrefix="history-calendar"
-                  />
-                </View>
-              </Animated.View>
-
-              {/* S5 summary */}
-              <HistorySummaryPanel summary={data.summary} />
-
-              {/* S6 mini map */}
-              <HistoryMiniMap geometry={data.map} alertText={data.alertText} />
-
-              {/* S7 playback + S8 hour/min jumpers */}
-              <PlaybackPanel playback={data.playback} filters={data.filters} />
-
-              {/* S9 section header */}
-              <View style={styles.sectionBar}>
-                <Text style={styles.sectionBarText}>History</Text>
-              </View>
+              <Pressable
+                style={styles.viewLive}
+                onPress={handleBack}
+                hitSlop={8}
+                testID="history-view-live"
+                  accessibilityRole="button"
+                  accessibilityLabel="View live map">
+                <ArrowLeft color={historyColors.viewLiveInk} size={14} />
+                <Text style={styles.viewLiveText}>{'View Live'}</Text>
+              </Pressable>
             </View>
-          }
-        />
-      </View>
-    </PaperProvider>
+
+            {/* S3 date field + S4 calendar (the SAME component Reports uses) */}
+            <DateRangeField value={rangeLabel} onPress={toggle} />
+            <Animated.View
+              style={[styles.collapseWrap, { height: animatedHeight, opacity: anim }]}>
+              <View
+                onLayout={e => onMeasureLayout(e.nativeEvent.layout.height)}
+                testID="history-date-body">
+                <DateRangeCalendar
+                  startDate={fromIsoDate(draftRange.from)}
+                  endDate={draftRange.until ? fromIsoDate(draftRange.until) : null}
+                  displayedMonth={displayedMonth}
+                  displayedYear={displayedYear}
+                  onRangeChange={handleRangeChange}
+                  onMonthChange={handleMonthChange}
+                  onYearChange={handleYearChange}
+                  testIDPrefix="history-calendar"
+                />
+              </View>
+            </Animated.View>
+
+            {/* S5 summary */}
+            <HistorySummaryPanel summary={data.summary} />
+
+            {/* S6 mini map */}
+            <HistoryMiniMap geometry={data.map} alertText={data.alertText} />
+
+            {/* S7 playback + S8 hour/min jumpers */}
+            <PlaybackPanel playback={data.playback} filters={data.filters} />
+
+            {/* S9 section header */}
+            <View style={styles.sectionBar}>
+              <Text style={styles.sectionBarText}>History</Text>
+            </View>
+          </View>
+        }
+      />
+    </View>
   );
 }
 

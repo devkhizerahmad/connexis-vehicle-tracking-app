@@ -3,6 +3,7 @@ import React, { useCallback, useRef, useState } from 'react';
 import { Animated, ScrollView, StatusBar, Text, View } from 'react-native';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import AppHeader from '@shared/components/layout/AppHeader';
+import { ScreenState } from '@shared/components/feedback/ScreenState';
 import PlateStatusRow from '@shared/components/vehicle/PlateStatusRow';
 import VehicleInfoCard from '@shared/components/vehicle/VehicleInfoCard';
 import KpiRow from '@features/home/components/KpiRow';
@@ -23,7 +24,7 @@ interface DetailsScreenProps {
 
 export function DetailsScreen({ route, navigation }: DetailsScreenProps) {
   const vehicleId = route?.params?.vehicleId ?? 'LFA-1464';
-  const { details } = useVehicleDetails(vehicleId);
+  const { details, loading, error, retry } = useVehicleDetails(vehicleId);
 
   const [toast, setToast] = useState<string | null>(null);
   const toastAnim = useRef(new Animated.Value(0)).current;
@@ -57,7 +58,25 @@ export function DetailsScreen({ route, navigation }: DetailsScreenProps) {
   if (!details) {
     return (
       <SafeAreaProvider>
-        <View style={styles.screen} />
+        <View style={styles.screen}>
+          <StatusBar barStyle="light-content" />
+          <AppHeader variant="standard" onBack={() => navigation?.goBack()} />
+          {loading ? (
+            <ScreenState kind="loading" message="Loading vehicle details." />
+          ) : error ? (
+            <ScreenState
+              kind="error"
+              message="We could not load this vehicle. Check your connection and try again."
+              onAction={retry}
+            />
+          ) : (
+            <ScreenState
+              kind="empty"
+              title="Vehicle not found"
+              message="This vehicle is no longer available."
+            />
+          )}
+        </View>
       </SafeAreaProvider>
     );
   }

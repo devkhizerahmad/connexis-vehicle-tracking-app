@@ -87,8 +87,12 @@ export function ProfileScreen({ navigation }: ProfileScreenProps) {
   }, [navigation]);
 
   const handleUpdate = useCallback(async () => {
-    await save();
-    showToast('Profile updated successfully');
+    const result = await save();
+    if (result?.ok) {
+      showToast('Profile updated successfully');
+      return;
+    }
+    showToast('Could not update your profile. Try again.');
   }, [save, showToast]);
 
   const handleLogout = useCallback(() => {

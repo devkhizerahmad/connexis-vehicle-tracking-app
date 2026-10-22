@@ -169,19 +169,34 @@ function ControlSwipeCardImpl({
       processingRef.current = true;
       setProcessing(true);
 
-      engineControlService.requestLockUnlock(action).then(() => {
-        if (!mountedRef.current) {
-          return;
-        }
-        onNotice(action === 'lock' ? LOCKED_MESSAGE : UNLOCKED_MESSAGE);
-        // Snap the rail back only now, so it reads as filled for the whole
-        // in-flight window instead of resetting the instant the swipe landed.
-        forceResetRef.current?.();
-        processingRef.current = false;
-        setProcessing(false);
-        pendingActionRef.current = null;
-        setPendingAction(null);
-      });
+      engineControlService
+        .requestLockUnlock(action)
+        .then(() => {
+          if (!mountedRef.current) {
+            return;
+          }
+          onNotice(action === 'lock' ? LOCKED_MESSAGE : UNLOCKED_MESSAGE);
+          pendingActionRef.current = null;
+          setPendingAction(null);
+        })
+        .catch(() => {
+          if (!mountedRef.current) {
+            return;
+          }
+          // B17: a rejected request used to leave the card stuck in the
+          // processing state with no feedback at all.
+          onNotice('Could not reach the vehicle. Try again.');
+        })
+        .finally(() => {
+          if (!mountedRef.current) {
+            return;
+          }
+          // Snap the rail back only now, so it reads as filled for the whole
+          // in-flight window instead of resetting the instant the swipe landed.
+          forceResetRef.current?.();
+          processingRef.current = false;
+          setProcessing(false);
+        });
     },
     [onNotice],
   );

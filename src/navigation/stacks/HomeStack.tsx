@@ -14,7 +14,7 @@ export function HomeStack() {
   return (
     <Stack.Navigator
       initialRouteName={INITIAL_ROUTE}
-      screenOptions={{ headerShown: false }}>
+      screenOptions={{ headerShown: false, freezeOnBlur: true }}>
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Details" component={DetailsScreen} />
     </Stack.Navigator>

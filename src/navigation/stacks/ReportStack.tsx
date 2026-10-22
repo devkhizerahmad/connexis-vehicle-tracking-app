@@ -15,7 +15,7 @@ export function ReportStack() {
   return (
     <Stack.Navigator
       initialRouteName={INITIAL_ROUTE}
-      screenOptions={{ headerShown: false }}>
+      screenOptions={{ headerShown: false, freezeOnBlur: true }}>
       <Stack.Screen name="Reports" component={ReportsScreen} />
     </Stack.Navigator>
   );

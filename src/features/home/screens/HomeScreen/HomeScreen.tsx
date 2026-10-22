@@ -4,6 +4,7 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Animated, FlatList, Image, Pressable, Text, View } from 'react-native';
 import AppHeader from '@shared/components/layout/AppHeader';
+import { ScreenState } from '@shared/components/feedback/ScreenState';
 import { BellIcon, RefreshIcon } from '@shared/components/icons';
 import { goToLiveMap, goToReports } from '@shared/utils/navigationHelpers';
 import { colors, sizes, spacing } from '@shared/theme';
@@ -24,7 +25,7 @@ type FeedItem =
   | { kind: 'promo' };
 
 export function HomeScreen({ navigation }: HomeScreenProps) {
-  const { feed } = useVehicleList();
+  const { feed, loading, error, retry } = useVehicleList();
 
   const [toast, setToast] = useState<string | null>(null);
   const toastAnim = useRef(new Animated.Value(0)).current;
@@ -118,7 +119,11 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
           <SummaryCards summary={feed.summary} />
           <View style={styles.titleRow}>
             <Text style={styles.titleText}>Assets List</Text>
-            <Pressable onPress={onRefresh} hitSlop={8}>
+            <Pressable
+              onPress={onRefresh}
+              hitSlop={8}
+              accessibilityRole="button"
+              accessibilityLabel="Refresh vehicle list">
               <RefreshIcon color={colors.home.assetsTitle} size={20} />
             </Pressable>
           </View>
@@ -126,6 +131,29 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
       ) : null,
     [feed, onRefresh],
   );
+
+  // B6: the feed no longer renders a silent blank list while loading, on
+  // failure, or when the account has no vehicles.
+  const listEmpty = useMemo(() => {
+    if (loading) {
+      return <ScreenState kind="loading" message="Loading your vehicles." />;
+    }
+    if (error) {
+      return (
+        <ScreenState
+          kind="error"
+          message="We could not load your vehicles. Check your connection and try again."
+          onAction={retry}
+        />
+      );
+    }
+    return (
+      <ScreenState
+        kind="empty"
+        message="No vehicles are assigned to this account yet."
+      />
+    );
+  }, [error, loading, retry]);
 
   return (
     <View style={styles.screen}>
@@ -155,7 +183,11 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
         bandContent={
           <View style={styles.band}>
             <Text style={styles.greeting}>Hi, Good Morning!</Text>
-            <Pressable style={styles.chip} onPress={onChipPress}>
+            <Pressable
+              style={styles.chip}
+              onPress={onChipPress}
+              accessibilityRole="button"
+              accessibilityLabel="Adeel Hussein, open profile">
               <Text style={styles.chipName} numberOfLines={1}>Adeel Hussein</Text>
               <Image source={require('../../../../assets/profile_avatar.png')} style={styles.chipAvatar} />
             </Pressable>
@@ -168,6 +200,7 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
         keyExtractor={item => (item.kind === 'promo' ? 'promo' : item.vehicle.name)}
         renderItem={renderItem}
         ListHeaderComponent={listHeader ?? undefined}
+        ListEmptyComponent={listEmpty}
         style={styles.list}
         contentContainerStyle={[styles.listContent, { paddingBottom: scrollPadBottom }]}
         removeClippedSubviews

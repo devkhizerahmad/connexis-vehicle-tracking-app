@@ -51,7 +51,8 @@ export function QuickReportGrid({
         style={styles.header}
         onPress={toggle}
         accessibilityRole="button"
-        accessibilityState={{ expanded }}>
+        accessibilityState={{ expanded }}
+          accessibilityLabel="Quick Report">
         <Clipboard color={colors.white} size={sizes.headerIcon} />
         <Text style={styles.headerTitle}>Quick Report</Text>
         <View style={styles.spacer} />
@@ -75,6 +76,8 @@ export function QuickReportGrid({
                 <Pressable
                   key={r.label + r.color}
                   onPress={() => onTileTap?.(r.label)}
+                    accessibilityRole="button"
+                    accessibilityLabel={r.label}
                   style={[
                     styles.tile,
                     colIndex === row.length - 1 ? styles.tileRowEnd : null,

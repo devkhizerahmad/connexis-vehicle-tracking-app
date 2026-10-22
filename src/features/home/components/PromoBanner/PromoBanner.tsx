@@ -17,7 +17,9 @@ export function PromoBanner({ promo, onMoreInfo }: PromoBannerProps) {
       {/* left: 3-line title + More Info button */}
       <View style={styles.left}>
         <Text style={styles.title}>{promo.title}</Text>
-        <Pressable style={styles.button} onPress={onMoreInfo}>
+        <Pressable style={styles.button} onPress={onMoreInfo}
+          accessibilityRole="button"
+          accessibilityLabel={promo.buttonLabel}>
           <Text style={styles.buttonText}>{promo.buttonLabel}</Text>
         </Pressable>
       </View>

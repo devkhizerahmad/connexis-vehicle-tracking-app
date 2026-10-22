@@ -2,6 +2,7 @@
   "extends": "@react-native/typescript-config",
   "compilerOptions": {
     "strict": true,
+    "noEmit": true,
     "paths": {
       "@shared/*": ["./src/shared/*"],
       "@features/*": ["./src/features/*"],

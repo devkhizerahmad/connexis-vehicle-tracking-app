@@ -17,7 +17,7 @@ export function MapStack() {
   return (
     <Stack.Navigator
       initialRouteName={INITIAL_ROUTE}
-      screenOptions={{ headerShown: false }}>
+      screenOptions={{ headerShown: false, freezeOnBlur: true }}>
       <Stack.Screen name="LiveMap" component={LiveMapScreen} />
       <Stack.Screen name="History" component={HistoryScreen} />
     </Stack.Navigator>

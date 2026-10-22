@@ -4,9 +4,9 @@ module.exports = {
   // go through the RN babel preset. The pattern is ANCHORED (^node_modules/)
   // so it only inspects the top-level package: without the anchor the regex
   // re-matches at any nested `node_modules/` and skips deps that live inside an
-  // allowlisted package (e.g. react-native-paper-dates' own copy of `color`).
+  // allowlisted package.
   transformIgnorePatterns: [
-    '^node_modules/(?!(react-native|@react-native|@react-navigation|react-native-linear-gradient|react-native-paper|react-native-paper-dates|react-native-vector-icons|react-native-safe-area-context|react-native-screens|react-native-worklets)/)',
+    '^node_modules/(?!(react-native|@react-native|@react-navigation|react-native-linear-gradient|react-native-safe-area-context|react-native-screens|react-native-worklets)/)',
   ],
   moduleNameMapper: {
     // Reanimated's bundled mock imports the real package, which loads the
