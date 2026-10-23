@@ -27,7 +27,20 @@ export function LiveMapScreen({ route, navigation }: LiveMapScreenProps) {
   const [loadError, setLoadError] = useState<Error | null>(null);
   const [attempt, setAttempt] = useState(0);
   const [options, setOptions] = useState<VehicleOption[]>([]);
-  const [vehicleId, setVehicleId] = useState<string | undefined>(route?.params?.vehicleId);
+  const incomingVehicleId = route?.params?.vehicleId;
+  const [vehicleId, setVehicleId] = useState<string | undefined>(incomingVehicleId);
+
+  // B5: the Map tab stays mounted, so a `vehicleId` pushed from a Home/Details
+  // card only reached the initialiser and the screen kept the first vehicle
+  // forever. Sync it in, then consume the param so returning to the tab later
+  // keeps whatever the user picked in the dropdown.
+  useEffect(() => {
+    if (!incomingVehicleId) {
+      return;
+    }
+    setVehicleId(incomingVehicleId);
+    navigation.setParams({ vehicleId: undefined });
+  }, [incomingVehicleId, navigation]);
   // typed cross-tab handle (avatar -> ProfileTab, stack-root back -> HomeTab)
   const tabNav = useNavigation<BottomTabNavigationProp<RootTabParamList>>();
   const insets = useSafeAreaInsets();

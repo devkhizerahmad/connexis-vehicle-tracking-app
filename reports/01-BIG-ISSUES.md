@@ -38,6 +38,7 @@ Format: `ID · file:line · problem → impact → fix → evidence`.
 - **Evidence:** grep for `setInterval|requestAnimationFrame|onScrub` in the file → **0 hits**; `togglePlay` body is a one-line state flip (line 66).
 
 ### B5 · `src/features/map/screens/LiveMapScreen/LiveMapScreen.tsx:27` · New `vehicleId` param ignored when the tab is already mounted
+- **Status: FIXED during this review.** `LiveMapScreen` now derives `incomingVehicleId` from `route?.params?.vehicleId`, syncs it into state in a `useEffect`, then calls `navigation.setParams({vehicleId: undefined})` to consume the param so a later dropdown choice is not overwritten. Verified on device: Map tab already mounted showed Honda Civic; tapping "View on Map" on Toyota Vitz (JSB-8735) switched the mounted tab to Toyota Vitz. A unit test (`__tests__/mapService.test.ts`) already covers the service side (id -> correct payload).
 - **Problem:** `const [vehicleId, setVehicleId] = useState<string | undefined>(route?.params?.vehicleId)` copies the param once. `navigationHelpers.ts:9-12` dispatches `navigate('MapTab', { screen: 'LiveMap', params: { vehicleId } })`; React Navigation updates `route.params`, but the state copy never resyncs.
 - **Impact:** Home → "View on Map" on Kia → back → "View on Map" on Honda → the Map tab still shows the Kia card, name and route while the header implies the new selection. Same for Details → Live Location.
 - **Fix:** Derive from the param, or sync in an effect keyed on `route.params?.vehicleId`, keeping only the dropdown override in state.

@@ -14,12 +14,14 @@
 - **Evidence:** line 178 has `.then(...)`; grep `.catch|.finally` in the file → 0.
 
 ### M2 · `ReportsScreen.tsx:81` · New `vehicleId` param ignored on an already-mounted tab
+- **Status: FIXED during this review.** Same pattern as B5: `incomingVehicleId` derived, `useEffect` syncs `selectedVehicle`, param consumed via `setParams`. Verified on device: Report tab already mounted showed Toyota Vitz (JSB-8735); tapping "Reports" on Kia Sportage (LZA-8735) switched the mounted tab to Kia Sportage.
 - **Problem:** Same defect class as B5: `const [vehicleId, setVehicleId] = useState<string | undefined>(route?.params?.vehicleId)`.
 - **Impact:** Reports stays on the previous vehicle after selecting another one from Home/Details.
 - **Fix:** Sync from `route.params?.vehicleId` in an effect, or derive instead of copying.
 - **Evidence:** `useState(route?.params?.vehicleId)` at line 81.
 
 ### M3 · `vehicleService.ts:13` · Vehicle details ignore the requested id
+- **Status: FIXED during this review.** `getVehicleDetails(id)` now looks up the requested vehicle in `vehicles.mock.json` and relabels the single mock detail body with that vehicle's name (mock files untouched - the swap happens in the service). Verified on device: tapping "More Details" on Suzuki Mehran (LZA-8735) now shows a Details header reading "Suzuki Mehran (LZA-8735)" instead of the hardcoded "Honda Civic (LFA-1464)". New `__tests__/vehicleService.test.ts` (3 tests) locks the contract: known id relabels, unknown id falls back to the base payload.
 - **Problem:** `getVehicleDetails: async (_id: string) => detailsMock` — the id is discarded, so every vehicle shows the Honda payload (plate, battery, 1.2 bar, last-update text).
 - **Impact:** Details is wrong for every non-Honda vehicle; the bug is invisible because the mock is self-consistent.
 - **Fix:** Key `details.mock.json` by vehicle id (`Record<string, VehicleDetailsData>`) and select by `_id`; return a typed `NotFound`.

@@ -12,8 +12,8 @@ Nothing here needs a design decision. Do it before any feature work.
 
 | # | Action | Fixes | Effort |
 |---|---|---|---|
-| 1 | Rotate the Google Maps key in Cloud Console; add package + SHA-1 + API restrictions | B1 | S |
-| 2 | `git rm --cached android/gradle.properties`, `uidump.xml`, `android/app/src/main/assets/index.android.bundle`; add `*.bundle` to `.gitignore`; purge history with `git filter-repo` | B1, M39, M42 | M |
+| 1 | Rotate the Google Maps key in Cloud Console; add package + SHA-1 + API restrictions | B1 | S | (key rotated 2026-10-23 by user; **remaining: update `C:\Users\Administrator\.gradle\gradle.properties` with the new key + add package/SHA-1 restrictions in Cloud Console**) |
+| 2 | ~~`git rm --cached android/gradle.properties`, `uidump.xml`, `android/app/src/main/assets/index.android.bundle`; add `*.bundle` to `.gitignore`~~ **DONE** (12 artifacts untracked + deleted) | B1 | M |
 | 3 | ~~Delete `.env`; move the canonical value into an untracked local file~~ **DONE** (key now in `~/.gradle/gradle.properties`) | S8 | S |
 | 4 | ~~Add `"typecheck": "tsc --noEmit"` and `"noEmit": true`~~ **DONE** | B20 | S |
 | 5 | ~~Add `.github/workflows/ci.yml`: `npm ci` → typecheck → lint → test~~ **DONE** | B19 | M |
@@ -31,7 +31,7 @@ The user-visible lies and the blocked-accessible paths.
 | # | Action | Fixes | Effort |
 |---|---|---|---|
 | 1 | Implement playback advance + wire `onScrub` + derive the timestamp | B4 | M |
-| 2 | Resync `vehicleId` from route params in LiveMap and Reports | B5, M2 | S |
+| 2 | ~~Resync `vehicleId` from route params in LiveMap and Reports~~ **DONE** - param synced via `useEffect`, consumed via `setParams`, `getVehicleDetails(id)` relabels mock, 3 new service tests | B5, M2, M3 | S |
 | 3 | ~~One `ScreenShell` + `EmptyState`/`ErrorState`/Retry; add `.catch` to all 5 services; `ListEmptyComponent`~~ **DONE** — `ScreenState` shipped, every screen fetch handles rejection, Home has `ListEmptyComponent`, 4 new tests | B6, M4, M5 | L |
 | 4 | ~~`try/catch/finally` in `ControlSwipeCard`~~ **DONE** — `.catch` + `.finally`, failure notice | M1 | S |
 | 5 | ~~`await` real save in Profile; toast only on resolve~~ **DONE** — `save()` returns `null` on failure, toast branches on `ok` | M6 | S |

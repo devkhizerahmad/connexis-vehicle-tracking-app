@@ -79,9 +79,21 @@ export function ReportsScreen({ navigation, route }: ReportsScreenProps) {
   // ReportsScreen is reachable directly with a vehicleId (Home's card "Reports"
   // button). Seeding it here pre-selects that vehicle; an unknown/absent id leaves
   // the "Select Vehicle" placeholder untouched (selectedLabel resolves via find()).
+  const incomingVehicleId = route?.params?.vehicleId;
   const [selectedVehicle, setSelectedVehicle] = useState<string | undefined>(
-    route?.params?.vehicleId,
+    incomingVehicleId,
   );
+
+  // M2: same defect class as B5 - the Report tab stays mounted, so a vehicle
+  // picked on Home/Details never replaced the one seeded at first mount. Consume
+  // the param afterwards so a later dropdown choice is not overwritten.
+  useEffect(() => {
+    if (!incomingVehicleId) {
+      return;
+    }
+    setSelectedVehicle(incomingVehicleId);
+    navigation.setParams({ vehicleId: undefined });
+  }, [incomingVehicleId, navigation]);
   const [data, setData] = useState<ReportsData | null>(null);
   const [loadError, setLoadError] = useState<Error | null>(null);
   const [attempt, setAttempt] = useState(0);
