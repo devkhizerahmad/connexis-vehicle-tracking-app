@@ -28,3 +28,15 @@ export const formatShortDate = (iso: string): string => {
   const date = fromIsoDate(iso);
   return `${pad2(date.getDate())}.${pad2(date.getMonth() + 1)}.${pad2(date.getFullYear() % 100)}`;
 };
+
+/**
+ * True when two ranges describe the same closed window.
+ *
+ * Used by HistoryScreen to tell "the payload seeded this range" apart from "the
+ * user picked a new range", so the seed does not trigger a second identical
+ * request (M9). `null` is never equal to a range.
+ */
+export const sameRange = (
+  a: { from: string; until: string } | null,
+  b: { from: string; until: string } | null,
+): boolean => !!a && !!b && a.from === b.from && a.until === b.until;

@@ -57,7 +57,7 @@ Removes the duplication that makes every future change expensive.
 | 3 | ~~Extract `shared/components/vehicle/RouteRow`; reduce both route lists to wrappers~~ **DONE** - shared row + `routeRowToneFromKey`, both list stylesheets reduced to card chrome, device-verified | B10 | M |
 | 4 | ~~One `useToast` + `<Toast>`; delete 5 copies~~ **DONE** - one hook + one shell, all 5 screens migrated, per-screen timer refs and toast styles deleted, `useToast` tests (5) added, device-verified on all 5 screens | M17, S3, M56 | M |
 | 5 | Extract `useReportRange`/`useReportFilters`; break up `ReportsScreen` | M24 | L |
-| 6 | `useAsyncData` hook; migrate all 5 data hooks | M31 | M |
+| 6 | ~~`useAsyncData` hook; migrate the data loads~~ **DONE** - one hook, 6 call sites (2 hooks + 4 screens), three cancellation idioms gone, M9 double-fetch closed, 7 tests | M31, M9 | M |
 | 7 | ~~`accessibilityLabel` on all 27 unlabelled controls; `autoComplete`/`returnKeyType` on Profile fields~~ **DONE** — 0 unlabelled `Pressable` remain; Profile fields autofill-ready | B13, M53 | M |
 | 8 | ~~Fix the 5 contrast pairs to >=4.5:1; raise telemetry text to >=12 pt~~ **DONE (telemetry + status ink)** — 7.5 -> 10 pt, gray -> grayStrong, dark ink on bright status fills, dark chip text. `colors.ts` values and `reportColors.rangeFill` untouched | B14, M55 | M |
 | 9 | Move `RootTabParamList` into `shared/types`; fix the upward import | M26 | S |

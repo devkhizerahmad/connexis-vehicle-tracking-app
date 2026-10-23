@@ -67,6 +67,7 @@
 - **Impact:** Double network cost and a state-update race on the same `setData`; one result can overwrite the other.
 - **Fix:** Single effect keyed on the effective range; seed the draft inside the same effect.
 - **Evidence:** two `getHistoryData().then(...)` calls (`:131`, `:150`) reached on mount.
+- **Status: FIXED during this review.** History now has ONE request through `useAsyncData`, keyed on `${vehicleId}|${from~until}`. The payload's own range is recorded in `seededRangeRef` before `setRange` runs, and `requestRange` ignores a range equal to the seeded one — so seeding the calendar no longer retriggers an identical fetch. The single effect also seeds month/year/draft in one place. Covered by `useAsyncData`'s key-change test; verified on device (History opens with one fetch, range change still refetches).
 
 ---
 
@@ -214,10 +215,11 @@
 - **Evidence:** `props: any` in `CustomTabBar`; three parallel lists.
 
 ### M31 · repo-wide · No shared async-data pattern
-- **Problem:** Three cancellation idioms (`cancelled` boolean, `active` boolean, `mountedRef`), and every hook re-implements loading/error/cancel differently — the root cause behind B6.
+- **Problem:** Three cancellation idioms (`cancelled` boolean, `active` boolean, `mountedRef`), and every hook re-implements loading/error/cancel differently - the root cause behind B6.
 - **Impact:** Each new screen invents its own lifecycle, so error handling and cancellation correctness vary by file.
 - **Fix:** `useAsyncData(fn, deps)` returning `{data, loading, error, retry}` with built-in cancellation; migrate the five hooks.
 - **Evidence:** three distinct flag names across the hooks.
+- **Status: FIXED during this review.** New `src/shared/hooks/useAsyncData.ts`: `useAsyncData(loader, key)` returns `{ data, loading, error, retry }`, keyed on a primitive so an inline loader cannot retrigger the effect. It drops any response whose effect was torn down (unmount or newer key), keeps the previous data during a refetch, normalises rejections, settles a synchronous throw, and clears the error when a fetch starts. Migrated: `useVehicleList`, `useVehicleDetails`, `EngineControlScreen`, `ReportsScreen`, `LiveMapScreen`, `HistoryScreen` (which also closes M9). `useProfile` stays custom on purpose: it owns editable form state plus a `save()` action, not a fetch lifecycle. All six `attempt` counters, three flag idioms and every per-screen `.catch` shape are gone. `__tests__/useAsyncData.test.tsx` (7 tests) locks resolve/reject/sync-throw/retry/stale-key/unmount.
 
 ---
 

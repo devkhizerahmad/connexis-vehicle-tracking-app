@@ -22,7 +22,7 @@
 // the shared `DateRangeCalendar` is now the single picker, and it moves the
 // displayed month to the tapped day as part of the selection itself, so the two
 // can no longer disagree. See the component header for the full rationale.
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, Image, Pressable, ScrollView, Text, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -33,6 +33,7 @@ import { ScreenState } from '@shared/components/feedback/ScreenState';
 import { ArrowLeft } from '@shared/components/icons';
 import { DateRangeCalendar, DateRangeField } from '@shared/components/controls/DateRangeCalendar';
 import { useCollapsible } from '@shared/hooks/useCollapsible';
+import { useAsyncData } from '@shared/hooks/useAsyncData';
 import { historyColors } from '@shared/theme';
 import { sizes } from '@shared/theme';
 import { historyService } from '@features/map/services/historyService';
@@ -40,9 +41,9 @@ import { HistoryListRow } from '@features/map/components/HistoryListRow';
 import { HistoryMiniMap } from '@features/map/components/HistoryMiniMap';
 import { HistorySummaryPanel } from '@features/map/components/HistorySummaryPanel';
 import { PlaybackPanel } from '@features/map/components/PlaybackPanel';
-import { formatShortDate, fromIsoDate } from '@features/map/utils/historyDates';
+import { formatShortDate, fromIsoDate, sameRange } from '@features/map/utils/historyDates';
 import { activeStopId } from '@features/map/utils/routePlayback';
-import type { HistoryData, HistoryDateRange, IsoDate } from '@features/map/types/history';
+import type { HistoryDateRange, IsoDate } from '@features/map/types/history';
 import type { MapStackParamList } from '@navigation/types';
 import { styles } from './styles';
 
@@ -77,11 +78,27 @@ export function HistoryScreen({ route, navigation }: HistoryScreenProps) {
   const insets = useSafeAreaInsets();
   const scrollPadBottom = sizes.bottomNavH + insets.bottom + 12;
 
-  const [data, setData] = useState<HistoryData | null>(null);
-  const [loadError, setLoadError] = useState<Error | null>(null);
-  const [attempt, setAttempt] = useState(0);
   /** Range the panels currently reflect; changing it triggers a refetch. */
   const [range, setRange] = useState<HistoryDateRange | null>(null);
+  /**
+   * M9: the range that arrived WITH the payload is not a reason to fetch again.
+   * The first request runs with no range; seeding `range` from the response
+   * used to retrigger a second identical request, so two effects raced on
+   * `setData`. Comparing against the seeded range keeps the key stable.
+   */
+  const seededRangeRef = useRef<HistoryDateRange | null>(null);
+  const requestRange =
+    range && !sameRange(range, seededRangeRef.current) ? range : null;
+  const {
+    data,
+    error: loadError,
+    retry: retryLoad,
+  } = useAsyncData(
+    () => historyService.getHistoryData(vehicleId, requestRange ?? undefined),
+    `${vehicleId ?? 'none'}|${
+      requestRange ? `${requestRange.from}~${requestRange.until}` : 'initial'
+    }`,
+  );
   /** Range being edited in the calendar until the day tap commits it. */
   const [draftRange, setDraftRange] = useState<HistoryDraftRange | null>(null);
   /**
@@ -109,56 +126,19 @@ export function HistoryScreen({ route, navigation }: HistoryScreenProps) {
     });
   }, []);
 
-  // Initial load — no range yet, so the service returns its mock default.
+  // One request, one owner. The first payload also seeds the calendar and the
+  // panels; a later range change only swaps the data.
   useEffect(() => {
-    let cancelled = false;
-    setLoadError(null);
-    historyService
-      .getHistoryData(vehicleId)
-      .then(payload => {
-        if (cancelled) {
-          return;
-        }
-        setData(payload);
-        setRange(payload.range);
-        setDraftRange(payload.range);
-        setDisplayedMonth(payload.month.month);
-        setDisplayedYear(payload.month.year);
-        setViewSeeded(true);
-      })
-      .catch((reason: unknown) => {
-        if (cancelled) {
-          return;
-        }
-        setLoadError(reason instanceof Error ? reason : new Error(String(reason)));
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [attempt, vehicleId]);
-
-  /** Confirmed range changed -> refetch for the new window. */
-  useEffect(() => {
-    if (!range) {
-      return undefined;
+    if (!data || viewSeeded) {
+      return;
     }
-    let cancelled = false;
-    historyService
-      .getHistoryData(vehicleId, range)
-      .then(payload => {
-        if (!cancelled) {
-          setData(payload);
-        }
-      })
-      .catch((reason: unknown) => {
-        if (!cancelled) {
-          setLoadError(reason instanceof Error ? reason : new Error(String(reason)));
-        }
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [range, vehicleId]);
+    seededRangeRef.current = data.range;
+    setRange(data.range);
+    setDraftRange(data.range);
+    setDisplayedMonth(data.month.month);
+    setDisplayedYear(data.month.year);
+    setViewSeeded(true);
+  }, [data, viewSeeded]);
 
   const handleBack = useCallback(() => navigation.goBack(), [navigation]);
 
@@ -240,7 +220,7 @@ export function HistoryScreen({ route, navigation }: HistoryScreenProps) {
           <ScreenState
             kind="error"
             message="We could not load the trip history. Check your connection and try again."
-            onAction={() => setAttempt(n => n + 1)}
+            onAction={retryLoad}
           />
         ) : (
           <ScreenState kind="loading" message="Loading trip history." />

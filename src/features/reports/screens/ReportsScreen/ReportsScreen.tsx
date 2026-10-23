@@ -50,11 +50,11 @@ import { DateRangeCalendar } from '@shared/components/controls/DateRangeCalendar
 import { HourMinPicker } from '@shared/components/controls/HourMinPicker';
 import { useCollapsible } from '@shared/hooks/useCollapsible';
 import { useToast } from '@shared/hooks/useToast';
+import { useAsyncData } from '@shared/hooks/useAsyncData';
 import { Toast } from '@shared/components/feedback/Toast';
 import { spacing, sizes } from '@shared/theme';
 import { reportsService } from '@features/reports/services/reportsService';
 import { ReportCategorySection } from '@features/reports/components/ReportCategorySection';
-import type { ReportsData } from '@features/reports/types/reports';
 import type { ReportStackParamList } from '@navigation/types';
 import { styles } from './styles';
 
@@ -95,9 +95,12 @@ export function ReportsScreen({ navigation, route }: ReportsScreenProps) {
     setSelectedVehicle(incomingVehicleId);
     navigation.setParams({ vehicleId: undefined });
   }, [incomingVehicleId, navigation]);
-  const [data, setData] = useState<ReportsData | null>(null);
-  const [loadError, setLoadError] = useState<Error | null>(null);
-  const [attempt, setAttempt] = useState(0);
+  // M31: shared load lifecycle. `retryLoad` is what the error state calls.
+  const {
+    data,
+    error: loadError,
+    retry: retryLoad,
+  } = useAsyncData(() => reportsService.getReportsData(), 'reports');
   const [vehicleOpen, setVehicleOpen] = useState(false);
   /** S4 range selection + the grid's view cursor, both owned by this screen. */
   const [startDate, setStartDate] = useState<DateType>(MOCK_START_DATE);
@@ -136,30 +139,15 @@ export function ReportsScreen({ navigation, route }: ReportsScreenProps) {
   const { message: toast, anim: toastAnim, showToast } = useToast();
 
 
+  // Seed the pickers from the mock's pre-selected indices once the payload
+  // lands. Keyed on `data`, so a retry reseeds from the fresh payload.
   useEffect(() => {
-    let mounted = true;
-    setLoadError(null);
-    reportsService
-      .getReportsData()
-      .then(payload => {
-        if (!mounted) {
-          return;
-        }
-        setData(payload);
-        // seed the pickers from the mock's pre-selected indices
-        setHour(payload.hourRow.chips[payload.hourRow.selected] ?? '');
-        setMinute(payload.minRow.chips[payload.minRow.selected] ?? '');
-      })
-      .catch((reason: unknown) => {
-        if (!mounted) {
-          return;
-        }
-        setLoadError(reason instanceof Error ? reason : new Error(String(reason)));
-      });
-    return () => {
-      mounted = false;
-    };
-  }, [attempt]);
+    if (!data) {
+      return;
+    }
+    setHour(data.hourRow.chips[data.hourRow.selected] ?? '');
+    setMinute(data.minRow.chips[data.minRow.selected] ?? '');
+  }, [data]);
 
   /** S1: the only real navigation on this screen. */
   const handleAvatar = useCallback(() => {
@@ -294,7 +282,7 @@ export function ReportsScreen({ navigation, route }: ReportsScreenProps) {
           <ScreenState
             kind="error"
             message="We could not load your reports. Check your connection and try again."
-            onAction={() => setAttempt(n => n + 1)}
+            onAction={retryLoad}
           />
         ) : (
           <ScreenState kind="loading" message="Loading your reports." />

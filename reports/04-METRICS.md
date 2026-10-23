@@ -187,10 +187,10 @@ Every row was re-measured with the same command as the baseline above.
 
 | Metric | Before | After | Note |
 |---|---:|---:|---|
-| `src/` files | 180 | 204 | +24: icons split (11 files), `RouteRow`, `domain.ts`, `stamp.ts`, `routePlayback.ts`, `useToast.ts`, `Toast/` (3 files), 5 test-driven modules |
-| `src/` LOC | 14,607 | 15,213 | +606 net, all comments + new shared modules (playback maths, shared toast) |
+| `src/` files | 180 | 205 | +25: icons split (11 files), `RouteRow`, `domain.ts`, `stamp.ts`, `routePlayback.ts`, `useToast.ts`, `useAsyncData.ts`, `Toast/` (3 files), 5 test-driven modules |
+| `src/` LOC | 14,607 | 15,205 | +598 net, all comments + new shared modules (playback maths, shared toast) |
 | Lint | 0 errors, **177 warnings** | 0 errors, **21 warnings** | icons inline styles gone; remaining warnings are pre-existing `no-inline-styles` / `no-shadow` outside icons |
-| Tests | **3 suites / 28 tests** | **12 suites / 98 tests** | +9 suites / +70 tests |
+| Tests | **3 suites / 28 tests** | **13 suites / 105 tests** | +10 suites / +77 tests |
 | Typecheck | not wired | `tsc --noEmit` **0 errors** | new `typecheck` script |
 | `as any` | 9 | **3** | DetailsScreen's 8 are gone |
 | `style={{` in `src/` | 231 | **27** | 204 of those were in `icons/index.tsx` |
@@ -200,7 +200,7 @@ Every row was re-measured with the same command as the baseline above.
 | Unlabelled interactive elements | 27 of 55 | **0** | 27 controls labelled, re-scanned |
 | Files > 300 LOC | 3 | 5 | `ReportsScreen` 390, `PlaybackPanel` 330 (B4 loop), `engineControl.ts` 355 (tokens), two icon domain files 325/313 |
 
-Test suites: `App`, `ScreenState`, `mapService`, `vehicleService`, `ReportsScreen`, `playbackStamp`, `dob` (12), `fitRegion` (8), `playbackScrubber` (5), `ControlSwipeCard` (5), `routePlayback` (23), `useToast` (5).
+Test suites: `App`, `ScreenState`, `mapService`, `vehicleService`, `ReportsScreen`, `playbackStamp`, `dob` (12), `fitRegion` (8), `playbackScrubber` (5), `ControlSwipeCard` (5), `routePlayback` (23), `useToast` (5), `useAsyncData` (7).
 
 Gates are wired in `.github/workflows/ci.yml` (typecheck, lint, jest) so these numbers cannot silently regress.
 

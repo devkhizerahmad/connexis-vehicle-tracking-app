@@ -1,42 +1,17 @@
 // useVehicleDetails.ts — Hook for vehicle details by vehicleId
-import { useCallback, useEffect, useState } from 'react';
+import { useAsyncData } from '@shared/hooks/useAsyncData';
 import { vehicleService } from '@features/home/services/vehicleService';
-import { VehicleDetailsData } from '@features/home/types/details';
 
+/**
+ * M31: keyed on `vehicleId`, so switching vehicles refetches and a late
+ * response for the previous vehicle is dropped instead of relabelling the
+ * screen.
+ */
 export function useVehicleDetails(vehicleId: string) {
-  const [details, setDetails] = useState<VehicleDetailsData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-  const [attempt, setAttempt] = useState(0);
-
-  useEffect(() => {
-    let mounted = true;
-    setLoading(true);
-    setError(null);
-
-    vehicleService
-      .getVehicleDetails(vehicleId)
-      .then(data => {
-        if (!mounted) {
-          return;
-        }
-        setDetails(data);
-        setLoading(false);
-      })
-      .catch((reason: unknown) => {
-        if (!mounted) {
-          return;
-        }
-        setError(reason instanceof Error ? reason : new Error(String(reason)));
-        setLoading(false);
-      });
-
-    return () => {
-      mounted = false;
-    };
-  }, [vehicleId, attempt]);
-
-  const retry = useCallback(() => setAttempt(n => n + 1), []);
+  const { data: details, loading, error, retry } = useAsyncData(
+    () => vehicleService.getVehicleDetails(vehicleId),
+    vehicleId,
+  );
 
   return { details, loading, error, retry };
 }

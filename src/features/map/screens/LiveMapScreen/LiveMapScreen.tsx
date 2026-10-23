@@ -12,8 +12,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AppHeader from '@shared/components/layout/AppHeader';
 import { sizes } from '@shared/theme';
 import { mapService } from '@features/map/services/mapService';
-import type { LiveMapData, VehicleOption } from '@features/map/types/map';
+import type { VehicleOption } from '@features/map/types/map';
 import { ScreenState } from '@shared/components/feedback/ScreenState';
+import { useAsyncData } from '@shared/hooks/useAsyncData';
 import { LiveMapView } from '@features/map/components/LiveMapView';
 import { MapVehicleCard } from '@features/map/components/MapVehicleCard';
 import { SelectVehicleField } from '@features/map/components/SelectVehicleField';
@@ -23,12 +24,17 @@ import { MAP_NAV_GAP, styles } from './styles';
 type LiveMapScreenProps = NativeStackScreenProps<MapStackParamList, 'LiveMap'>;
 
 export function LiveMapScreen({ route, navigation }: LiveMapScreenProps) {
-  const [data, setData] = useState<LiveMapData | null>(null);
-  const [loadError, setLoadError] = useState<Error | null>(null);
-  const [attempt, setAttempt] = useState(0);
   const [options, setOptions] = useState<VehicleOption[]>([]);
   const incomingVehicleId = route?.params?.vehicleId;
   const [vehicleId, setVehicleId] = useState<string | undefined>(incomingVehicleId);
+
+  // M31: keyed on the selected vehicle, so switching vehicles refetches and a
+  // late response for the previous one is dropped.
+  const {
+    data,
+    error: loadError,
+    retry: retryLoad,
+  } = useAsyncData(() => mapService.getLiveMapData(vehicleId), vehicleId ?? 'default');
 
   // B5: the Map tab stays mounted, so a `vehicleId` pushed from a Home/Details
   // card only reached the initialiser and the screen kept the first vehicle
@@ -69,26 +75,6 @@ export function LiveMapScreen({ route, navigation }: LiveMapScreenProps) {
       mounted = false;
     };
   }, []);
-
-  useEffect(() => {
-    let mounted = true;
-    setLoadError(null);
-    mapService
-      .getLiveMapData(vehicleId)
-      .then(payload => {
-        if (mounted) {
-          setData(payload);
-        }
-      })
-      .catch((reason: unknown) => {
-        if (mounted) {
-          setLoadError(reason instanceof Error ? reason : new Error(String(reason)));
-        }
-      });
-    return () => {
-      mounted = false;
-    };
-  }, [attempt, vehicleId]);
 
   /** S1: left chevron pops the Map stack (falls back to the Home tab at root). */
   const handleBack = useCallback(() => {
@@ -170,7 +156,7 @@ export function LiveMapScreen({ route, navigation }: LiveMapScreenProps) {
         <ScreenState
           kind="error"
           message="We could not load the live map. Check your connection and try again."
-          onAction={() => setAttempt(n => n + 1)}
+          onAction={retryLoad}
         />
       ) : (
         <ScreenState kind="loading" message="Loading the live map." />

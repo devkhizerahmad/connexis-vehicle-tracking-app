@@ -22,7 +22,7 @@
 // (tab switch) every interaction is stubbed with the shared toast — the same
 // pattern ReportsScreen uses for its not-yet-wired controls — because no Engine
 // Control endpoint exists yet.
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Image, Pressable, ScrollView, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -32,6 +32,7 @@ import { AppHeader } from '@shared/components/layout/AppHeader';
 import { ScreenState } from '@shared/components/feedback/ScreenState';
 import { Toast } from '@shared/components/feedback/Toast';
 import { useToast } from '@shared/hooks/useToast';
+import { useAsyncData } from '@shared/hooks/useAsyncData';
 import { ecSizes, sizes } from '@shared/theme';
 import { goToLiveMap } from '@shared/utils/navigationHelpers';
 import type { RootTabParamList } from '@navigation/types';
@@ -45,7 +46,6 @@ import { RouteList } from '@features/engineControl/components/RouteList';
 import { SupportButton } from '@features/engineControl/components/SupportButton';
 import { VehicleStatusCards } from '@features/engineControl/components/VehicleStatusCards';
 import { engineControlService } from '@features/engineControl/services/engineControlService';
-import type { EngineControlData } from '@features/engineControl/types/engineControl';
 import type { EngineControlStackParamList } from '@navigation/types';
 import { styles } from './styles';
 
@@ -62,9 +62,14 @@ type EngineControlScreenProps = NativeStackScreenProps<
 const CURRENT_VEHICLE_ID = 'LFA-1464';
 
 export function EngineControlScreen({ navigation }: EngineControlScreenProps) {
-  const [data, setData] = useState<EngineControlData | null>(null);
-  const [loadError, setLoadError] = useState<Error | null>(null);
-  const [attempt, setAttempt] = useState(0);
+  // M31: the load lifecycle is shared. One key ('engine-control') because this
+  // screen always reads the same vehicle.
+  const {
+    data,
+    error: loadError,
+    retry: retryLoad,
+  } = useAsyncData(() => engineControlService.getEngineControlData(), 'engine-control');
+
   // W4: this screen's `navigation` is a STACK prop (EngineControlStack), but the
   // helper needs the ROOT tab prop to switch tabs — same typed handle LiveMap uses.
   const tabNav = useNavigation<BottomTabNavigationProp<RootTabParamList>>();
@@ -74,26 +79,6 @@ export function EngineControlScreen({ navigation }: EngineControlScreenProps) {
   // scroll content needs explicit clearance for it plus the device gesture inset.
   const insets = useSafeAreaInsets();
   const scrollPadBottom = sizes.bottomNav + insets.bottom + ecSizes.scrollNavBuffer;
-
-  useEffect(() => {
-    let alive = true;
-    setLoadError(null);
-    engineControlService
-      .getEngineControlData()
-      .then(payload => {
-        if (alive) {
-          setData(payload);
-        }
-      })
-      .catch((reason: unknown) => {
-        if (alive) {
-          setLoadError(reason instanceof Error ? reason : new Error(String(reason)));
-        }
-      });
-    return () => {
-      alive = false;
-    };
-  }, [attempt]);
 
   // S1 back chevron: this screen IS the stack root, so the chevron stays inert
   // (reference parity + the ReportsScreen precedent).
@@ -158,7 +143,7 @@ export function EngineControlScreen({ navigation }: EngineControlScreenProps) {
           <ScreenState
             kind="error"
             message="We could not load engine control. Check your connection and try again."
-            onAction={() => setAttempt(n => n + 1)}
+            onAction={retryLoad}
           />
         ) : (
           <ScreenState kind="loading" message="Loading engine control." />
