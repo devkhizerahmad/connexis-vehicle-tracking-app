@@ -19,6 +19,7 @@ import {
 import { HourMinPicker } from '@shared/components/controls/HourMinPicker';
 import { historyColors, historySizes, radii } from '@shared/theme';
 import type { HistoryFilters, HistoryPlayback } from '@features/map/types/history';
+import { playbackReadout } from '@features/map/utils/routePlayback';
 import { PlaybackScrubber, type PlaybackScrubberHandle } from './PlaybackScrubber';
 import { derivePlaybackStamp } from './stamp';
 
@@ -34,43 +35,83 @@ export interface PlaybackPanelProps {
   filters: HistoryFilters;
   onHourChange?: (hour: string) => void;
   onMinuteChange?: (minute: string) => void;
+  /**
+   * Controlled playhead (0..1). When supplied the panel renders this value and
+   * reports every move through `onProgressChange`; the mini-map uses the same
+   * number, so the car and the clock can never drift apart.
+   */
+  progress?: number;
+  /** Fired on every playhead move (RAF tick, scrub, skip, restart-at-end). */
+  onProgressChange?: (progress: number) => void;
 }
+
+const clamp01 = (value: number) => (Number.isFinite(value) ? Math.min(1, Math.max(0, value)) : 0);
 
 export const PlaybackPanel = ({
   playback,
   filters,
   onHourChange,
   onMinuteChange,
+  progress,
+  onProgressChange,
 }: PlaybackPanelProps) => {
   const [playing, setPlaying] = useState(false);
   const scrubberRef = useRef<PlaybackScrubberHandle | null>(null);
   // B4: the playhead lives in a ref (authoritative, read by the RAF loop) and is
   // mirrored into state only ~10x/s so the timestamp text re-renders without
   // turning the transport into a 60 fps React workload.
-  const [progress, setProgress] = useState(() =>
-    Math.min(1, Math.max(0, playback.initialProgress)),
-  );
+  const [innerProgress, setInnerProgress] = useState(() => clamp01(playback.initialProgress));
+  const controlled = progress !== undefined;
+  const currentProgress = controlled ? clamp01(progress) : innerProgress;
   // PATCH T-HISTORY: the Hour/Min rows own their selection so the chips and the
   // flanking carets actually respond; the parent is still notified when wired.
   const [hour, setHour] = useState(filters.defaultHour);
   const [minute, setMinute] = useState(filters.defaultMinute);
-  const progressRef = useRef(progress);
+  const progressRef = useRef(currentProgress);
+  const onChangeRef = useRef(onProgressChange);
   const durationMs = Math.max(1, playback.durationMinutes * 60_000);
 
+  useEffect(() => {
+    onChangeRef.current = onProgressChange;
+  }, [onProgressChange]);
+
+  /** Mirror a playhead value into local state and out to the owner screen. */
+  const emit = useCallback((value: number) => {
+    setInnerProgress(value);
+    onChangeRef.current?.(value);
+  }, []);
+
   /** Single writer for the playhead: ref + scrubber shared value + state. */
-  const writeProgress = useCallback((value: number) => {
-    const next = Math.min(1, Math.max(0, value));
+  const writeProgress = useCallback(
+    (value: number) => {
+      const next = clamp01(value);
+      progressRef.current = next;
+      scrubberRef.current?.setProgress(next);
+      emit(next);
+    },
+    [emit],
+  );
+
+  /** An externally driven playhead (map tap-to-seek, parent reset) wins. */
+  useEffect(() => {
+    if (progress === undefined) {
+      return;
+    }
+    const next = clamp01(progress);
+    if (Math.abs(next - progressRef.current) < 1e-6) {
+      return;
+    }
     progressRef.current = next;
     scrubberRef.current?.setProgress(next);
-    setProgress(next);
-  }, []);
+  }, [progress]);
 
   /** M8: a new payload resets the transport, the playhead and the jump rows. */
   useEffect(() => {
-    const seed = Math.min(1, Math.max(0, playback.initialProgress));
+    const seed = clamp01(playback.initialProgress);
     progressRef.current = seed;
-    setProgress(seed);
+    setInnerProgress(seed);
     scrubberRef.current?.setProgress(seed);
+    onChangeRef.current?.(seed);
     setPlaying(false);
     setHour(filters.defaultHour);
     setMinute(filters.defaultMinute);
@@ -99,7 +140,7 @@ export const PlaybackPanel = ({
       scrubberRef.current?.setProgress(next);
       if (now - lastPaint > 100 || next >= 1) {
         lastPaint = now;
-        setProgress(next);
+        emit(next);
       }
       if (next >= 1) {
         setPlaying(false);
@@ -109,7 +150,7 @@ export const PlaybackPanel = ({
     };
     frame = requestAnimationFrame(step);
     return () => cancelAnimationFrame(frame);
-  }, [playing, durationMs]);
+  }, [playing, durationMs, emit]);
 
   const selectHour = useCallback(
     (next: string) => {
@@ -129,11 +170,9 @@ export const PlaybackPanel = ({
   /** Dragging or skipping the playhead keeps the timestamp in step (B4). */
   const handleScrub = useCallback(
     (next: number) => {
-      const clamped = Math.min(1, Math.max(0, next));
-      progressRef.current = clamped;
-      setProgress(clamped);
+      writeProgress(next);
     },
-    [],
+    [writeProgress],
   );
 
   /** Play from the current position; a finished clip restarts from the top. */
@@ -158,7 +197,16 @@ export const PlaybackPanel = ({
    * playhead's CURRENT position, so its base time is that value minus
    * `initialProgress` of the clip; advancing the playhead moves the clock.
    */
-  const stamp = useMemo(() => derivePlaybackStamp(playback, progress), [playback, progress]);
+  const stamp = useMemo(
+    () => derivePlaybackStamp(playback, currentProgress),
+    [playback, currentProgress],
+  );
+
+  /** PATCH T-HISTORY: speed + state now follow the playhead, not a frozen label. */
+  const readout = useMemo(
+    () => playbackReadout(playback, currentProgress),
+    [playback, currentProgress],
+  );
 
   return (
     <View style={styles.wrap} testID="playback-panel">
@@ -172,11 +220,11 @@ export const PlaybackPanel = ({
         <View style={styles.head}>
           <View style={styles.headLeft}>
             <CarGlyph color={historyColors.playIconInk} size={17} />
-            <Text style={styles.speed}>{`Speed: ${playback.speed}`}</Text>
+            <Text style={styles.speed}>{`Speed: ${readout.speed}`}</Text>
           </View>
           <View style={styles.statePill} testID="playback-state">
-            <StatusRing color={STATE_INK[playback.state]} size={13} />
-            <Text style={styles.stateText}>{playback.stateLabel}</Text>
+            <StatusRing color={STATE_INK[readout.state]} size={13} />
+            <Text style={styles.stateText}>{readout.stateLabel}</Text>
           </View>
         </View>
 

@@ -18,6 +18,8 @@ export interface HistoryListRowProps {
   stop: HistoryStop;
   /** True for the final row — suppresses the connector below the badge. */
   isLast?: boolean;
+  /** True while the playhead sits on this event (drives the highlight). */
+  active?: boolean;
 }
 
 /** Per-state badge accent. */
@@ -39,11 +41,16 @@ export function splitAddress(address: string): { street: string; city: string } 
 export const HistoryListRow = memo(function HistoryListRow({
   stop,
   isLast = false,
+  active = false,
 }: HistoryListRowProps) {
   const { street, city } = splitAddress(stop.address);
 
   return (
-    <View style={styles.row} testID={`history-row-${stop.id}`}>
+    <View
+      style={[styles.row, active ? styles.rowActive : null]}
+      accessibilityState={{ selected: active }}
+      testID={`history-row-${stop.id}`}>
+      {active ? <View style={styles.activeBar} testID={`history-row-active-${stop.id}`} /> : null}
       <Text style={styles.time} testID={`history-time-${stop.id}`}>
         {stop.time}
       </Text>
@@ -96,6 +103,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: historySizes.gutter,
     backgroundColor: '#FFFFFF',
   },
+  /** PATCH T-HISTORY: the event the playhead is on gets a tint + left accent. */
+  rowActive: {
+    backgroundColor: historyColors.rowChipBg,
+  },
+  activeBar: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    bottom: 0,
+    width: 3,
+    backgroundColor: historyColors.chipActiveBg,
+  },
   time: {
     width: historySizes.stopColW,
     fontSize: 12,
@@ -136,6 +155,9 @@ const styles = StyleSheet.create({
   },
   metaRow: {
     flexDirection: 'row',
+    // PATCH T-HISTORY (route card): the card is narrower than the old
+    // full-bleed row, so three chips can overflow — wrap instead of clipping.
+    flexWrap: 'wrap',
     gap: 6,
     marginTop: 7,
   },

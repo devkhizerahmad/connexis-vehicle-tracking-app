@@ -1,33 +1,35 @@
 // HistoryMiniMap.tsx — S6: light mini-map with a dashed red "already driven"
 // leg, a solid green "remaining" leg, a junction pin, and the red alert banner.
-import React, { forwardRef, useCallback, useMemo, useRef } from 'react';
+import React, { forwardRef, memo, useCallback, useMemo, useRef } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
-import { NavArrow, Pin } from '@shared/components/icons';
-import { historyColors, historySizes } from '@shared/theme';
+import { CarGlyph, NavArrow, Pin } from '@shared/components/icons';
+import { colors, historyColors, historySizes } from '@shared/theme';
 import type {
   HistoryMapGeometry,
   HistoryRoutePoint,
-  HistorySegment,
 } from '@features/map/types/history';
+import { pointAtProgress, splitRouteAtProgress } from '@features/map/utils/routePlayback';
 import { historyMapStyle } from './historyMapStyle';
 
 export interface HistoryMiniMapProps {
   geometry: HistoryMapGeometry;
   /** Red banner copy under the map (S6). */
   alertText: string;
+  /**
+   * Playhead 0..1. The car marker and the driven/remaining legs derive from it,
+   * so the map is always showing the same moment as the S7 transport.
+   */
+  progress?: number;
 }
 
 const toLatLngs = (points: HistoryRoutePoint[]) =>
   points.map(([lat, lng]) => ({ latitude: lat, longitude: lng }));
 
-const sliceSegment = (points: HistoryRoutePoint[], seg: HistorySegment) =>
-  points.slice(seg.startIndex, seg.endIndex + 1);
-
 const EDGE_PADDING = { top: 28, right: 28, bottom: 28, left: 28 };
 
-export const HistoryMiniMap = forwardRef<MapView, HistoryMiniMapProps>(
-  function HistoryMiniMap({ geometry, alertText }, ref) {
+const HistoryMiniMapBase = forwardRef<MapView, HistoryMiniMapProps>(
+  function HistoryMiniMap({ geometry, alertText, progress = 0 }, ref) {
     const innerRef = useRef<MapView | null>(null);
     const setRefs = useCallback(
       (instance: MapView | null) => {
@@ -41,13 +43,16 @@ export const HistoryMiniMap = forwardRef<MapView, HistoryMiniMapProps>(
       [ref],
     );
 
-    const dashedCoords = useMemo(
-      () => toLatLngs(sliceSegment(geometry.route, geometry.dashedSegment)),
-      [geometry],
+    /** PATCH T-HISTORY: both legs are cut at the playhead, not at fixed indices. */
+    const legs = useMemo(
+      () => splitRouteAtProgress(geometry.route, progress),
+      [geometry.route, progress],
     );
-    const solidCoords = useMemo(
-      () => toLatLngs(sliceSegment(geometry.route, geometry.solidSegment)),
-      [geometry],
+    const traveledCoords = useMemo(() => toLatLngs(legs.traveled), [legs.traveled]);
+    const remainingCoords = useMemo(() => toLatLngs(legs.remaining), [legs.remaining]);
+    const car = useMemo(
+      () => pointAtProgress(geometry.route, progress),
+      [geometry.route, progress],
     );
 
     /** Fit both legs as soon as the native map is ready. */
@@ -71,23 +76,42 @@ export const HistoryMiniMap = forwardRef<MapView, HistoryMiniMapProps>(
           zoomControlEnabled={false}
           showsMyLocationButton={false}
           loadingEnabled={false}
-          scrollEnabled={false}
-          zoomEnabled={false}
-          pitchEnabled={false}
-          rotateEnabled={false}>
+          // PATCH T-HISTORY (zoom): the mini-map now behaves like the LIVE map —
+          // pinch to zoom, drag to pan, two-finger rotate/tilt. The initial
+          // `fitToCoordinates` still frames the whole trip, but the user can
+          // zoom in on a stop and the camera stays put while the car moves
+          // (progress only re-renders the marker/legs, never the camera).
+          scrollEnabled
+          zoomEnabled
+          pitchEnabled
+          rotateEnabled>
           <Polyline
-            coordinates={dashedCoords}
+            coordinates={traveledCoords}
             strokeWidth={4}
             strokeColor={historyColors.mapRouteRed}
             lineDashPattern={[10, 6]}
           />
           {/* PATCH T-HISTORY: the "remaining" leg is ALSO dashed in the reference */}
           <Polyline
-            coordinates={solidCoords}
+            coordinates={remainingCoords}
             strokeWidth={4}
             strokeColor={historyColors.mapRouteGreen}
             lineDashPattern={[10, 6]}
           />
+          {car ? (
+            <Marker
+              coordinate={{
+                latitude: car.coordinate[0],
+                longitude: car.coordinate[1],
+              }}
+              anchor={{ x: 0.5, y: 0.5 }}
+              tracksViewChanges={false}
+              testID="history-map-car">
+              <View style={styles.carMarker}>
+                <CarGlyph color={historyColors.playIconInk} size={16} />
+              </View>
+            </Marker>
+          ) : null}
           <Marker
             coordinate={{
               latitude: geometry.junctionPinCoordinate[0],
@@ -109,6 +133,13 @@ export const HistoryMiniMap = forwardRef<MapView, HistoryMiniMapProps>(
     );
   },
 );
+
+/**
+ * Memoised: the History screen re-renders its FlatList header on every
+ * playhead tick, and a MapView re-render is the most expensive thing on that
+ * screen. The map only needs to redraw when the (quantised) playhead moves.
+ */
+export const HistoryMiniMap = memo(HistoryMiniMapBase);
 
 const styles = StyleSheet.create({
   wrap: {
@@ -144,6 +175,17 @@ const styles = StyleSheet.create({
     color: historyColors.alertInk,
     fontSize: 11,
     lineHeight: 14,
+  },
+  /** PATCH T-HISTORY: the moving playhead on the route (white disc, red car). */
+  carMarker: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.white,
+    borderWidth: 1,
+    borderColor: historyColors.playIconInk,
   },
 });
 

@@ -23,7 +23,7 @@
 // displayed month to the tapped day as part of the selection itself, so the two
 // can no longer disagree. See the component header for the full rationale.
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Animated, FlatList, Image, Pressable, Text, View } from 'react-native';
+import { Animated, Image, Pressable, ScrollView, Text, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import dayjs from 'dayjs';
@@ -41,6 +41,7 @@ import { HistoryMiniMap } from '@features/map/components/HistoryMiniMap';
 import { HistorySummaryPanel } from '@features/map/components/HistorySummaryPanel';
 import { PlaybackPanel } from '@features/map/components/PlaybackPanel';
 import { formatShortDate, fromIsoDate } from '@features/map/utils/historyDates';
+import { activeStopId } from '@features/map/utils/routePlayback';
 import type { HistoryData, HistoryDateRange, IsoDate } from '@features/map/types/history';
 import type { MapStackParamList } from '@navigation/types';
 import { styles } from './styles';
@@ -93,6 +94,20 @@ export function HistoryScreen({ route, navigation }: HistoryScreenProps) {
   const [displayedYear, setDisplayedYear] = useState<number>(DEFAULT_YEAR);
   /** Once the payload lands we adopt ITS month, so rest state == selection. */
   const [viewSeeded, setViewSeeded] = useState(false);
+  /**
+   * PATCH T-HISTORY: the playhead the MAP and the ROW HIGHLIGHT follow. The
+   * panel owns the high-frequency value (it repaints 10x/s); this copy is
+   * quantised to 0.1% so the map/list do not re-render on every tick.
+   */
+  const [progress, setProgress] = useState(0);
+  const handleProgressChange = useCallback((next: number) => {
+    setProgress(prev => {
+      if (next === 0 || next === 1 || Math.abs(next - prev) >= 0.001) {
+        return next;
+      }
+      return prev;
+    });
+  }, []);
 
   // Initial load — no range yet, so the service returns its mock default.
   useEffect(() => {
@@ -211,6 +226,12 @@ export function HistoryScreen({ route, navigation }: HistoryScreenProps) {
     [range],
   );
 
+  /** The event the playhead currently sits on (null before the first one). */
+  const activeId = useMemo(
+    () => (data ? activeStopId(data.stops, progress) : null),
+    [data, progress],
+  );
+
   if (!data || !range || !draftRange || !viewSeeded) {
     return (
       <View style={styles.screen}>
@@ -232,18 +253,12 @@ export function HistoryScreen({ route, navigation }: HistoryScreenProps) {
     <View style={styles.screen}>
       <AppHeader title="History" onBack={handleBack} />
 
-      <FlatList
-        data={data.stops}
-        keyExtractor={item => item.id}
-        renderItem={({ item, index }) => (
-          <HistoryListRow stop={item} isLast={index === data.stops.length - 1} />
-        )}
+      <ScrollView
         style={styles.list}
         contentContainerStyle={[styles.listContent, { paddingBottom: scrollPadBottom }]}
         showsVerticalScrollIndicator={false}
-        testID="history-list"
-        ListHeaderComponent={
-          <View style={styles.header}>
+        testID="history-list">
+        <View style={styles.header}>
             {/* S2 vehicle chip + live link */}
             <View style={styles.vehicleRow}>
               <View style={styles.vehicleChip} testID="history-vehicle-chip">
@@ -290,19 +305,42 @@ export function HistoryScreen({ route, navigation }: HistoryScreenProps) {
             {/* S5 summary */}
             <HistorySummaryPanel summary={data.summary} />
 
-            {/* S6 mini map */}
-            <HistoryMiniMap geometry={data.map} alertText={data.alertText} />
+            {/* S6 mini map — the car marker follows the playhead */}
+            <HistoryMiniMap
+              geometry={data.map}
+              alertText={data.alertText}
+              progress={progress}
+            />
 
             {/* S7 playback + S8 hour/min jumpers */}
-            <PlaybackPanel playback={data.playback} filters={data.filters} />
+            <PlaybackPanel
+              playback={data.playback}
+              filters={data.filters}
+              onProgressChange={handleProgressChange}
+            />
 
-            {/* S9 section header */}
+        </View>
+
+        {/* S9 route card — same chrome as the Engine Control "Driving Routes"
+            card: an inset, shadowed, rounded shell that CLIPS the rows, so the
+            active tint and its accent bar stop at the card edge instead of
+            running to the screen edges. */}
+        <View style={styles.cardOuter} testID="history-stops-card">
+          <View style={styles.card}>
             <View style={styles.sectionBar}>
               <Text style={styles.sectionBarText}>History</Text>
             </View>
+            {data.stops.map((stop, index) => (
+              <HistoryListRow
+                key={stop.id}
+                stop={stop}
+                isLast={index === data.stops.length - 1}
+                active={stop.id === activeId}
+              />
+            ))}
           </View>
-        }
-      />
+        </View>
+      </ScrollView>
     </View>
   );
 }

@@ -1,7 +1,12 @@
 // styles.ts — HistoryScreen layout (S2 chip row, list gutters, S9 section bar).
 import { StyleSheet } from 'react-native';
 import { colors } from '@shared/theme';
-import { historyColors, historySizes, radii } from '@shared/theme';
+import {
+  ecCardRadius,
+  ecShadow,
+  historyColors,
+  historySizes,
+} from '@shared/theme';
 
 export const styles = StyleSheet.create({
   screen: {
@@ -9,20 +14,34 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.bg,
   },
   /**
-   * PATCH UI-POLISH (PART 8): the history list is the tail of the rounded S9
-   * block, so it closes the bottom corners that `sectionBar` opened at the top.
-   * `overflow: hidden` clips the virtualised rows to the radius.
+   * PATCH T-HISTORY (route card): the rows no longer live in the screen-wide
+   * list — they sit inside an inset card (see `cardOuter`/`card`), so this is a
+   * plain scroller and the card owns the rounding + clipping.
    */
   list: {
     flex: 1,
-    borderBottomLeftRadius: radii.md,
-    borderBottomRightRadius: radii.md,
-    overflow: 'hidden',
   },
   listContent: {
     // V5-PART1: paddingBottom is applied dynamically in HistoryScreen as
     // `sizes.bottomNav + insets.bottom + 12` — the shared BottomNav is an absolute
     // overlay, so a constant here would let the last history row sit under it.
+  },
+  /**
+   * S9 route card. Same chrome as the Engine Control "Driving Routes" card:
+   * the OUTER shell carries the shadow (so the blur is never cut by a clip) and
+   * the INNER card rounds + clips the section bar and the rows.
+   */
+  cardOuter: {
+    marginHorizontal: historySizes.gutter,
+    marginTop: 10,
+    backgroundColor: colors.white,
+    borderRadius: ecCardRadius,
+    ...ecShadow,
+  },
+  card: {
+    overflow: 'hidden',
+    borderRadius: ecCardRadius,
+    backgroundColor: colors.white,
   },
   /** S2–S8 stack above the S9 list. */
   header: {
@@ -77,18 +96,15 @@ export const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   /**
-   * PATCH UI-POLISH (PART 8): S9 dark section header now carries `radii.md` on
-   * its top corners, matching the Playback title strip above it. `overflow:
-   * hidden` clips the bar to them.
+   * PATCH T-HISTORY (route card): the dark "History" bar is now the card's top
+   * row, so it is square and the CARD clips it to `ecCardRadius` (its own radii
+   * would leave white slivers in the corners).
    */
   sectionBar: {
     paddingHorizontal: 12,
     height: historySizes.panelTitleH,
     justifyContent: 'center',
     backgroundColor: historyColors.sectionBarBg,
-    borderTopLeftRadius: radii.md,
-    borderTopRightRadius: radii.md,
-    overflow: 'hidden',
   },
   sectionBarText: {
     color: historyColors.sectionBarInk,

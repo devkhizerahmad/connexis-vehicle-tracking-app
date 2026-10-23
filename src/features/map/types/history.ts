@@ -58,14 +58,35 @@ export interface HistorySummary {
   idleRatio: number;
 }
 
+/** The three states the S7 pill can show (also the S9 row badge kinds). */
+export type HistoryPlaybackState = 'Moving' | 'Idle' | 'Stop';
+
+/**
+ * One leg of the trip's speed/state profile. The entry holds until the next
+ * entry's `at`, so a sparse list (8-10 entries) describes the whole clip.
+ */
+export interface HistoryTimelineEntry {
+  /** 0..1 position on the clip. */
+  at: number;
+  /** Vehicle speed label for this leg, e.g. "47 km/h". */
+  speed: string;
+  state: HistoryPlaybackState;
+  stateLabel: string;
+}
+
 /** S9 playback header strip. */
 export interface HistoryPlayback {
   speed: string;
-  state: 'Moving' | 'Idle' | 'Stop';
+  state: HistoryPlaybackState;
   stateLabel: string;
   stamp: string;
   durationMinutes: number;
   initialProgress: number;
+  /**
+   * Optional speed/state profile. When present the S7 pill is DERIVED from the
+   * playhead instead of showing one frozen label for the whole clip.
+   */
+  timeline?: HistoryTimelineEntry[];
 }
 
 /** S8 mini-map geometry: dashed red leg, solid green leg, junction pin. */
@@ -86,6 +107,13 @@ export interface HistoryStop {
   duration: string;
   distance: string;
   speed: string;
+  /**
+   * 0..1 position on the clip where this event happened. Drives the row
+   * highlight while the playback runs; absent rows simply never highlight.
+   */
+  atProgress?: number;
+  /** Where the event happened on the route (optional map anchor). */
+  coordinate?: HistoryRoutePoint;
 }
 
 /** S5/S6 filter option lists plus the defaults that start selected. */

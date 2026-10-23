@@ -10,17 +10,28 @@
     "stateLabel": "Moving",
     "stamp": "28-April-2024 (2:45 AM)",
     "durationMinutes": 18,
-    "initialProgress": 0.34
+    "initialProgress": 0.34,
+    "timeline": [
+      { "at": 0, "speed": "0 km/h", "state": "Stop", "stateLabel": "Parked" },
+      { "at": 0.08, "speed": "18 km/h", "state": "Moving", "stateLabel": "Moving" },
+      { "at": 0.2, "speed": "47 km/h", "state": "Moving", "stateLabel": "Moving" },
+      { "at": 0.34, "speed": "35 km/h", "state": "Moving", "stateLabel": "Moving" },
+      { "at": 0.52, "speed": "62 km/h", "state": "Moving", "stateLabel": "Moving" },
+      { "at": 0.61, "speed": "0 km/h", "state": "Idle", "stateLabel": "Idle" },
+      { "at": 0.66, "speed": "41 km/h", "state": "Moving", "stateLabel": "Moving" },
+      { "at": 0.88, "speed": "55 km/h", "state": "Moving", "stateLabel": "Moving" },
+      { "at": 1, "speed": "0 km/h", "state": "Stop", "stateLabel": "Trip end" }
+    ]
   },
   "summary": {
-    "totalKm": "23.5",
+    "totalKm": "13.8",
     "totalKmUnit": "Km",
     "runningLabel": "TOTAL Running",
-    "runningValue": "18 minutes",
+    "runningValue": "14 minutes",
     "idleLabel": "TOTAL Idle",
-    "idleValue": "1 hour 30 minutes",
-    "runningRatio": 0.28,
-    "idleRatio": 0.55
+    "idleValue": "4 minutes",
+    "runningRatio": 0.78,
+    "idleRatio": 0.22
   },
   "alert": {
     "text": "Near Lahore Ring Road Interchange, Bedian Road, Lahore District, Punjab"
@@ -49,31 +60,37 @@
   "minuteOptions": ["00", "05", "10", "15"],
   "stops": [
     {
-      "id": "stop-1",
-      "time": "10:08 PM",
-      "kind": "moving",
-      "address": "Lda Avenue Phase 1 Lahore,Punjab",
-      "duration": "6 min.",
-      "distance": "5.12 km",
-      "speed": "47 mph"
+      "id": "stop-3",
+      "time": "3:03 AM",
+      "kind": "stop",
+      "address": "Lahore Ring Road Interchange, Lahore Punjab",
+      "duration": "1 min",
+      "distance": "13.8 km",
+      "speed": "",
+      "atProgress": 1,
+      "coordinate": [31.551, 74.4]
     },
     {
       "id": "stop-2",
-      "time": "09:12 PM",
+      "time": "3:01 AM",
       "kind": "idle",
       "address": "H3, Phase 2 Johar Town, Lahore Punjab",
       "duration": "1 min",
       "distance": "",
-      "speed": ""
+      "speed": "",
+      "atProgress": 0.61,
+      "coordinate": [31.515, 74.38]
     },
     {
-      "id": "stop-3",
-      "time": "09:11 PM",
-      "kind": "stop",
-      "address": "H3, Phase 2 Johar Town, Lahore Punjab",
-      "duration": "20 Hr-20min",
-      "distance": "",
-      "speed": ""
+      "id": "stop-1",
+      "time": "2:52 AM",
+      "kind": "moving",
+      "address": "Lda Avenue Phase 1 Lahore,Punjab",
+      "duration": "6 min.",
+      "distance": "5.12 km",
+      "speed": "47 km/h",
+      "atProgress": 0.2,
+      "coordinate": [31.479, 74.3615]
     }
   ],
   "vehicles": [
