@@ -49,12 +49,14 @@
 - **Evidence:** toast fires in the synchronous handler; `saving` set false only in the success path.
 
 ### M7 · `dob.ts:98-102` · A future DOB silently becomes *today*
+- **Status: FIXED during this review.** `clampParts` now clamps COMPONENT-WISE instead of returning `today` wholesale: the day is first pulled back to the chosen month's real length (leap-aware), then a future year becomes the current year, a future month becomes the current month, and only then a future day becomes today — each segment keeps as much of the user's intent as the rule allows. `{2030, 5, 15}` now yields `2026-05-15` (it used to yield `2026-10-22`, silently rewriting month and day on a picker that auto-saves on close). `__tests__/dob.test.ts` pins the three cases plus a future Feb 29.
 - **Problem:** `clampParts` returns `today` wholesale when the candidate is after today, instead of clamping to the nearest valid date, and `ProfileDobSheet` auto-saves on close.
 - **Impact:** Selecting a future year/month rewrites month **and** day to today and persists it — a quiet data-corruption path with no message.
 - **Fix:** Clamp component-wise (year → current year, month → current month, day → min(day, today)) and show a notice; or reject with an inline error instead of auto-saving.
 - **Evidence:** `if (isAfter(candidate, today)) return today;` at `:101`.
 
 ### M8 · `PlaybackPanel.tsx:48`, `PlaybackScrubber.tsx:53` · Transport state does not resync on new payload
+- **Status: FIXED during this review.** The panel resets `playing`, the playhead and the Hour/Min chips whenever the payload changes (`playback.stamp` / `initialProgress` / `durationMinutes` / `filters.default*`), and `PlaybackScrubber` re-seeds its shared value from `playback.initialProgress` on change (its own `useEffect`), so a re-render or a new trip no longer leaves the playhead on the previous position.
 - **Problem:** `hour`/`minute` initialise from `playback.hour/minute` once; `progress` is a `useSharedValue(0)` seeded once from `playback.progress`. Changing vehicle/trip leaves the old hour/minute/duration/speed in the panel and the previous position on the slider.
 - **Impact:** Switching trips shows the new route geometry with the old trip's time, duration, and playhead.
 - **Fix:** Reset in an effect keyed on `playback` (and on `ref.current?.reset()`), or key the panel by trip id.

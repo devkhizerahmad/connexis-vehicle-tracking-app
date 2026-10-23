@@ -30,12 +30,12 @@ The user-visible lies and the blocked-accessible paths.
 
 | # | Action | Fixes | Effort |
 |---|---|---|---|
-| 1 | Implement playback advance + wire `onScrub` + derive the timestamp | B4 | M |
+| 1 | ~~Implement playback advance + wire `onScrub` + derive the timestamp~~ **DONE** - RAF loop, `setProgress` on the scrubber handle, `derivePlaybackStamp` in `PlaybackPanel/stamp.ts`, 5 new stamp tests, device-verified | B4, M8 | M |
 | 2 | ~~Resync `vehicleId` from route params in LiveMap and Reports~~ **DONE** - param synced via `useEffect`, consumed via `setParams`, `getVehicleDetails(id)` relabels mock, 3 new service tests | B5, M2, M3 | S |
 | 3 | ~~One `ScreenShell` + `EmptyState`/`ErrorState`/Retry; add `.catch` to all 5 services; `ListEmptyComponent`~~ **DONE** — `ScreenState` shipped, every screen fetch handles rejection, Home has `ListEmptyComponent`, 4 new tests | B6, M4, M5 | L |
 | 4 | ~~`try/catch/finally` in `ControlSwipeCard`~~ **DONE** — `.catch` + `.finally`, failure notice | M1 | S |
 | 5 | ~~`await` real save in Profile; toast only on resolve~~ **DONE** — `save()` returns `null` on failure, toast branches on `ok` | M6 | S |
-| 6 | Fix DOB clamp (component-wise, with notice) | M7 | M |
+| 6 | ~~Fix DOB clamp (component-wise)~~ **DONE** - year/month/day clamped one segment at a time; future year keeps month+day; 12 DOB tests | M7, B15 | M |
 | 7 | ~~`accessibilityLabel` on all 27 unlabelled controls; `autoComplete`/`returnKeyType` on Profile fields~~ **DONE** — 0 unlabelled `Pressable` remain; Profile fields autofill-ready | B13, M53 | M |
 | 8 | ~~Fix the 5 contrast pairs to >=4.5:1; raise telemetry text to >=12 pt~~ **DONE (telemetry + status ink)** — 7.5 -> 10 pt, gray -> grayStrong, dark ink on bright status fills, dark chip text. `colors.ts` values and `reportColors.rangeFill` untouched | B14, M55 | M |
 | 9 | Tab role + selected state; `expanded` state on collapsibles; live-region on toasts | M52, M56, S38 | M |
@@ -52,9 +52,9 @@ Removes the duplication that makes every future change expensive.
 
 | # | Action | Fixes | Effort |
 |---|---|---|---|
-| 1 | Split `icons/index.tsx` into 6 domain files + `icons/styles.ts`; memoise; delete 12 dead exports | B8, S14 | L |
-| 2 | Create `shared/types/domain.ts`; replace 8 vehicle interfaces; delete the `as any` casts | B9, S21 | L |
-| 3 | Extract `shared/components/vehicle/RouteRow`; reduce both route lists to wrappers | B10 | M |
+| 1 | ~~Split `icons/index.tsx` into domain files + `icons/styles.ts`; memoise; delete dead exports~~ **DONE** - 12 files, 204 inline styles removed, 65 memo, lint 176 -> 22 warnings, parity proven | B8, S14 | L |
+| 2 | ~~Create `shared/types/domain.ts`; replace the duplicated vehicle interfaces; delete the `as any` casts~~ **DONE** - one status union, shared geometry, DetailsScreen fully typed, repo `as any` 9 -> 3 | B9, S21 | L |
+| 3 | ~~Extract `shared/components/vehicle/RouteRow`; reduce both route lists to wrappers~~ **DONE** - shared row + `routeRowToneFromKey`, both list stylesheets reduced to card chrome, device-verified | B10 | M |
 | 4 | One `useToast` + `<Toast>`; delete 5 copies | M17, S3 | M |
 | 5 | Extract `useReportRange`/`useReportFilters`; break up `ReportsScreen` | M24 | L |
 | 6 | `useAsyncData` hook; migrate all 5 data hooks | M31 | M |
@@ -73,10 +73,10 @@ Removes the duplication that makes every future change expensive.
 
 | # | Action | Fixes | Effort |
 |---|---|---|---|
-| 1 | `__tests__/dob.test.ts` with frozen clock | B15 | M |
-| 2 | `__tests__/PlaybackScrubber.test.tsx` (layout-first, boundary clamp) | B16 | M |
-| 3 | `__tests__/ControlSwipeCard.test.tsx` (4 guard cases, fake timers) | B17 | M |
-| 4 | `__tests__/fitRegion.test.ts` | B18 | S |
+| 1 | ~~`__tests__/dob.test.ts` with frozen clock~~ **DONE** - 12 tests | B15 | M |
+| 2 | ~~`__tests__/PlaybackScrubber.test.tsx`~~ **DONE** - 5 tests (layout-first, clamp, silent setProgress, re-seed) | B16 | M |
+| 3 | ~~`__tests__/ControlSwipeCard.test.tsx`~~ **DONE** - 5 guard cases, real 800 ms seam + fake timers | B17 | M |
+| 4 | ~~`__tests__/fitRegion.test.ts`~~ **DONE** - 8 tests | B18 | S |
 | 5 | Replace the vacuous calendar assertion with a real boundary walk | M10 | M |
 | 6 | Mount `ReportsScreen` in one test | M11 | M |
 | 7 | ~~`accessibilityLabel` on all 27 unlabelled controls; `autoComplete`/`returnKeyType` on Profile fields~~ **DONE** — 0 unlabelled `Pressable` remain; Profile fields autofill-ready | B13, M53 | M |
@@ -124,3 +124,19 @@ Note: adding `@testing-library/react-native` (Sprint 3) is a **devDependency** a
 5. Add `accessibilityLabel` to the Profile fields (B13).
 
 Those five changes remove the two worst security exposures, restore the app's headline feature, and make every future regression visible.
+
+---
+
+## Status at close (2026-10-23)
+
+| Sprint | Rows | Done |
+|---|---|---|
+| Sprint 0 - stop the bleeding | 7 | 6 done, 1 blocked on the user (new Maps key in `~/.gradle/gradle.properties` + Cloud Console restrictions) |
+| Sprint 1 - correctness + accessibility | 8 | all 8 done (B5, B6, M1-M8, B13, B14) |
+| Sprint 2 - structural deduplication | 12 | rows 1-3 done (icons split, shared domain types, shared `RouteRow`); rows 4-12 open |
+| Sprint 3 - tests + guardrails | 12 | rows 1-4 done (B15-B18) plus row 5 (DOB clamp); rows 6-12 open |
+| Sprint 4 - optional polish | - | open |
+
+Gates: `npm run typecheck` 0 errors -> `npm run lint` 0 errors / 22 warnings -> `npm test -- --ci` 10 suites / 70 tests.
+
+B3 (biometric kill-confirmation / audit log) stays permanently out of scope for this review.

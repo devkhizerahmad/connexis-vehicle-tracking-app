@@ -1,4 +1,10 @@
-// vehicle.ts — shared vehicle domain models
+// vehicle.ts — shared vehicle presentation models
+//
+// B9: the status union lives in `@shared/types/domain`; this file must not
+// re-declare it (it used to widen the union to `| string`, which silently
+// accepted any status).
+import type { VehicleStatus } from '@shared/types/domain';
+
 export interface VehiclePlateStatus {
   country?: string;
   state?: string;
@@ -6,7 +12,7 @@ export interface VehiclePlateStatus {
 }
 
 export interface VehicleStatusInfo {
-  state?: 'running' | 'idle' | 'stop' | 'noData' | string;
+  state?: VehicleStatus;
   time?: string;
 }
 

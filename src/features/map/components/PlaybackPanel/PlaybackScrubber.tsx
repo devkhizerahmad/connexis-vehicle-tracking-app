@@ -13,7 +13,7 @@
 // gesture-handler, which is NOT a dependency of this project. Note the gesture
 // handlers themselves run on the JS thread — it is the style application that
 // is handed to the UI thread.
-import React, { forwardRef, useCallback, useImperativeHandle, useMemo } from 'react';
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo } from 'react';
 import {
   Image,
   type LayoutChangeEvent,
@@ -39,6 +39,8 @@ const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
 export interface PlaybackScrubberHandle {
   /** Move the playhead one skip step left (-1) or right (1). */
   skip: (direction: -1 | 1) => void;
+  /** Place the playhead at an absolute 0..1 position (B4 play loop). */
+  setProgress: (value: number) => void;
 }
 
 export interface PlaybackScrubberProps {
@@ -94,9 +96,18 @@ export const PlaybackScrubber = forwardRef<PlaybackScrubberHandle, PlaybackScrub
           progress.value = next;
           onScrub?.(next);
         },
+        setProgress: (value: number) => {
+          progress.value = clamp01(value);
+        },
       }),
       [onScrub, progress],
     );
+
+    // M8: a new payload (different vehicle / trip) must not leave the playhead
+    // on the previous position. Re-seed whenever the value changes.
+    useEffect(() => {
+      progress.value = clamp01(playback.initialProgress);
+    }, [playback.initialProgress, progress]);
 
     // The car rides the playhead.
     const carStyle = useAnimatedStyle(() => ({

@@ -1,20 +1,27 @@
 // map.ts — Map feature types
 // RESERVED MapLocation kept (pending History/Reports swap); LiveMap types added
 // for the LiveMap screen (S1–S6 build).
+//
+// B9: the route geometry and the vehicle identity now come from
+// `@shared/types/domain` instead of being re-declared per feature.
+import type {
+  RoutePoint,
+  Segment,
+  VehicleStatus,
+  VehicleStatusReadout,
+} from '@shared/types/domain';
+
+export type { RoutePoint, VehicleOption } from '@shared/types/domain';
+
 export interface MapLocation {
   lat: number;
   lng: number;
   address: string;
 }
 
-/** One route vertex as [lat, lng] (mock wire format). */
-export type RoutePoint = [number, number];
-
 /** A vehicle plotted on the live map: card content + route + car marker. */
-export interface LiveMapVehicle {
-  id: string;
-  name: string;
-  status: 'running' | 'idle' | 'stop' | 'noData';
+export interface LiveMapVehicle extends VehicleStatusReadout {
+  status: VehicleStatus;
   statusLabel: string;
   speed: string;
   update: string;
@@ -42,10 +49,7 @@ export interface MapDot {
 export type MapMarker = MapPin | MapDot;
 
 /** Inclusive index range into the vehicle route polyline. */
-export interface MapSegment {
-  startIndex: number;
-  endIndex: number;
-}
+export type MapSegment = Segment;
 
 /** Everything the LiveMap screen needs for one vehicle selection. */
 export interface LiveMapData {
@@ -56,12 +60,6 @@ export interface LiveMapData {
   dashedSegment: MapSegment;
   pins: MapPin[];
   dots: MapDot[];
-}
-
-/** Compact option row for the Select Vehicle dropdown. */
-export interface VehicleOption {
-  id: string;
-  name: string;
 }
 
 /** Raw livemap.mock.json payload shape. */

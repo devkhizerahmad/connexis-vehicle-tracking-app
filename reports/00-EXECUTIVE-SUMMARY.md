@@ -109,3 +109,24 @@ These were checked and found correct — do not churn them:
 | `03-SMALL-ISSUES.md` | 38 polish items with concrete value |
 | `04-METRICS.md` | Raw measured numbers, gate evidence, coverage map, dead-code inventory |
 | `05-REMEDIATION-PLAN.md` | Four sequenced sprints with effort estimates and exit criteria |
+
+---
+
+## 2c. Remediation status at close
+
+All 20 BIG findings except the permanently out-of-scope auth item are fixed and device-verified; the medium set is fixed through M8 plus M39/M42.
+
+| Area | Findings | State |
+|---|---|---|
+| Security | B1 (Maps key out of the repo), B2 (release signing) | **Fixed** — release aborts when the key or keystore is missing; the user must still rotate/update `MAPS_API_KEY` locally |
+| Error states | B6, M1, M4, M5, M6 | **Fixed** — shared `ScreenState`, `.catch` wiring on every screen, empty state on Home |
+| Maps / donut | B11, B12 | **Fixed** — `freezeOnBlur`, hoisted `RingView`, throttled count-up, progressbar a11y |
+| Accessibility | B13, B14 | **Fixed** — 27 controls labelled (re-scan: 0 unlabelled), ink/size fixes in components only |
+| Stale params | B5, M2, M3 | **Fixed** — params consumed after sync, `getVehicleDetails(id)` relabels the payload |
+| Playback | B4, M8 | **Fixed** — RAF transport, `setProgress`, `onScrub` wired, derived timestamp |
+| Structure | B7, B8, B9, B10 | **Fixed** — dead deps removed, icons split (204 inline styles gone), shared domain types, shared `RouteRow` |
+| Tests | B15, B16, B17, B18, M7 | **Fixed** — 70 tests over 10 suites, all four gaps covered |
+
+Gates at close: `npm run typecheck` **0 errors** -> `npm run lint` **0 errors / 22 warnings** -> `npm test -- --ci` **10 suites / 70 tests**.
+
+Still open (user-side, not code): rotate the exposed Maps key in Google Cloud and update `C:\Users\Administrator\.gradle\gradle.properties`; create `android/keystore.properties` and a release keystore; restrict the new key by package + SHA-1. OCR's native mode stays blocked by an upstream 503, so reviews ran in delegate mode.

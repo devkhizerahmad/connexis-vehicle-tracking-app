@@ -23,7 +23,7 @@ interface GlyphProps {
 }
 
 /** Maps the mock's `iconKey` to its glyph. White on the coloured cap. */
-const GLYPHS: Record<ReportIconKey, (p: GlyphProps) => React.JSX.Element> = {
+const GLYPHS: Record<ReportIconKey, React.ComponentType<GlyphProps>> = {
   list: ListIcon,
   flag: FlagIcon,
   highway: HighwayGlyph,

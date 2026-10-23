@@ -1,16 +1,14 @@
 // home.ts — HomeScreen feature types
+import type { Vehicle, VehicleStatus } from '@shared/types/domain';
+
 export interface VehicleSensorStrip {
   temp: string;
   fuel: string;
   door: string;
 }
 
-export interface VehicleSummary {
-  id: string;
-  /** Kia Sportage shares its plate with Suzuki Mehran in the mock data; id is unique. */
-  plate?: string;
-  name: string;
-  status: 'running' | 'idle' | 'stop' | 'noData';
+export interface VehicleSummary extends Vehicle {
+  status: VehicleStatus;
   image: 'sedan' | 'van';
   speed: string;
   location: string;

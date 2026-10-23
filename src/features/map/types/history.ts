@@ -1,15 +1,16 @@
 // history.ts — History (route playback) screen types (S1–S9).
 // Wire-compatible with history.mock.json; the shapes mirror the map feature so
 // the mini-map can reuse RoutePoint/MapSegment from types/map.ts.
+//
+// B9: the geometry itself is the shared domain now, so history and map cannot
+// drift apart again.
+import type { RoutePoint, Segment } from '@shared/types/domain';
 
 /** One route vertex as [lat, lng] (same wire format as the live map). */
-export type HistoryRoutePoint = [number, number];
+export type HistoryRoutePoint = RoutePoint;
 
 /** Inclusive index slice into a route polyline. */
-export interface HistorySegment {
-  startIndex: number;
-  endIndex: number;
-}
+export type HistorySegment = Segment;
 
 /** A selected calendar day, formatted `YYYY-MM-DD` (local, no timezone drift). */
 export type IsoDate = string;

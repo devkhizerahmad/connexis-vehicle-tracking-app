@@ -178,3 +178,30 @@ Edge distribution: DEFINES 1,299, USAGE 1,258, IMPORTS 642, CONTAINS_FILE 226, C
 | Notable exclusion | `index.android.bundle` (2,693,794 B > 2 MB scan limit) |
 
 This selection is what a full-codebase OCR pass would feed to a model. The 112 exclusions are predominantly binaries, generated assets, and the committed bundle.
+
+---
+
+## 11. After remediation (measured at the end of this review)
+
+Every row was re-measured with the same command as the baseline above.
+
+| Metric | Before | After | Note |
+|---|---:|---:|---|
+| `src/` files | 180 | 199 | +19: icons split (11 files), `RouteRow`, `domain.ts`, `stamp.ts`, 5 test-driven modules |
+| `src/` LOC | 14,607 | 14,910 | +303 net, all comments + new shared modules |
+| Lint | 0 errors, **177 warnings** | 0 errors, **22 warnings** | icons inline styles gone; remaining 22 are pre-existing `no-inline-styles` outside icons |
+| Tests | **3 suites / 28 tests** | **10 suites / 70 tests** | +7 suites / +42 tests |
+| Typecheck | not wired | `tsc --noEmit` **0 errors** | new `typecheck` script |
+| `as any` | 9 | **3** | DetailsScreen's 8 are gone |
+| `style={{` in `src/` | 231 | **27** | 204 of those were in `icons/index.tsx` |
+| `.catch(` in `src/` | 0 | **10** | every screen/service path now has an error branch |
+| `freezeOnBlur` | 0 | **6** | tab navigator + 5 stacks |
+| `ListEmptyComponent` | 0 | **1** | Home vehicle list |
+| Unlabelled interactive elements | 27 of 55 | **0** | 27 controls labelled, re-scanned |
+| Files > 300 LOC | 3 | 5 | `ReportsScreen` 390, `PlaybackPanel` 330 (B4 loop), `engineControl.ts` 355 (tokens), two icon domain files 325/313 |
+
+Test suites: `App`, `ScreenState`, `mapService`, `vehicleService`, `ReportsScreen`, `playbackStamp`, `dob` (12), `fitRegion` (8), `playbackScrubber` (5), `ControlSwipeCard` (5).
+
+Gates are wired in `.github/workflows/ci.yml` (typecheck, lint, jest) so these numbers cannot silently regress.
+
+The three remaining `as any` are the service/mock boundary casts that were already accepted in the baseline (`as unknown as` is used elsewhere for the same job); they are not the domain-model hole B9 closed.

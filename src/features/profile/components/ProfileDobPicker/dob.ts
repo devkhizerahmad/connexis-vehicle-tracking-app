@@ -89,20 +89,34 @@ export function formatDob(iso: string | null | undefined): string {
  * The clamp rules the picker applies to every segment selection:
  *   1. the day never exceeds the chosen month's real length (leap-aware);
  *   2. the result never lands after TODAY (maxDate = today).
+ *
+ * M7: rule 2 is applied COMPONENT-WISE. The old version returned `today`
+ * wholesale, so selecting a future YEAR rewrote the month and the day the user
+ * had just chosen (and `ProfileDobSheet` auto-saves on close, which made that a
+ * quiet data-corruption path). Now a future year becomes the current year, a
+ * future month becomes the current month, and only then a future day becomes
+ * today — each segment keeps as much of the user's intent as the rule allows.
  */
 export function clampParts(candidate: DobParts): DobParts {
   const today = todayParts();
-  const maxDay = daysInMonth(candidate.month, candidate.year);
-  const clamped: DobParts = {
-    year: candidate.year,
-    month: candidate.month,
-    day: Math.min(candidate.day, maxDay),
-  };
-  // Step 2: if the result is after today, fall back to today.
-  const afterToday =
-    clamped.year > today.year ||
-    (clamped.year === today.year &&
-      (clamped.month > today.month ||
-        (clamped.month === today.month && clamped.day > today.day)));
-  return afterToday ? today : clamped;
+  // Step 1: a day that does not exist in the chosen month is pulled back to the
+  // month's last day (leap-aware).
+  let year = candidate.year;
+  let month = candidate.month;
+  let day = Math.min(candidate.day, daysInMonth(month, year));
+
+  // Step 2: never in the future, one segment at a time.
+  if (year > today.year) {
+    year = today.year;
+  }
+  if (year === today.year && month > today.month) {
+    month = today.month;
+  }
+  // Shortening the year (Feb 29 -> Feb 28) or the month can invalidate the day.
+  day = Math.min(day, daysInMonth(month, year));
+  if (year === today.year && month === today.month && day > today.day) {
+    day = today.day;
+  }
+
+  return { year, month, day };
 }

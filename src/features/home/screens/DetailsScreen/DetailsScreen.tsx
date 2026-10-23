@@ -2,6 +2,13 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { Animated, ScrollView, StatusBar, Text, View } from 'react-native';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
+import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type {
+  HomeStackParamList,
+  RootTabParamList,
+} from '@navigation/types';
 import AppHeader from '@shared/components/layout/AppHeader';
 import { ScreenState } from '@shared/components/feedback/ScreenState';
 import PlateStatusRow from '@shared/components/vehicle/PlateStatusRow';
@@ -17,13 +24,18 @@ import { goToLiveMap } from '@shared/utils/navigationHelpers';
 import { spacing, sizes } from '@shared/theme';
 import { styles } from './styles';
 
-interface DetailsScreenProps {
-  route?: { params?: { vehicleId?: string } };
-  navigation?: any;
-}
+/**
+ * B9: Details is a Home-stack screen, so its props are typed against the stack —
+ * `navigation?: any` is gone, and the eight `as any` casts on the details
+ * payload are gone too (that payload already matched its component props).
+ * Cross-TAB navigation (the "live location" button) uses the same hook pattern
+ * as LiveMapScreen.
+ */
+type DetailsScreenProps = NativeStackScreenProps<HomeStackParamList, 'Details'>;
 
 export function DetailsScreen({ route, navigation }: DetailsScreenProps) {
-  const vehicleId = route?.params?.vehicleId ?? 'LFA-1464';
+  const vehicleId = route.params?.vehicleId ?? 'LFA-1464';
+  const tabNav = useNavigation<BottomTabNavigationProp<RootTabParamList>>();
   const { details, loading, error, retry } = useVehicleDetails(vehicleId);
 
   const [toast, setToast] = useState<string | null>(null);
@@ -60,7 +72,7 @@ export function DetailsScreen({ route, navigation }: DetailsScreenProps) {
       <SafeAreaProvider>
         <View style={styles.screen}>
           <StatusBar barStyle="light-content" />
-          <AppHeader variant="standard" onBack={() => navigation?.goBack()} />
+          <AppHeader variant="standard" onBack={() => navigation.goBack()} />
           {loading ? (
             <ScreenState kind="loading" message="Loading vehicle details." />
           ) : error ? (
@@ -90,13 +102,13 @@ export function DetailsScreen({ route, navigation }: DetailsScreenProps) {
           (it used to raise a toast and stay put). The shared header supplies
           the "Back" label and the 44dp target.
         */}
-        <AppHeader variant="standard" onBack={() => navigation?.goBack()} />
+        <AppHeader variant="standard" onBack={() => navigation.goBack()} />
 
         <ScrollView
           contentContainerStyle={[styles.scrollViewContent, { paddingBottom: scrollPadBottom }]}
           showsVerticalScrollIndicator={false}>
           <View style={styles.contentPadding}>
-            <PlateStatusRow plate={details.plate as any} status={details.status as any} />
+            <PlateStatusRow plate={details.plate} status={details.status} />
 
             <View onLayout={e => setCardH(e.nativeEvent.layout.height)}>
               <VehicleInfoCard
@@ -111,7 +123,7 @@ export function DetailsScreen({ route, navigation }: DetailsScreenProps) {
                 // button's pin glyph/label/style stay frozen.
                 onLiveLocation={() => {
                   if (navigation) {
-                    goToLiveMap(navigation, vehicleId);
+                    goToLiveMap(tabNav, vehicleId);
                   }
                 }}
                 onCyanHeight={setCyH}
@@ -119,15 +131,15 @@ export function DetailsScreen({ route, navigation }: DetailsScreenProps) {
             </View>
 
             <View style={{ marginTop: Math.max(0, kpiGap - spacing.gridGap) }}>
-              <KpiRow kpis={details.kpis as any} />
+              <KpiRow kpis={details.kpis} />
             </View>
 
             <SensorBlock
               title={details.fuelSensor.title}
               accent="amber"
               dropdown={details.fuelSensor.dropdown}
-              tiles={details.fuelSensor.tiles as any}
-              banner={details.fuelSensor.banner as any}
+              tiles={details.fuelSensor.tiles}
+              banner={details.fuelSensor.banner}
               onSelectPress={() => showToast('No sensors available yet')}
             />
 
@@ -135,19 +147,19 @@ export function DetailsScreen({ route, navigation }: DetailsScreenProps) {
               title={details.tempSensor.title}
               accent="blue"
               dropdown={details.tempSensor.dropdown}
-              tiles={details.tempSensor.tiles as any}
-              banner={details.tempSensor.banner as any}
+              tiles={details.tempSensor.tiles}
+              banner={details.tempSensor.banner}
               onSelectPress={() => showToast('No sensors available yet')}
             />
 
             <RoutesCard
-              routes={details.routes as any}
+              routes={details.routes}
               viewMore={details.viewMore}
               onViewMore={() => showToast('Opening all routes…')}
             />
 
             <QuickReportGrid
-              reports={details.reports as any}
+              reports={details.reports}
               onTileTap={l => showToast(`${l} tapped`)}
             />
 

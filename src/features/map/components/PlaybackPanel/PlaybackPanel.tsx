@@ -8,7 +8,7 @@
 //   * the car + calendar glyphs are RED on this panel;
 //   * the scrubber, its tick ruler and the Hour/Min rows sit on the PAGE background
 //     below the dark surface, so only the title strip + two info rows are dark.
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import {
   CalendarGlyph,
@@ -20,6 +20,7 @@ import { HourMinPicker } from '@shared/components/controls/HourMinPicker';
 import { historyColors, historySizes, radii } from '@shared/theme';
 import type { HistoryFilters, HistoryPlayback } from '@features/map/types/history';
 import { PlaybackScrubber, type PlaybackScrubberHandle } from './PlaybackScrubber';
+import { derivePlaybackStamp } from './stamp';
 
 /** State dot colour tracks the playback state (same tokens as the S9 badges). */
 const STATE_INK: Record<HistoryPlayback['state'], string> = {
@@ -43,10 +44,72 @@ export const PlaybackPanel = ({
 }: PlaybackPanelProps) => {
   const [playing, setPlaying] = useState(false);
   const scrubberRef = useRef<PlaybackScrubberHandle | null>(null);
+  // B4: the playhead lives in a ref (authoritative, read by the RAF loop) and is
+  // mirrored into state only ~10x/s so the timestamp text re-renders without
+  // turning the transport into a 60 fps React workload.
+  const [progress, setProgress] = useState(() =>
+    Math.min(1, Math.max(0, playback.initialProgress)),
+  );
   // PATCH T-HISTORY: the Hour/Min rows own their selection so the chips and the
   // flanking carets actually respond; the parent is still notified when wired.
   const [hour, setHour] = useState(filters.defaultHour);
   const [minute, setMinute] = useState(filters.defaultMinute);
+  const progressRef = useRef(progress);
+  const durationMs = Math.max(1, playback.durationMinutes * 60_000);
+
+  /** Single writer for the playhead: ref + scrubber shared value + state. */
+  const writeProgress = useCallback((value: number) => {
+    const next = Math.min(1, Math.max(0, value));
+    progressRef.current = next;
+    scrubberRef.current?.setProgress(next);
+    setProgress(next);
+  }, []);
+
+  /** M8: a new payload resets the transport, the playhead and the jump rows. */
+  useEffect(() => {
+    const seed = Math.min(1, Math.max(0, playback.initialProgress));
+    progressRef.current = seed;
+    setProgress(seed);
+    scrubberRef.current?.setProgress(seed);
+    setPlaying(false);
+    setHour(filters.defaultHour);
+    setMinute(filters.defaultMinute);
+  }, [
+    playback.stamp,
+    playback.initialProgress,
+    playback.durationMinutes,
+    filters.defaultHour,
+    filters.defaultMinute,
+  ]);
+
+  /** B4: while playing, advance the playhead in real time and stop at the end. */
+  useEffect(() => {
+    if (!playing) {
+      return undefined;
+    }
+    let frame = 0;
+    let lastTs = Date.now();
+    let lastPaint = lastTs;
+    const step = () => {
+      const now = Date.now();
+      const elapsed = now - lastTs;
+      lastTs = now;
+      const next = Math.min(1, progressRef.current + elapsed / durationMs);
+      progressRef.current = next;
+      scrubberRef.current?.setProgress(next);
+      if (now - lastPaint > 100 || next >= 1) {
+        lastPaint = now;
+        setProgress(next);
+      }
+      if (next >= 1) {
+        setPlaying(false);
+        return;
+      }
+      frame = requestAnimationFrame(step);
+    };
+    frame = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(frame);
+  }, [playing, durationMs]);
 
   const selectHour = useCallback(
     (next: string) => {
@@ -63,7 +126,24 @@ export const PlaybackPanel = ({
     [onMinuteChange],
   );
 
-  const togglePlay = useCallback(() => setPlaying(p => !p), []);
+  /** Dragging or skipping the playhead keeps the timestamp in step (B4). */
+  const handleScrub = useCallback(
+    (next: number) => {
+      const clamped = Math.min(1, Math.max(0, next));
+      progressRef.current = clamped;
+      setProgress(clamped);
+    },
+    [],
+  );
+
+  /** Play from the current position; a finished clip restarts from the top. */
+  const togglePlay = useCallback(() => {
+    if (!playing && progressRef.current >= 1) {
+      writeProgress(0);
+    }
+    setPlaying(p => !p);
+  }, [playing, writeProgress]);
+
   // Skip buttons move the Reanimated playhead through the scrubber's imperative handle.
   const skip = useCallback(
     (direction: -1 | 1) => () => {
@@ -72,6 +152,13 @@ export const PlaybackPanel = ({
     },
     [],
   );
+
+  /**
+   * B4: the displayed time is derived, not copied. `playback.stamp` describes the
+   * playhead's CURRENT position, so its base time is that value minus
+   * `initialProgress` of the clip; advancing the playhead moves the clock.
+   */
+  const stamp = useMemo(() => derivePlaybackStamp(playback, progress), [playback, progress]);
 
   return (
     <View style={styles.wrap} testID="playback-panel">
@@ -97,7 +184,7 @@ export const PlaybackPanel = ({
           <View style={styles.headLeft}>
             <CalendarGlyph color={historyColors.playIconInk} size={15} />
             <Text style={styles.stamp} testID="playback-stamp">
-              {playback.stamp}
+              {stamp}
             </Text>
           </View>
           <View style={styles.transport}>
@@ -135,7 +222,7 @@ export const PlaybackPanel = ({
       </View>
 
       {/* S7 scrubber + ruler — page background, not the dark surface */}
-      <PlaybackScrubber ref={scrubberRef} playback={playback} />
+      <PlaybackScrubber ref={scrubberRef} playback={playback} onScrub={handleScrub} />
 
       {/* S8 hour/minute jump rows */}
       <View style={styles.jumpers}>
