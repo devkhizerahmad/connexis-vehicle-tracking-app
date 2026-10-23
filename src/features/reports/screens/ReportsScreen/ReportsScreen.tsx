@@ -35,7 +35,6 @@ import {
   Pressable,
   ScrollView,
   type ScrollViewInstance,
-  Text,
   View,
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -50,6 +49,8 @@ import {
 import { DateRangeCalendar } from '@shared/components/controls/DateRangeCalendar';
 import { HourMinPicker } from '@shared/components/controls/HourMinPicker';
 import { useCollapsible } from '@shared/hooks/useCollapsible';
+import { useToast } from '@shared/hooks/useToast';
+import { Toast } from '@shared/components/feedback/Toast';
 import { spacing, sizes } from '@shared/theme';
 import { reportsService } from '@features/reports/services/reportsService';
 import { ReportCategorySection } from '@features/reports/components/ReportCategorySection';
@@ -132,33 +133,7 @@ export function ReportsScreen({ navigation, route }: ReportsScreenProps) {
     return () => clearTimeout(timer);
   }, [isExpanded]);
 
-  // stub toast — the target report flows are not wired yet
-  const [toast, setToast] = useState<string | null>(null);
-  const toastAnim = useRef(new Animated.Value(0)).current;
-  const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const showToast = useCallback(
-    (message: string) => {
-      if (toastTimer.current) {
-        clearTimeout(toastTimer.current);
-      }
-      setToast(message);
-      Animated.timing(toastAnim, { toValue: 1, duration: 150, useNativeDriver: true }).start();
-      toastTimer.current = setTimeout(() => {
-        Animated.timing(toastAnim, { toValue: 0, duration: 200, useNativeDriver: true }).start();
-      }, spacing.toastMs);
-    },
-    [toastAnim],
-  );
-
-  useEffect(
-    () => () => {
-      if (toastTimer.current) {
-        clearTimeout(toastTimer.current);
-      }
-    },
-    [],
-  );
+  const { message: toast, anim: toastAnim, showToast } = useToast();
 
 
   useEffect(() => {
@@ -412,14 +387,7 @@ export function ReportsScreen({ navigation, route }: ReportsScreenProps) {
         {categories}
       </ScrollView>
 
-      {toast ? (
-        <Animated.View
-          pointerEvents="none"
-          style={[styles.toast, { opacity: toastAnim }]}
-          testID="reports-toast">
-          <Text style={styles.toastText}>{toast}</Text>
-        </Animated.View>
-      ) : null}
+      <Toast message={toast} anim={toastAnim} testID="reports-toast" />
     </View>
   );
 }

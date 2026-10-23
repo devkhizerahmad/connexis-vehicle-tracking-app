@@ -10,7 +10,7 @@
 |---|---|---|---|
 | S1 | `DateRangeCalendar/DateRangeCalendar.tsx:141` | Year-sync `setTimeout` is never cleared; it can fire after unmount or after the user has moved on. | Store the id in a ref; clear in the effect cleanup and before scheduling a new one. |
 | S2 | `HomeScreen/HomeScreen.tsx:96` | `keyExtractor={(v) => v.name}` — two vehicles with the same name collide and React reuses the wrong row state. | Use `v.id`. |
-| S3 | 5 toast implementations | `setToast(null)` is never called, so the state persists after fade-out; Home and Details also never clear their timer. | Fold into the shared `useToast` hook (M17); clear timer on unmount and reset state after the exit animation. |
+| S3 | 5 toast implementations | `setToast(null)` is never called, so the state persists after fade-out; Home and Details also never clear their timer. | Fold into the shared `useToast` hook (M17); clear timer on unmount and reset state after the exit animation. **FIXED** — `useToast` clears the timer on unmount and sets the message back to `null` inside the fade-out completion callback; locked by `__tests__/useToast.test.tsx`. |
 | S4 | `DetailsScreen/DetailsScreen.tsx:80` | `vehicles[selectedIndex]` falls back to index 0 when the id is not found, so the header silently mislabels the vehicle. | Resolve by id and render an explicit not-found state. |
 
 ---

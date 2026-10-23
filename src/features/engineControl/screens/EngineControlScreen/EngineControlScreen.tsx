@@ -22,15 +22,17 @@
 // (tab switch) every interaction is stubbed with the shared toast — the same
 // pattern ReportsScreen uses for its not-yet-wired controls — because no Engine
 // Control endpoint exists yet.
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Animated, Image, Pressable, ScrollView, Text, View } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Image, Pressable, ScrollView, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { AppHeader } from '@shared/components/layout/AppHeader';
 import { ScreenState } from '@shared/components/feedback/ScreenState';
-import { ecSizes, sizes, spacing } from '@shared/theme';
+import { Toast } from '@shared/components/feedback/Toast';
+import { useToast } from '@shared/hooks/useToast';
+import { ecSizes, sizes } from '@shared/theme';
 import { goToLiveMap } from '@shared/utils/navigationHelpers';
 import type { RootTabParamList } from '@navigation/types';
 import { ChangeFenceButton } from '@features/engineControl/components/ChangeFenceButton';
@@ -66,17 +68,12 @@ export function EngineControlScreen({ navigation }: EngineControlScreenProps) {
   // W4: this screen's `navigation` is a STACK prop (EngineControlStack), but the
   // helper needs the ROOT tab prop to switch tabs — same typed handle LiveMap uses.
   const tabNav = useNavigation<BottomTabNavigationProp<RootTabParamList>>();
-  const [toast, setToast] = useState<string>('');
+  const { message: toast, anim: toastAnim, showToast } = useToast();
   const [avatarBroken, setAvatarBroken] = useState(false);
   // F13: the shared tab bar is an absolute overlay (BottomNav/styles.ts), so the
   // scroll content needs explicit clearance for it plus the device gesture inset.
   const insets = useSafeAreaInsets();
   const scrollPadBottom = sizes.bottomNav + insets.bottom + ecSizes.scrollNavBuffer;
-  // PATCH EC-SWIPE: the toast is screen-absolute, so it also has to clear the
-  // BottomNav overlay — a flat `bottom` sat underneath it and was invisible.
-  const toastBottom = sizes.bottomNav + insets.bottom + ecSizes.toastNavGap;
-  const toastAnim = useRef(new Animated.Value(0)).current;
-  const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     let alive = true;
@@ -97,43 +94,6 @@ export function EngineControlScreen({ navigation }: EngineControlScreenProps) {
       alive = false;
     };
   }, [attempt]);
-
-  // Cancel a pending toast dismissal if the screen unmounts mid-fade.
-  useEffect(
-    () => () => {
-      if (toastTimer.current) {
-        clearTimeout(toastTimer.current);
-      }
-    },
-    [],
-  );
-
-  const showToast = useCallback(
-    (message: string) => {
-      setToast(message);
-      toastAnim.setValue(0);
-      Animated.timing(toastAnim, {
-        toValue: 1,
-        duration: 180,
-        useNativeDriver: true,
-      }).start();
-      if (toastTimer.current) {
-        clearTimeout(toastTimer.current);
-      }
-      toastTimer.current = setTimeout(() => {
-        Animated.timing(toastAnim, {
-          toValue: 0,
-          duration: 180,
-          useNativeDriver: true,
-        }).start(({ finished }) => {
-          if (finished) {
-            setToast('');
-          }
-        });
-      }, spacing.toastMs);
-    },
-    [toastAnim],
-  );
 
   // S1 back chevron: this screen IS the stack root, so the chevron stays inert
   // (reference parity + the ReportsScreen precedent).
@@ -281,14 +241,7 @@ export function EngineControlScreen({ navigation }: EngineControlScreenProps) {
         </View>
       </ScrollView>
 
-      {toast ? (
-        <Animated.View
-          pointerEvents="none"
-          style={[styles.toast, { bottom: toastBottom, opacity: toastAnim }]}
-          testID="ec-toast">
-          <Text style={styles.toastText}>{toast}</Text>
-        </Animated.View>
-      ) : null}
+      <Toast message={toast} anim={toastAnim} testID="ec-toast" />
     </View>
   );
 }

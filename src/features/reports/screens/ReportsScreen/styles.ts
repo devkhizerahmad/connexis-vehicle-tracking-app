@@ -1,6 +1,6 @@
 // styles.ts — ReportsScreen assembly (scroll gutters, picker rows, toast, avatar).
 import { StyleSheet } from 'react-native';
-import { colors, headerSpec, reportColors, reportSizes, sizes } from '@shared/theme';
+import { colors, headerSpec, sizes } from '@shared/theme';
 
 export const styles = StyleSheet.create({
   screen: {
@@ -72,22 +72,6 @@ export const styles = StyleSheet.create({
   avatar: {
     width: headerSpec.avatar.size * headerSpec.avatar.cropScale,
     height: headerSpec.avatar.size * headerSpec.avatar.cropScale,
-  },
-  toast: {
-    position: 'absolute',
-    left: reportSizes.gutter * 2,
-    right: reportSizes.gutter * 2,
-    bottom: 32,
-    paddingVertical: 10,
-    paddingHorizontal: 14,
-    borderRadius: 6,
-    backgroundColor: reportColors.toastBg,
-    alignItems: 'center',
-  },
-  toastText: {
-    color: reportColors.toastInk,
-    fontSize: 12,
-    fontWeight: '600',
   },
 });
 

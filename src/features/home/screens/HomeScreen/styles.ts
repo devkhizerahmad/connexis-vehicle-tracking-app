@@ -76,18 +76,4 @@ export const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: '700',
   },
-  toast: {
-    position: 'absolute',
-    bottom: 100,
-    alignSelf: 'center',
-    backgroundColor: colors.surface.navy,
-    borderRadius: 6,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-  },
-  toastText: {
-    color: colors.white,
-    fontSize: 12,
-    fontWeight: '600',
-  },
 });

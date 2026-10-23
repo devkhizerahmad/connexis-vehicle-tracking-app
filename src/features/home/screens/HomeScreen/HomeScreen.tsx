@@ -1,13 +1,15 @@
 // HomeScreen.tsx — Home tab entry screen (reference mock, S1–S7)
 // Header: AppHeader variant="extended" (band 80: greeting + user chip); nav row has the
 // standard 56dp row with visual-only back (tab root) + bell action.
-import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { Animated, FlatList, Image, Pressable, Text, View } from 'react-native';
+import React, { useCallback, useMemo } from 'react';
+import { FlatList, Image, Pressable, Text, View } from 'react-native';
 import AppHeader from '@shared/components/layout/AppHeader';
 import { ScreenState } from '@shared/components/feedback/ScreenState';
+import { Toast } from '@shared/components/feedback/Toast';
+import { useToast } from '@shared/hooks/useToast';
 import { BellIcon, RefreshIcon } from '@shared/components/icons';
 import { goToLiveMap, goToReports } from '@shared/utils/navigationHelpers';
-import { colors, sizes, spacing } from '@shared/theme';
+import { colors, sizes } from '@shared/theme';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import SummaryCards from '@features/home/components/SummaryCards';
 import AssetCard from '@features/home/components/AssetCard';
@@ -27,23 +29,7 @@ type FeedItem =
 export function HomeScreen({ navigation }: HomeScreenProps) {
   const { feed, loading, error, retry } = useVehicleList();
 
-  const [toast, setToast] = useState<string | null>(null);
-  const toastAnim = useRef(new Animated.Value(0)).current;
-  const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const showToast = useCallback(
-    (msg: string) => {
-      if (toastTimer.current) {
-        clearTimeout(toastTimer.current);
-      }
-      setToast(msg);
-      Animated.timing(toastAnim, { toValue: 1, duration: 150, useNativeDriver: true }).start();
-      toastTimer.current = setTimeout(() => {
-        Animated.timing(toastAnim, { toValue: 0, duration: 200, useNativeDriver: true }).start();
-      }, spacing.toastMs);
-    },
-    [toastAnim],
-  );
+  const { message: toast, anim: toastAnim, showToast } = useToast();
 
   // The bottom bar is drawn by RootNavigator's CustomTabBar (an absolute overlay),
   // so this screen must not render its own BottomNav — that duplicate caused the
@@ -210,11 +196,7 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
         showsVerticalScrollIndicator={false}
       />
 
-      {toast ? (
-        <Animated.View style={[styles.toast, { opacity: toastAnim }]}>
-          <Text style={styles.toastText}>{toast}</Text>
-        </Animated.View>
-      ) : null}
+      <Toast message={toast} anim={toastAnim} testID="home-toast" />
     </View>
   );
 }

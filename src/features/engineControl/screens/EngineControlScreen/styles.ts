@@ -1,6 +1,6 @@
 // styles.ts — EngineControlScreen assembly (section rhythm, scroll gutters, toast).
 import { StyleSheet } from 'react-native';
-import { colors, ecColors, ecSizes, headerSpec, reportColors } from '@shared/theme';
+import { colors, ecColors, ecSizes, headerSpec } from '@shared/theme';
 
 export const styles = StyleSheet.create({
   screen: {
@@ -87,34 +87,6 @@ export const styles = StyleSheet.create({
     bottom: 0,
     backgroundColor: ecColors.avatarFallback,
     borderRadius: headerSpec.avatar.size / 2,
-  },
-  /**
-   * PATCH EC-SWIPE: `bottom` is NO LONGER set here.
-   *
-   * It used to be a flat 32, which put the toast at y≈1620..1656 on a 1688 px
-   * screen — squarely underneath the shared BottomNav overlay (≈1548..1660). The
-   * toast was therefore rendering the whole time and simply being PAINTED OVER,
-   * which made every control in this screen look dead. Its offset is now applied
-   * dynamically by EngineControlScreen as `sizes.bottomNav + insets.bottom`,
-   * exactly like `scrollPadBottom`, so it always clears the nav.
-   */
-  toast: {
-    position: 'absolute',
-    left: ecSizes.gutter * 2,
-    right: ecSizes.gutter * 2,
-    paddingVertical: 10,
-    paddingHorizontal: 14,
-    borderRadius: 6,
-    backgroundColor: reportColors.toastBg,
-    alignItems: 'center',
-    // Above the nav overlay, not merely near the bottom edge.
-    zIndex: 10,
-    elevation: 10,
-  },
-  toastText: {
-    color: reportColors.toastInk,
-    fontSize: 12,
-    fontWeight: '600',
   },
 });
 

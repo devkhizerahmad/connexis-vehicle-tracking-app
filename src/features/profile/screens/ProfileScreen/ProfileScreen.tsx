@@ -1,13 +1,11 @@
 // ProfileScreen.tsx — Profile screen assembly (390x844 reference)
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import {
   Alert,
-  Animated,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   StatusBar,
-  Text,
   View,
 } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -22,7 +20,9 @@ import ProfileHeader from '@features/profile/components/ProfileHeader';
 import { useProfile } from '@features/profile/hooks/useProfile';
 import { PROFILE_FIELDS } from '@features/profile/types/profile';
 import { ProfileStackParamList, RootTabParamList } from '@navigation/types';
-import { spacing } from '@shared/theme';
+import { Toast } from '@shared/components/feedback/Toast';
+import { useToast } from '@shared/hooks/useToast';
+import { profileTokens } from '@shared/theme';
 import { makeProfileScrollContentStyle } from '@shared/utils/styleFactories';
 import { styles } from './styles';
 
@@ -41,9 +41,7 @@ export function ProfileScreen({ navigation }: ProfileScreenProps) {
   const insets = useSafeAreaInsets();
   const { values, setField, save, saving } = useProfile();
 
-  const [toast, setToast] = useState<string | null>(null);
-  const toastAnim = useRef(new Animated.Value(0)).current;
-  const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { message: toast, anim: toastAnim, showToast } = useToast();
   /** The 3-segment DOB sheet is open. */
   const [dobSheetOpen, setDobSheetOpen] = useState(false);
 
@@ -52,28 +50,6 @@ export function ProfileScreen({ navigation }: ProfileScreenProps) {
     [insets.bottom],
   );
 
-  const showToast = useCallback(
-    (message: string) => {
-      if (toastTimer.current) {
-        clearTimeout(toastTimer.current);
-      }
-      setToast(message);
-      Animated.timing(toastAnim, { toValue: 1, duration: 150, useNativeDriver: true }).start();
-      toastTimer.current = setTimeout(() => {
-        Animated.timing(toastAnim, { toValue: 0, duration: 200, useNativeDriver: true }).start();
-      }, spacing.toastMs);
-    },
-    [toastAnim],
-  );
-
-  useEffect(
-    () => () => {
-      if (toastTimer.current) {
-        clearTimeout(toastTimer.current);
-      }
-    },
-    [],
-  );
 
   /** Back chevron pops the tab stack (falls back to the Home tab). */
   const handleBack = useCallback(() => {
@@ -165,13 +141,12 @@ export function ProfileScreen({ navigation }: ProfileScreenProps) {
         </ScrollView>
       </KeyboardAvoidingView>
 
-      {toast ? (
-        <Animated.View
-          pointerEvents="none"
-          style={[styles.toast, { opacity: toastAnim }]}>
-          <Text style={styles.toastText}>{toast}</Text>
-        </Animated.View>
-      ) : null}
+      <Toast
+        message={toast}
+        anim={toastAnim}
+        bottom={profileTokens.space.toastBottom}
+        testID="profile-toast"
+      />
     </View>
   );
 }

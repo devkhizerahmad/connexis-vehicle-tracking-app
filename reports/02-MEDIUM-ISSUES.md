@@ -123,6 +123,7 @@
 - **Impact:** A toast change is a 5-file edit; two of them leak a timer and can `setState` after unmount.
 - **Fix:** One `useToast()` hook + one `<Toast>` component in `shared`; delete all five copies.
 - **Evidence:** 5 `const showToast` occurrences; no `clearTimeout` in HomeScreen/DetailsScreen.
+- **Status: FIXED during this review.** New `src/shared/hooks/useToast.ts` owns the message, the single `Animated.Value`, the dismiss timer and the unmount cleanup. New `src/shared/components/feedback/Toast/{Toast.tsx, styles.ts, index.ts}` is the only toast surface (navy pill, 24 pt insets, `pointerEvents="none"`, default offset `bottomNav + insets.bottom + 12`). All five screens now call `const { message: toast, anim: toastAnim, showToast } = useToast()` and render `<Toast …/>`; every per-screen `toast`/`toastText` style and timer ref is deleted. Profile passes `bottom={profileTokens.space.toastBottom}` because it hides the tab bar. `__tests__/useToast.test.tsx` (5 tests) locks show / auto-clear / timer restart / no-setState-after-unmount. Verified on device (SM-A025F): Home bell, Details "Select", EC "Change Fence", Profile "Update profile", Reports "History Report" all show and fade away.
 
 ### M18 · 12 component files · `StyleSheet.create` embedded with no `styles.ts`
 - **Problem:** The stated convention is `ComponentName/{ComponentName.tsx, styles.ts, index.ts}`. Twelve components create styles inline in the `.tsx` (`map/LiveMapView`, `map/HistoryMiniMap`, `map/HistoryListRow`, `map/HistorySummaryPanel`, `reports/ReportTile`, `reports/HourMinPicker`, `controls/Collapsible`, `controls/DateRangeField`, `profile/ProfileDobPicker/ProfileDobSheet`, and 3 more).
@@ -389,6 +390,7 @@
 - **Impact:** "Vehicle locked", "Profile saved", "Logged out" are silent for screen-reader users — the only feedback for those actions.
 - **Fix:** `accessibilityLiveRegion="polite"` on the toast container plus an explicit announce on mount.
 - **Evidence:** toast JSX in 5 screens with no live-region prop.
+- **Status: FIXED during this review (via M17).** The single `<Toast>` now sets `accessibilityRole="alert"` and `accessibilityLiveRegion="polite"`, so every screen's toast is announced by TalkBack with no per-screen work. Explicit `announceForAccessibility` was not added: the live region already covers the message, and a manual announce would double-speak it.
 
 ### M57 · `ProfileDobSheet.tsx` · Modal does not contain focus
 - **Problem:** No `accessibilityViewIsModal`; the backdrop is the first focusable element, so TalkBack can move behind the sheet.

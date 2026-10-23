@@ -38,7 +38,7 @@ The user-visible lies and the blocked-accessible paths.
 | 6 | ~~Fix DOB clamp (component-wise)~~ **DONE** - year/month/day clamped one segment at a time; future year keeps month+day; 12 DOB tests | M7, B15 | M |
 | 7 | ~~`accessibilityLabel` on all 27 unlabelled controls; `autoComplete`/`returnKeyType` on Profile fields~~ **DONE** — 0 unlabelled `Pressable` remain; Profile fields autofill-ready | B13, M53 | M |
 | 8 | ~~Fix the 5 contrast pairs to >=4.5:1; raise telemetry text to >=12 pt~~ **DONE (telemetry + status ink)** — 7.5 -> 10 pt, gray -> grayStrong, dark ink on bright status fills, dark chip text. `colors.ts` values and `reportColors.rangeFill` untouched | B14, M55 | M |
-| 9 | Tab role + selected state; `expanded` state on collapsibles; live-region on toasts | M52, M56, S38 | M |
+| 9 | Tab role + selected state; `expanded` state on collapsibles; ~~live-region on toasts~~ **toast part DONE** (single `<Toast>` carries `role="alert"` + `liveRegion="polite"`); tab/collapsible parts open | M52, M56, S38 | M |
 | 10 | 44 dp hit areas via `hitSlop` | M54 | S |
 | 11 | Kill-confirmation (biometric or modal) + audit log entry | B3, M38 | L |
 
@@ -55,7 +55,7 @@ Removes the duplication that makes every future change expensive.
 | 1 | ~~Split `icons/index.tsx` into domain files + `icons/styles.ts`; memoise; delete dead exports~~ **DONE** - 12 files, 204 inline styles removed, 65 memo, lint 176 -> 22 warnings, parity proven | B8, S14 | L |
 | 2 | ~~Create `shared/types/domain.ts`; replace the duplicated vehicle interfaces; delete the `as any` casts~~ **DONE** - one status union, shared geometry, DetailsScreen fully typed, repo `as any` 9 -> 3 | B9, S21 | L |
 | 3 | ~~Extract `shared/components/vehicle/RouteRow`; reduce both route lists to wrappers~~ **DONE** - shared row + `routeRowToneFromKey`, both list stylesheets reduced to card chrome, device-verified | B10 | M |
-| 4 | One `useToast` + `<Toast>`; delete 5 copies | M17, S3 | M |
+| 4 | ~~One `useToast` + `<Toast>`; delete 5 copies~~ **DONE** - one hook + one shell, all 5 screens migrated, per-screen timer refs and toast styles deleted, `useToast` tests (5) added, device-verified on all 5 screens | M17, S3, M56 | M |
 | 5 | Extract `useReportRange`/`useReportFilters`; break up `ReportsScreen` | M24 | L |
 | 6 | `useAsyncData` hook; migrate all 5 data hooks | M31 | M |
 | 7 | ~~`accessibilityLabel` on all 27 unlabelled controls; `autoComplete`/`returnKeyType` on Profile fields~~ **DONE** — 0 unlabelled `Pressable` remain; Profile fields autofill-ready | B13, M53 | M |

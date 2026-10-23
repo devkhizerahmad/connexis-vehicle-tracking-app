@@ -20,20 +20,4 @@ export const styles = StyleSheet.create({
     paddingBottom: profileTokens.space.formPadBottom,
     ...shadows.card,
   },
-  toast: {
-    position: 'absolute',
-    left: profileTokens.space.toastInsetH,
-    right: profileTokens.space.toastInsetH,
-    bottom: profileTokens.space.toastBottom,
-    paddingVertical: profileTokens.space.toastPadV,
-    paddingHorizontal: profileTokens.space.toastPadH,
-    borderRadius: profileTokens.radius.toast,
-    backgroundColor: profileTokens.color.toastSurface,
-    alignItems: 'center',
-  },
-  toastText: {
-    color: profileTokens.color.onDark,
-    fontSize: profileTokens.type.toastLabel.fontSize,
-    fontWeight: profileTokens.type.toastLabel.fontWeight,
-  },
 });

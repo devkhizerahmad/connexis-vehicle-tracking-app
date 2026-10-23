@@ -1,6 +1,6 @@
 // DetailsScreen.tsx — Details screen assembly (390x844 target)
-import React, { useCallback, useRef, useState } from 'react';
-import { Animated, ScrollView, StatusBar, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { ScrollView, StatusBar, View } from 'react-native';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { useNavigation } from '@react-navigation/native';
@@ -11,6 +11,8 @@ import type {
 } from '@navigation/types';
 import AppHeader from '@shared/components/layout/AppHeader';
 import { ScreenState } from '@shared/components/feedback/ScreenState';
+import { Toast } from '@shared/components/feedback/Toast';
+import { useToast } from '@shared/hooks/useToast';
 import PlateStatusRow from '@shared/components/vehicle/PlateStatusRow';
 import VehicleInfoCard from '@shared/components/vehicle/VehicleInfoCard';
 import KpiRow from '@features/home/components/KpiRow';
@@ -38,27 +40,11 @@ export function DetailsScreen({ route, navigation }: DetailsScreenProps) {
   const tabNav = useNavigation<BottomTabNavigationProp<RootTabParamList>>();
   const { details, loading, error, retry } = useVehicleDetails(vehicleId);
 
-  const [toast, setToast] = useState<string | null>(null);
-  const toastAnim = useRef(new Animated.Value(0)).current;
-  const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { message: toast, anim: toastAnim, showToast } = useToast();
   const [cardH, setCardH] = useState(0);
   const [cyH, setCyH] = useState(0);
 
   const kpiGap = calculateKpiGap(cardH, cyH);
-
-  const showToast = useCallback(
-    (msg: string) => {
-      if (toastTimer.current) {
-        clearTimeout(toastTimer.current);
-      }
-      setToast(msg);
-      Animated.timing(toastAnim, { toValue: 1, duration: 150, useNativeDriver: true }).start();
-      toastTimer.current = setTimeout(() => {
-        Animated.timing(toastAnim, { toValue: 0, duration: 200, useNativeDriver: true }).start();
-      }, spacing.toastMs);
-    },
-    [toastAnim],
-  );
 
   // V5-PART1: Details lives INSIDE HomeTab, so RootNavigator's CustomTabBar already
   // draws the (absolute) BottomNav here — this screen's own <BottomNav> was the
@@ -172,16 +158,7 @@ export function DetailsScreen({ route, navigation }: DetailsScreenProps) {
           </View>
         </ScrollView>
 
-        {toast ? (
-          <Animated.View
-            pointerEvents="none"
-            style={[
-              styles.toast,
-              { opacity: toastAnim },
-            ]}>
-            <Text style={styles.toastText}>{toast}</Text>
-          </Animated.View>
-        ) : null}
+        <Toast message={toast} anim={toastAnim} testID="details-toast" />
       </View>
     </SafeAreaProvider>
   );
