@@ -5,6 +5,8 @@
 // completes), then the overlay is unmounted entirely (splashGone).
 // PATCH H1: native window background = colors.splash (#F8F3F3) — see android
 // res/values/colors.xml + styles.xml (safety net for any pre-JS paint gap).
+// AUTH: unauthenticated users see LoginScreen; authenticated users see RootNavigator.
+//   Splash overlay renders on top of either screen.
 import React, {useEffect, useRef, useState} from 'react';
 import {
   Animated,
@@ -18,6 +20,8 @@ import {
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import RootNavigator from '@navigation/RootNavigator';
 import {colors} from '@shared/theme/colors';
+import { LoginScreen } from './src/features/auth/screens/LoginScreen';
+import { AuthProvider, useAuth } from './src/features/auth/context/AuthContext';
 
 const MIN_SPLASH_MS = 2400; // logo spring + 800ms fade + tagline visibility
 const FADE_MS = 300;
@@ -29,6 +33,7 @@ export default function App() {
   const mountedAt = useRef<number>(Date.now());
   const [navReady, setNavReady] = useState(false);
   const [splashGone, setSplashGone] = useState(false);
+  const { isAuthenticated } = useAuth();
 
   // Logo entrance animation (native-driven: scale spring + fade timing).
   useEffect(() => {
@@ -47,6 +52,7 @@ export default function App() {
   }, [fadeAnim, scaleAnim]);
 
   // Dismiss: wait for navigator ready + minimum splash time, then fade 1->0 and unmount.
+  // navReady is set true by RootNavigator.onReady OR by the LoginScreen mount effect.
   const fadeScheduled = useRef(false);
   useEffect(() => {
     if (!navReady || fadeScheduled.current) {
@@ -65,13 +71,16 @@ export default function App() {
     return () => clearTimeout(t);
   }, [navReady, overlayOpacity]);
 
-  // Navigator mounts exactly once; splash renders above it as an overlay.
-  // The gap that previously flashed black is now covered by the still-visible splash.
   return (
     <SafeAreaProvider>
-      <RootNavigator onReady={() => setNavReady(true)} />
+      <AuthProvider>
+        {isAuthenticated ? (
+          <RootNavigator onReady={() => setNavReady(true)} />
+        ) : (
+          <LoginScreen onAuthReady={() => setNavReady(true)} />
+        )}
 
-      {!splashGone && (
+        {!splashGone && (
         <Animated.View
           style={[styles.splashOverlay, {opacity: overlayOpacity}]}
           pointerEvents="auto">

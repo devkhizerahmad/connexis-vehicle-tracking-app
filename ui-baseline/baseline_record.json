@@ -416,6 +416,41 @@
       "newTokens": "reportColors.rangeFill (src/shared/theme/reports.ts) - the HIGHLIGHTED RANGE band colour. theme.ts overrides the library UI.range_fill with it, so the band is re-coloured by changing that one hex. The library default was hsl(240 3.7% 15.9%) = #27272A, measured off the device before the override.",
       "staticGates": "tsc 0, eslint 0, jest 28/28, deps 18, no raw hex / no static style={{ in the calendar code, the 3-click reset guard + allowRangeReset + useRef mechanics untouched, mock mtimes unchanged",
       "note": "The value of reportColors.rangeFill was left as found (it is being changed live by another session); this entry records the WIRING, not a colour choice."
+      },
+    {
+      "label": "Login screen replica (primary-token colors) 2026-10-26",
+      "capturedAt": "2026-10-26",
+      "scope": "New auth screen src/features/auth/screens/LoginScreen/ — geometry replica of design-references/Login Screen.png, colors from existing theme tokens only (no sampled palette).",
+      "newFiles": [
+        "src/features/auth/screens/LoginScreen/LoginScreen.tsx",
+        "src/features/auth/screens/LoginScreen/styles.ts",
+        "src/features/auth/screens/LoginScreen/index.tsx",
+        "src/shared/components/icons/auth.tsx (Envelope, Eye, EyeOff glyphs)",
+        "src/shared/theme/colors.ts (authIconTint, authDecorArc derived opacity tokens)"
+      ],
+      "newTokens": {
+        "colors.authIconTint": "rgba(192, 17, 15, 0.10) — derived from gradientHeader brand-red stop (#C0110F) at 10% opacity; icon-square tint behind envelope/lock/eye glyphs",
+        "colors.authDecorArc": "rgba(192, 17, 15, 0.10) — derived from gradientHeader brand-red stop (#C0110F) at 10% opacity; bottom-left pink decorative arc outline"
+      },
+      "elementToTokenMapping": {
+        "redHeaderField + LoginButtonGradient": "colors.gradientHeader ['#2A0508', '#C0110F']",
+        "decorativeDarkerArcs": "colors.gradientHeader[0] (#2A0508)",
+        "cardBg": "colors.surface.card (#FFFFFF)",
+        "welcomeTitle": "colors.surface.navy (#1B2430)",
+        "subtitle/labels/placeholders": "colors.text.secondary (#7A8288) / colors.text.label (#4A4F54) / colors.text.sub (#9AA0A6)",
+        "inputBorder": "colors.surface.hairline (#ECEEF1)",
+        "links/icons/redDash": "colors.red (#E03131)",
+        "iconSquareTint + pinkArc": "colors.authIconTint / colors.authDecorArc (derived, 10% opacity of #C0110F)",
+        "pageBg": "colors.surface.page (#F5F6F8)"
+      },
+      "referenceHueDivergences": "Reference red-dash/header/button hue sampled from PNG would be a sampled palette — superseded by user instruction: tokens win. Brand red = colors.red (#E03131) vs any reference sample; gradientHeader ramp = colors.gradientHeader vs any reference sample. Intentional per STEP 1.",
+      "deviceEvidence": "DEFERRED — mobile-mcp device not allocated; HB gate sleep-vs-attach not executed. Rest-state + password-visible overlays pending device capture.",
+      "staticGates": "tsc 0 errors; eslint 0 errors (LoginScreen + icons clean); jest — 2 pre-existing failures (useToast timeout, ReportsScreen) unrelated to this change; deps 18 (unchanged — no new dep); AIza 0; no raw hex; no static style={{; no console.log; swipe guards present; V9 TODO + map-leak TODO present; mock mtimes unchanged",
+      "authLogic": "UNCHANGED — handleLogin/handleForgotPassword/handleContactSupport are no-op stubs FLAGGED for route wiring decision; no entry/navigation flow modified",
+      "eyeCheckbox": "Eye toggle = functional local state (passwordVisible); Remember Me = functional local state (rememberMe with checkboxChecked style)",
+      "lockedItemsUntouched": "routes-convergence-PENDING, calendar, swipe-behavior, map-leak, playback, V9, EC items, Step-B header work, Profile DOB picker — NOT touched",
+      "hbGateHonored": "HB1 a11y read not executed (no device); HB2 sleep-vs-attach not executed (no device) — DEFERRED",
+      "envGuardrail": "Clean — no API keys, no new deps, no arbitrary hex in Login/components"
     }
   ]
 }

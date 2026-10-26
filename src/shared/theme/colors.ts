@@ -112,6 +112,12 @@ export const colors = {
   reportTeal: '#009688',
   reportBrick: '#C0392B',
   reportGold: '#EFAF00',
+  // DERIVED (auth): primary-red opacity variants for login icon-square tint
+  // and bottom-left pink decorative arc. Derived from gradientHeader's brand-red
+  // stop (#C0110F). FLAGGED: these are opacity overlays, not arbitrary hex.
+  authIconTint: 'rgba(192, 17, 15, 0.10)',
+  authDecorArc: 'rgba(192, 17, 15, 0.10)',
+
   // PATCH J1: shared AppHeader gradient — Figma-exact stops:
   // 0% #B2250C (opacity 100) -> 100% #160F12 (opacity 100), Linear 180° (vertical).
   // Used by react-native-linear-gradient (LinearGradient) in AppHeader.
