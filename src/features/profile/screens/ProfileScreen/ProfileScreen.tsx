@@ -18,6 +18,7 @@ import ProfileDobSheet from '@features/profile/components/ProfileDobPicker/Profi
 import ProfileFormField from '@features/profile/components/ProfileFormField';
 import ProfileHeader from '@features/profile/components/ProfileHeader';
 import { useProfile } from '@features/profile/hooks/useProfile';
+import { useAuth } from '@features/auth/context/AuthContext';
 import { PROFILE_FIELDS } from '@features/profile/types/profile';
 import { ProfileStackParamList, RootTabParamList } from '@navigation/types';
 import { Toast } from '@shared/components/feedback/Toast';
@@ -40,6 +41,7 @@ const KEYBOARD_BEHAVIOR: KeyboardBehavior = Platform.select({
 export function ProfileScreen({ navigation }: ProfileScreenProps) {
   const insets = useSafeAreaInsets();
   const { values, setField, save, saving } = useProfile();
+  const { logout } = useAuth();
 
   const { message: toast, anim: toastAnim, showToast } = useToast();
   /** The 3-segment DOB sheet is open. */
@@ -78,12 +80,12 @@ export function ProfileScreen({ navigation }: ProfileScreenProps) {
         text: 'Logout',
         style: 'destructive',
         onPress: () => {
-          // TODO: navigate to the Auth flow once authentication screens exist.
+          logout();
           showToast('Logged out');
         },
       },
     ]);
-  }, [showToast]);
+  }, [logout, showToast]);
 
   return (
     <View style={styles.root}>

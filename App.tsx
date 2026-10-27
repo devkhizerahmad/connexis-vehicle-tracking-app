@@ -33,7 +33,6 @@ export default function App() {
   const mountedAt = useRef<number>(Date.now());
   const [navReady, setNavReady] = useState(false);
   const [splashGone, setSplashGone] = useState(false);
-  const { isAuthenticated } = useAuth();
 
   // Logo entrance animation (native-driven: scale spring + fade timing).
   useEffect(() => {
@@ -74,13 +73,43 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <AuthProvider>
-        {isAuthenticated ? (
-          <RootNavigator onReady={() => setNavReady(true)} />
-        ) : (
-          <LoginScreen onAuthReady={() => setNavReady(true)} />
-        )}
+        <AppContent
+          setNavReady={() => setNavReady(true)}
+          splashGone={splashGone}
+          scaleAnim={scaleAnim}
+          fadeAnim={fadeAnim}
+          overlayOpacity={overlayOpacity}
+        />
+      </AuthProvider>
+    </SafeAreaProvider>
+  );
+}
 
-        {!splashGone && (
+// Renders inside AuthProvider so useAuth() works.
+function AppContent({
+  setNavReady,
+  splashGone,
+  scaleAnim,
+  fadeAnim,
+  overlayOpacity,
+}: {
+  setNavReady: () => void;
+  splashGone: boolean;
+  scaleAnim: Animated.Value;
+  fadeAnim: Animated.Value;
+  overlayOpacity: Animated.Value;
+}) {
+  const { isAuthenticated } = useAuth();
+
+  return (
+    <>
+      {isAuthenticated ? (
+        <RootNavigator onReady={setNavReady} />
+      ) : (
+        <LoginScreen onAuthReady={setNavReady} />
+      )}
+
+      {!splashGone && (
         <Animated.View
           style={[styles.splashOverlay, {opacity: overlayOpacity}]}
           pointerEvents="auto">
@@ -106,7 +135,7 @@ export default function App() {
           <Text style={styles.loading}>● ● ●</Text>
         </Animated.View>
       )}
-    </SafeAreaProvider>
+    </>
   );
 }
 

@@ -68,4 +68,4 @@ export {
   ExternalLinkGlyph,
   ShieldCheckGlyph,
 } from './engineControl';
-export { Envelope, Eye, EyeOff } from './auth';
+export { Envelope, Lock, Eye, EyeOff } from './auth';
