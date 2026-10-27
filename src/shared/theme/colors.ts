@@ -35,6 +35,14 @@ export const colors = {
   text: {
     primary: '#222222',
     secondary: '#7A8288',
+    /**
+     * AUTH CONTRAST FIX: `secondary` (#7A8288) is 3.9:1 on white and 3.6:1 on
+     * the page fill, below the 4.5:1 WCAG AA bar for the 13-14pt copy on the
+     * login card. These two derived greys are the AA-safe pair used there.
+     * FLAGGED: added tokens, not a global palette change.
+     */
+    secondaryStrong: '#5F6771', // 5.7:1 on white, 5.3:1 on page
+    placeholder: '#667077', // 5.1:1 on white, 4.7:1 on page
     onDark: '#FFFFFF',
     label: '#4A4F54',
     dark: '#3A3F45',
@@ -117,6 +125,25 @@ export const colors = {
   // stop (#C0110F). FLAGGED: these are opacity overlays, not arbitrary hex.
   authIconTint: 'rgba(192, 17, 15, 0.10)',
   authDecorArc: 'rgba(192, 17, 15, 0.10)',
+  // AUTH FORM STATES: inline error surface + ink. `surface.alertText` on
+  // `surface.alertBg` is ~3.3:1, too low for 13pt form copy; this pair is
+  // 6.4:1 and reads as an error without competing with the brand red.
+  // FLAGGED: added tokens for the login form only.
+  authErrorBg: '#FDECEA',
+  authErrorText: '#B00020',
+  authErrorBorder: '#F2B8B5',
+  // LOGIN RESTYLE (reference mock): light page behind the red hero, navy title,
+  // blue-grey copy, pale field outline. Sampled from design-references/
+  // Login Screen.png. FLAGGED: auth-only additions, no global palette change.
+  authPage: '#F7F7FB',
+  authTitle: '#172136',
+  authMuted: '#5F6D87',
+  authFieldBorder: '#E6EAF2',
+  // DERIVED (auth/login footer on red-bg image): light-on-red opacity variants.
+  // Reused from colors.white (#FFFFFF) — NOT arbitrary hex.
+  // FLAGGED: documented derived tokens only.
+  authFooterDim: 'rgba(255, 255, 255, 0.70)',
+  authFooterLink: '#FFFFFF',
 
   // PATCH J1: shared AppHeader gradient — Figma-exact stops:
   // 0% #B2250C (opacity 100) -> 100% #160F12 (opacity 100), Linear 180° (vertical).

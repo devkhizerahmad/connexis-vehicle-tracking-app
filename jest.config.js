@@ -1,5 +1,6 @@
 module.exports = {
   preset: '@react-native/jest-preset',
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   // Allowlist of node_modules that ship untranspiled ESM/JSX and therefore must
   // go through the RN babel preset. The pattern is ANCHORED (^node_modules/)
   // so it only inspects the top-level package: without the anchor the regex
