@@ -1,6 +1,6 @@
 // HistoryMiniMap.tsx — S6: light mini-map with a dashed red "already driven"
 // leg, a solid green "remaining" leg, a junction pin, and the red alert banner.
-import React, { forwardRef, memo, useCallback, useMemo, useRef } from 'react';
+import React, { forwardRef, memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import { CarGlyph, NavArrow, Pin } from '@shared/components/icons';
@@ -42,6 +42,13 @@ const HistoryMiniMapBase = forwardRef<MapView, HistoryMiniMapProps>(
       },
       [ref],
     );
+
+    // Detach native map ref on unmount
+    useEffect(() => {
+      return () => {
+        innerRef.current = null;
+      };
+    }, []);
 
     /** PATCH T-HISTORY: both legs are cut at the playhead, not at fixed indices. */
     const legs = useMemo(

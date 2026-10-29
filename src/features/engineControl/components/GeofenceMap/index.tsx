@@ -29,7 +29,7 @@
 //       gone and the big red direction-arrow teardrops shrank from 18/20 to 12;
 //   (d) NOT done, deliberately: the Google logo is mandatory attribution and
 //       react-native-maps exposes no size/opacity prop for it. See styles.ts.
-import React, { memo, useMemo } from 'react';
+import React, { memo, useEffect, useMemo, useRef } from 'react';
 import { Text, useWindowDimensions, View } from 'react-native';
 import MapView, { Circle, Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Clock, NavArrow, ShieldCheckGlyph, TeardropPin } from '@shared/components/icons';
@@ -43,7 +43,16 @@ export interface GeofenceMapProps {
 }
 
 function GeofenceMapImpl({ state }: GeofenceMapProps) {
+  const mapRef = useRef<MapView | null>(null);
   const { width } = useWindowDimensions();
+
+  // Cleanup native map reference on unmount
+  useEffect(() => {
+    return () => {
+      mapRef.current = null;
+    };
+  }, []);
+
   const fenceCenter = useMemo(
     () => ({ latitude: state.fence.latitude, longitude: state.fence.longitude }),
     [state.fence.latitude, state.fence.longitude],
@@ -62,6 +71,7 @@ function GeofenceMapImpl({ state }: GeofenceMapProps) {
   return (
     <View style={styles.wrap} testID="ec-map">
       <MapView
+        ref={mapRef}
         style={styles.map}
         provider={PROVIDER_GOOGLE}
         initialRegion={region}

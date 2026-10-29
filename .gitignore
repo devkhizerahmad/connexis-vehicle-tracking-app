@@ -78,9 +78,6 @@ yarn-error.log
 #credentials
 .env
 
-# Android Gradle Properties
-/android/gradle.properties
-
 #logs
 /logs
 
@@ -90,6 +87,8 @@ tsc_*.txt
 uidump.xml
 ec_*.png
 
-# Release signing credentials (see android/keystore.properties.example)
-/android/keystore.properties
+# Android Secrets
+android/gradle.properties
+android/app/release.keystore
+android/keystore.properties
 *.jks

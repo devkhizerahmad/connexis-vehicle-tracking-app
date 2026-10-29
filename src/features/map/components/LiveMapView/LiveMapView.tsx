@@ -4,7 +4,7 @@
 // duration 600. setCamera() was being overridden by the fit animation, which left the
 // map flat top-down; animateCamera() applies the 3D tilt reliably.
 // Pan/zoom enabled, no compass/toolbar/zoom controls.
-import React, { forwardRef, useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { forwardRef, memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Pin } from '@shared/components/icons';
@@ -40,8 +40,8 @@ const INITIAL_REGION = {
   longitudeDelta: 0.12,
 };
 
-export const LiveMapView = forwardRef<MapView, LiveMapViewProps>(
-  function LiveMapView(props, ref) {
+export const LiveMapView = memo(
+  forwardRef<MapView, LiveMapViewProps>(function LiveMapView(props, ref) {
     const innerRef = useRef<MapView | null>(null);
     const setRefs = (instance: MapView | null) => {
       innerRef.current = instance;
@@ -100,12 +100,14 @@ export const LiveMapView = forwardRef<MapView, LiveMapViewProps>(
       return undefined;
     }, [runCameraSequence]);
 
-    // Cancel a pending tilt if the view unmounts mid-sequence.
+    // Cancel a pending tilt and detach map ref if the view unmounts mid-sequence.
     useEffect(
       () => () => {
         if (cameraTimerRef.current) {
           clearTimeout(cameraTimerRef.current);
+          cameraTimerRef.current = null;
         }
+        innerRef.current = null;
       },
       [],
     );
@@ -194,7 +196,7 @@ export const LiveMapView = forwardRef<MapView, LiveMapViewProps>(
         </Marker>
       </MapView>
     );
-  },
+  }),
 );
 
 const styles = StyleSheet.create({
