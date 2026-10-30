@@ -46,6 +46,10 @@ export interface AssetCardProps {
 }
 
 export function AssetCard({ vehicle, onMoreDetails, onViewOnMap, onReports }: AssetCardProps) {
+  const handleMoreDetails = React.useCallback(() => onMoreDetails(vehicle), [onMoreDetails, vehicle]);
+  const handleReports = React.useCallback(() => onReports(vehicle), [onReports, vehicle]);
+  const handleViewOnMap = React.useCallback(() => onViewOnMap(vehicle), [onViewOnMap, vehicle]);
+
   // Honda Civic only: premium sensor strip (250ms collapse via shared hook)
   const strip = vehicle.sensorStrip;
   const { toggle, anim, animatedHeight, onMeasureLayout } = useCollapsible(
@@ -127,7 +131,7 @@ export function AssetCard({ vehicle, onMoreDetails, onViewOnMap, onReports }: As
             "More Details →" left, the two compact buttons right, both centred.
             Matches the sampled reference footer. */}
         <View style={styles.footerRow}>
-          <Pressable style={styles.moreDetailsLink} onPress={() => onMoreDetails(vehicle)}
+          <Pressable style={styles.moreDetailsLink} onPress={handleMoreDetails}
             accessibilityRole="button"
             accessibilityLabel={`More details for ${vehicle.name}`}>
             <Text style={styles.moreDetails}>More Details</Text>
@@ -136,7 +140,7 @@ export function AssetCard({ vehicle, onMoreDetails, onViewOnMap, onReports }: As
           <View style={styles.buttonsRow}>
             <Pressable
               style={[styles.actionBtn, { backgroundColor: colors.home.reportsBtn }]}
-              onPress={() => onReports(vehicle)}
+              onPress={handleReports}
                 accessibilityRole="button"
                 accessibilityLabel={`Reports for ${vehicle.name}`}>
               <ListIcon color={colors.white} size={12} />
@@ -144,7 +148,7 @@ export function AssetCard({ vehicle, onMoreDetails, onViewOnMap, onReports }: As
             </Pressable>
             <Pressable
               style={[styles.actionBtn, { backgroundColor: colors.surface.navy }]}
-              onPress={() => onViewOnMap(vehicle)}
+              onPress={handleViewOnMap}
                 accessibilityRole="button"
                 accessibilityLabel={`View ${vehicle.name} on the map`}>
               <Pin color={colors.white} size={12} />

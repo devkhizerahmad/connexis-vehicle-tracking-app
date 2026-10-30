@@ -21,6 +21,14 @@ react {
     //   skip the bundling of the JS bundle and the assets. Default is "debug", "debugOptimized".
     //   If you add flavors like lite, prod, etc. you'll have to list your debuggableVariants.
     // debuggableVariants = ["liteDebug", "liteDebugOptimized", "prodDebug", "prodDebugOptimized"]
+    //
+    //   `-PembedBundle` produces a QA/demo APK with the JS bundle inside it. The app
+    //   then starts from the embedded bundle instead of fetching ~9.6 MB from Metro
+    //   on every cold start (which is what made the launch look blank on a slow
+    //   device). Plain `assembleDebug` keeps the Metro-backed variant for debugging.
+    if (project.hasProperty("embedBundle")) {
+        debuggableVariants = []
+    }
 
     /* Bundling */
     //   A list containing the node command and its flags. Default is just 'node'.
@@ -156,6 +164,8 @@ android {
         }
     }
 }
+
+def hermesEnabled = (project.findProperty("hermesEnabled") ?: "true").toString()
 
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin

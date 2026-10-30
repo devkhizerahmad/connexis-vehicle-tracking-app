@@ -1,0 +1,13 @@
+<resources>
+
+    <!-- Android 12+ draws its own system splash before the activity window.
+         Background = the same cream as the app, icon = the Connexis wordmark,
+         so the system splash, the pre-JS window (res/drawable/splash_background.xml)
+         and the login hero all show the same branding. -->
+    <style name="SplashTheme" parent="AppTheme">
+        <item name="android:windowSplashScreenBackground">@color/splashBackground</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/splash_icon</item>
+        <item name="android:windowBackground">@drawable/splash_background</item>
+    </style>
+
+</resources>

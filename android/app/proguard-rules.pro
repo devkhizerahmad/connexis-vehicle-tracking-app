@@ -23,6 +23,14 @@
 # Keep annotations and inner classes
 -keepattributes *Annotation*,Signature,InnerClasses,EnclosingMethod
 
+# Room / WorkManager (pulled in by react-native-maps).
+# Room instantiates the generated `*_Impl` class through reflection and needs its
+# no-arg constructor, but room-runtime 2.5's own consumer rule only keeps the class —
+# R8 then strips the constructor and the app crashes at startup with
+# "Failed to create an instance of class androidx.work.impl.WorkDatabase".
+-keep class * extends androidx.room.RoomDatabase { <init>(); }
+-keep class androidx.work.impl.WorkDatabase_Impl { *; }
+
 # Keep OkHttp / Networking
 -dontwarn okio.**
 -dontwarn javax.annotation.**

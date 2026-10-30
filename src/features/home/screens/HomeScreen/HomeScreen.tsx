@@ -183,7 +183,7 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
 
       <FlatList
         data={listData}
-        keyExtractor={item => (item.kind === 'promo' ? 'promo' : item.vehicle.name)}
+        keyExtractor={item => (item.kind === 'promo' ? 'promo' : item.vehicle.id)}
         renderItem={renderItem}
         ListHeaderComponent={listHeader ?? undefined}
         ListEmptyComponent={listEmpty}

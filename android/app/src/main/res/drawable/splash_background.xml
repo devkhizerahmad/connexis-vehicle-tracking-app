@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Pre-JS window: Android draws this before React Native mounts, while the dev
+     bundle is still loading from Metro. Cream + the Connexis wordmark, so a slow
+     cold start reads as a splash instead of a blank page. The colour matches
+     colors.splash in src/shared/theme/colors.ts (locked by
+     __tests__/nativeSplash.test.ts). -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/splashBackground" />
+    <item
+        android:width="220dp"
+        android:height="47dp"
+        android:gravity="center">
+        <bitmap
+            android:gravity="fill"
+            android:src="@drawable/splash_logo" />
+    </item>
+</layer-list>

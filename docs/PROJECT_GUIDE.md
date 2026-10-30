@@ -13,11 +13,11 @@ Bare **React Native CLI** vehicle-tracking app. Yeh guide repo ke **current stat
 | 1 | Stack | Bare RN CLI (**Expo nahi**) — `react-native@0.87.1`, React 19, Hermes, TypeScript strict — [package.json](../package.json) |
 | 2 | Architecture | **Feature-first**: `src/features/<name>/{screens,components,hooks,services,mocks,types}` + cross-cutting `src/shared/` |
 | 3 | Path aliases | `@shared/*` → `src/shared/*`, `@features/*` → `src/features/*`, `@navigation/*` → `src/navigation/*` — [babel.config.js](../babel.config.js) + [tsconfig.json](../tsconfig.json) (dono saath update karo) |
-| 4 | Entry chain | [index.js](../index.js) → [App.tsx](../App.tsx) (navigator mounts immediately + splash overlay) → [RootNavigator.tsx](../src/navigation/RootNavigator.tsx) → 5 tabs |
+| 4 | Entry chain | [index.js](../index.js) → [App.tsx](../App.tsx) (auth gate: `LoginScreen` **or** `RootNavigator`) → [RootNavigator.tsx](../src/navigation/RootNavigator.tsx) → 5 tabs. Splash is **native only** — koi JS splash overlay nahi |
 | 5 | UI-FREEZE | Approved screens (Details, Profile) pixel-frozen. Geometry/colors change karne se pehle S3 dekho; baselines `/ui-baseline/` |
 | 6 | Perf contract | **G1–G10** global performance contract — S8 checklist; gates: `tsc`, `eslint --quiet`, `jest`, grep (`console.*` = 0, inline `style={{` = 0) |
 | 7 | Baselines | `/ui-baseline/` — 16 PNGs + [baseline_record.json](../ui-baseline/baseline_record.json) (SHA-256 per crop + interaction notes). Naya visual change = naya baseline |
-| 8 | Splash/window | `colors.splash = '#F8F3F3'` JS + native `windowBackground` — **dono match hone chahiye** |
+| 8 | Splash/window | **One** platform splash: `SplashTheme` + [splash_background.xml](../android/app/src/main/res/drawable/splash_background.xml) (wordmark on `colors.splash`); Android 12 icon = `splash_icon.png`. `colors.splash` JS = `splashBackground` XML — **dono match hone chahiye** |
 | 9 | Header gradient | Shared `colors.gradientHeader = ['#B2250C','#160F12']` (LinearGradient vertical, Figma-exact) — Details + Profile same header |
 | 10 | Docs sync rule | Koi bhi naya screen/alias/token/native change → **yeh dono files (MD+HTML) usi task me update karo** (S11) |
 
@@ -31,20 +31,14 @@ Bare **React Native CLI** vehicle-tracking app. Yeh guide repo ke **current stat
 ```mermaid
 flowchart TD
   HEX{{"index.js — AppRegistry"}}:::native
-  APP["App.tsx — navigator mounts on frame 1"]:::nav
-  NAV["RootNavigator — NavigationContainer onReady"]:::nav
-  D{"navReady AND elapsed >= 2400ms?"}:::dec
-  STAD(["SplashOverlay fade 1→0, 300ms, useNativeDriver"]):::ui
-  UNMOUNT["splashGone=true → overlay UNMOUNT (tree clean)"]:::ui
-  WIN{{"android:windowBackground = #F8F3F3"}}:::native
-  HEX --> APP --> NAV
-  APP --> D
-  D -- "no → logo spring + 800ms fade chal raha" --> APP
-  D -- "yes" --> STAD --> UNMOUNT
-  WIN -. "pre-JS frame gap ka safety net" .-> APP
+  SYS(["Android 12+ system splash — cream + splash_icon wordmark"]):::native
+  TH{{"SplashTheme — windowBackground = splash_background (wordmark on #F8F3F3)"}}:::native
+  APP["App.tsx — SafeAreaProvider → AuthProvider → Login | RootNavigator"]:::nav
+  FRAME["React first frame — splash window ke upar paint" ]:::ui
+  LOGIN["LoginScreen — hero wordmark on the shared header gradient"]:::ui
+  HEX --> SYS --> TH --> APP --> FRAME --> LOGIN
   classDef nav fill:#DBEAFE,stroke:#1D4ED8
   classDef ui fill:#DCFCE7,stroke:#15803D
-  classDef dec fill:#FEF3C7,stroke:#B45309
   classDef native fill:#EDE9FE,stroke:#6D28D9
 ```
 
@@ -54,20 +48,17 @@ flowchart TD
 [index.js]  (native entry, AppRegistry)
     |
     v
-[App.tsx]  -- mounts immediately -->  [RootNavigator(onReady)] --> 5 tabs
-    |                                        ^
-    |  SplashOverlay (#F8F3F3, zIndex 1000)  |
-    |  ON TOP of navigator                   |
-    v                                        |
-{navReady && elapsed>=2400ms?} --yes--> ((fade 300ms, native driver)) --> [overlay unmount]
-    | no
-    +--> logo spring + 800ms tagline fade continues
-
-safety net: android:windowBackground=#F8F3F3 (native window cream before first JS paint)
+{native} SplashTheme window — wordmark on #F8F3F3   <-- JS bundle load ke dauraan yahi dikhta hai
+    |        (Android 12+: pehle system splash, same cream + wordmark icon)
+    v
+[App.tsx]  AuthProvider --> LoginScreen  |  RootNavigator --> 5 tabs
+    |
+    v
+React ka first frame splash window ke upar paint karta hai — koi JS splash, koi fixed delay nahi
 ```
 
-Files: [index.js](../index.js) · [App.tsx](../App.tsx) · [RootNavigator.tsx](../src/navigation/RootNavigator.tsx) · [styles.xml](../android/app/src/main/res/values/styles.xml) · [colors.xml](../android/app/src/main/res/values/colors.xml) · `colors.splash` in [colors.ts](../src/shared/theme/colors.ts).
-**Note:** native XML change = full rebuild (`npx react-native run-android`) — Metro reload se apply **nahi** hota.
+Files: [index.js](../index.js) · [App.tsx](../App.tsx) · [RootNavigator.tsx](../src/navigation/RootNavigator.tsx) · [styles.xml](../android/app/src/main/res/values/styles.xml) · [values-v31/styles.xml](../android/app/src/main/res/values-v31/styles.xml) · [splash_background.xml](../android/app/src/main/res/drawable/splash_background.xml) · [colors.xml](../android/app/src/main/res/values/colors.xml) · `colors.splash` in [colors.ts](../src/shared/theme/colors.ts) · test lock: [nativeSplash.test.ts](../__tests__/nativeSplash.test.ts).
+**Note:** native XML change = full rebuild (`npx react-native run-android`) — Metro reload se apply **nahi** hota. Blank cold start dobara na aaye iske liye QA build `gradlew assembleDebug -PembedBundle` se banao (JS + assets APK ke andar, Metro ki zaroorat nahi).
 
 ---
 
@@ -308,7 +299,7 @@ Theme files: [colors.ts](../src/shared/theme/colors.ts) · [sizes.ts](../src/sha
 |---|---|---|---|
 | G1 | Settled screens par **idle re-renders = 0** (Home/Details/Profile) | React DevTools profiler: interact → settle → 0 commits | [DetailsScreen](../src/features/home/screens/DetailsScreen/DetailsScreen.tsx), [ProfileScreen](../src/features/profile/screens/ProfileScreen/ProfileScreen.tsx) |
 | G2 | Event handlers / callbacks **referentially stable** (`useCallback`) | `setField`/`save` pattern dekho; handlers props me pass hote waqt memoized | [useProfile.ts](../src/features/profile/hooks/useProfile.ts) |
-| G3 | Saari animations **`useNativeDriver: true`** | splash fade, logo spring — grep `useNativeDriver` | [App.tsx](../App.tsx) |
+| G3 | Saari animations **`useNativeDriver: true`** | screen enter/exit + logo spring — grep `useNativeDriver` (splash ab native hai, JS fade nahi) | [src/features/](../src/features) |
 | G4 | Shared animation behavior **hooks me** (copy-paste nahi) | collapse 250ms, donut progress | [useCollapsible.ts](../src/shared/hooks/useCollapsible.ts), [useDonutProgress.ts](../src/shared/hooks/useDonutProgress.ts) |
 | G5 | Repeated data lists **memoized rows + stable keys** (naya list = FlatList rules) | rows `memo` + `keyExtractor`; har-row state nahi | [ProfileFormField](../src/features/profile/components/ProfileFormField/ProfileFormField.tsx) pattern |
 | G6 | **`console.*` in src/ = 0** | `grep -r "console." src/` → 0 matches | whole `src/` |
@@ -360,8 +351,9 @@ Theme files: [colors.ts](../src/shared/theme/colors.ts) · [sizes.ts](../src/sha
 
 - **Symptom:** logo splash ke baad Home se pehle ~1-5 frames **black** screen.
 - **Cause (purana code):** `setTimeout(2400)` splash ko **unmount** karta tha, phir `RootNavigator` (5-tab navigator) pehli baar mount hota — us init ke frames me screen par kuch nahi, aur Android default `windowBackground` **black** thi.
-- **Fix:** (a) navigator **immediately** mount, splash absolute overlay ON TOP; (b) dismiss sirf `onReady && ≥2400ms` par, 300ms native-driver fade, phir unmount; (c) native safety net `windowBackground=#F8F3F3` — [App.tsx](../App.tsx) · [styles.xml](../android/app/src/main/res/values/styles.xml) · [colors.xml](../android/app/src/main/res/values/colors.xml).
-- **Lesson:** conditional `if (ready) return <Navigator/>` pattern navigation init ke waqt blank window deta hai — overlay pattern use karo.
+- **Pehla fix (ab superseded):** JS `SplashOverlay` navigator ke upar + 2400ms floor + 300ms fade. Isse aage do problem aayi: (i) overlay React tree ke andar rehta hai, to JS bundle load hone tak wo paint hi nahi kar sakta — cold start par 11–65 s flat cream page; (ii) fixed 2400ms floor har launch ko slow karta tha.
+- **Aaj ka fix (native, standard):** ek hi splash — `SplashTheme` + [splash_background.xml](../android/app/src/main/res/drawable/splash_background.xml) (wordmark on `#F8F3F3`), Android 12 par `windowSplashScreenAnimatedIcon = splash_icon`; `App.tsx` me koi splash/ timer nahi. Activity `SplashTheme` life-long rakhti hai taaki slow JS load par bhi branding dikhe, aur React ka first frame uske upar paint karta hai. QA build `-PembedBundle` se (Metro fetch ke bina) — [App.tsx](../App.tsx) · [nativeSplash.test.ts](../__tests__/nativeSplash.test.ts).
+- **Lesson:** pre-JS window sirf native layer paint kar sakta hai. Splash ko JS me mat rakho, aur launch ko kisi fixed duration se mat bando — first frame hi hand-off hai.
 
 ---
 

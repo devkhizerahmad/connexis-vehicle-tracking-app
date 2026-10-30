@@ -9,4 +9,11 @@
         <item name="android:windowBackground">@color/splashBackground</item>
     </style>
 
+    <!-- Launch-only theme for MainActivity: paints the wordmark on the cream
+         window while the JS bundle loads. MainActivity restores AppTheme in
+         onCreate, so the logo never shows behind a running screen. -->
+    <style name="SplashTheme" parent="AppTheme">
+        <item name="android:windowBackground">@drawable/splash_background</item>
+    </style>
+
 </resources>
